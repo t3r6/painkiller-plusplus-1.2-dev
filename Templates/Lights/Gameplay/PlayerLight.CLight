@@ -14,14 +14,15 @@ o._off = false
 o.Projector = "special/flashlight"
 o.LastType = 0
 o.Important = true
+o.Owner = Player
 
 function PlayerLight:Tick2(delta)
-	if self._off then
+	if self._off or not self.Owner then
 		return
 	end
 
     local fx,fy,fz = CAM.GetForwardVector()    
-    local x,y,z = Player:BindPoint(self.Offset.X,self.Offset.Y,self.Offset.Z)
+    local x,y,z = self.Owner:BindPoint(self.Offset.X,self.Offset.Y,self.Offset.Z)
     ENTITY.SetPosition(self._Entity,x,y,z)
    
     self._time  = self._time - delta

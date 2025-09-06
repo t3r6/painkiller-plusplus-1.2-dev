@@ -137,7 +137,7 @@ function StickyBomb:Update()
             if e then
 				local x,y,z = ENTITY.TransformLocalPointToWorld(self._Entity,0,0,0)
 				--if self._itsPlayer then
-				--	x,y,z = Player._groundx+FRand(-0.3,0.3), Player.Pos.Y, Player._groundz+FRand(-0.3,0.3)
+				--	x,y,z = self.ObjOwner._AIBrain.Target._groundx+FRand(-0.3,0.3), Player.Pos.Y, self.ObjOwner._AIBrain.Target._groundz+FRand(-0.3,0.3)
 				--end
 				ENTITY.PO_Enable(self._Entity, false)
 				if self.ObjOwner then
@@ -161,7 +161,7 @@ function StickyBomb:Update()
 		end
 	--[[else
 		local x,y,z = ENTITY.TransformLocalPointToWorld(self._Entity,0,0,0)
-		local distToPlayer = Dist3D(Player._groundx, Player._groundy+1.5, Player._groundz, x,y,z)
+		local distToPlayer = Dist3D(self.ObjOwner._AIBrain.Target._groundx, self.ObjOwner._AIBrain.Target._groundy+1.5, self.ObjOwner._AIBrain.Target._groundz, x,y,z)
 		if distToPlayer < self.stickToPlayerDistance then
 			self._startTick = self.TimeToExplode
 			ENTITY.PO_Enable(self._Entity, false)

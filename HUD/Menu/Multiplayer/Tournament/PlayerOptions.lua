@@ -2,8 +2,8 @@ PlayerOptions =
 {
 	bgStartFrame = { 120, 243, 268 },
 	bgEndFrame   = { 180, 267, 291 },
-	fontBig		= "timesbd",
-	fontSmall	= "timesbd",
+	fontBig		= Cfg.DefaultFont,
+	fontSmall	= Cfg.DefaultFont,
 
 
 	fontBigSize = 36,

@@ -12,7 +12,7 @@ function o:CustomUpdate()
 		self.TimeToLive = self.TimeToLive - 1
 		if self.TimeToLive < 0 then
 			self.TimeToLive = nil
-			self:OnDamage(self.Health + 2, self)
+			--self:OnDamage(self.Health + 2, self)
 		end
 	end
 end
@@ -241,17 +241,17 @@ function o._CustomAiStates.RavenIdle:OnUpdate(brain)
 						return
 					end
 					if not actor._isRotating and not actor._isWalking then
-						if math.random(100) < 20 then
-							local distToPlayer = Dist3D(actor._groundx,actor._groundy,actor._groundz,Player._groundx,Player._groundy,Player._groundz)
+						if Player and math.random(100) < 20 then
+							local distToPlayer = Dist3D(actor._groundx,actor._groundy,actor._groundz,brain.Target._groundx,brain.Target._groundy,brain.Target._groundz)
 							if (distToPlayer < aiParams.distWhenAlwaysEscape) then
 								self.state = 0
 								--Game:Print("gracz za blisko")
 								return
 							end
 						end
-						if math.random(1000) < 40 then
+						if Player and math.random(1000) < 40 then
 							if math.random(100) < 30 then
-								actor:RotateToVector(Player._groundx, Player._groundy, Player._groundz)
+								actor:RotateToVector(brain.Target._groundx, brain.Target._groundy, brain.Target._groundz)
 							else
 								actor:Rotate(math.random(-15,15))
 							end
@@ -331,16 +331,13 @@ function o._CustomAiStates.RavenIdle:OnUpdate(brain)
 			end
 
 			if self.dest then
-				--Game:Print("fly to point")
 				actor:FlyTo(self.dest.X, self.dest.Y + 0.5, self.dest.Z)
 				self.flyrandcnt = 0
 			else
 				-- random fly
-				--Game:Print("random fly "..self.flyrandcnt)
 				local dist = FRand(aiParams.walkStep * 0.7, aiParams.walkStep * 1.0)
 				local xd,yd,zd = actor._groundx,actor._groundy,actor._groundz
 				if self.flyrandcnt == 0 then
-					--Game:Print("1st fly")
 					PlaySound3D("actor/raven/raven_wings_flap",actor._groundx,actor._groundy,actor._groundz,10,math.random(20,26))
 					actor:AddPFX('but', actor._SphereSize * 0.6, Vector:New(actor._groundx,actor._groundy,actor._groundz))
 					dist = FRand(aiParams.walkStep * 0.3, aiParams.walkStep * 0.7)
@@ -374,12 +371,6 @@ function o._CustomAiStates.RavenIdle:OnUpdate(brain)
 						zd = brain._GuardPos.Z + FRand(-2,2)
 					end
 				end
-
-				--[[if math.random(100) < 100 then
-					local r = 0.25
-					actor._randomizedParams.FlySpeed = FRand(actor.FlySpeed * (1 - r), actor.FlySpeed * (1 + r))
-					Game:Print("randomize speed = "..actor._randomizedParams.FlySpeed)
-				end--]]
 				actor:FlyTo(xd + v.X*dist, yd, zd + v.Z*dist)
 				if self.stFly then
 					MDL.SetAnimTimeScale(actor._Entity, actor._CurAnimIndex, FRand(2.6, 2.8))
@@ -392,7 +383,6 @@ function o._CustomAiStates.RavenIdle:OnUpdate(brain)
 			end
 			self.state = 2
 			self.state2time = brain._currentTime
-			--return
 		end
 	end
 end

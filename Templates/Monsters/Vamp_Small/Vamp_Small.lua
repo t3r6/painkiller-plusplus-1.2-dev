@@ -60,7 +60,7 @@ function Vamp_Small:Throw(par3, par4)
         obj.PosDest = {}
         obj.PosDest.X = v.X + x
         obj.PosDest.Z = v.Z + z
-		obj.PosDest.Y = Player._groundy + FRand(1.7, 1.9)
+		obj.PosDest.Y = self._AIBrain.Target._groundy + FRand(1.7, 1.9)
 		--Game.freezeUpdate = true
 		obj.Rot:FromEuler(0, -self.angle, 0)
 		obj:Apply()

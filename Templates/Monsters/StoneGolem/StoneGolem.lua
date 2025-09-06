@@ -219,13 +219,13 @@ function o:OnTick(delta)
 	end
 	
 	if not self._ABdo then
-		--[[if not self.AIenabled and Player and Player._lastTimeHit > 0 and Player._lastTimeHit + 2 > Game.currentTime then
-			local dist = Dist2D(Player._lastPosHit.X,Player._lastPosHit.Z, self._groundx, self._groundz)
-			local dist1D = math.abs(Player._lastPosHit.Y - self._groundy)
+		--[[if not self.AIenabled and Player and self._AIBrain.Target._lastTimeHit > 0 and self._AIBrain.Target._lastTimeHit + 2 > Game.currentTime then
+			local dist = Dist2D(self._AIBrain.Target._lastPosHit.X,self._AIBrain.Target._lastPosHit.Z, self._groundx, self._groundz)
+			local dist1D = math.abs(self._AIBrain.Target._lastPosHit.Y - self._groundy)
 			
 			-- trace od player w dol, czy pod spodem jest golem
 			if debugMarek then
-				Game:Print("gracz zraniony dist = "..Player._lastTimeHit.." "..Game.currentTime)
+				Game:Print("gracz zraniony dist = "..self._AIBrain.Target._lastTimeHit.." "..Game.currentTime)
 				DEBUGcx = PX
 				DEBUGcy = PY + 1
 				DEBUGcz = PZ
@@ -237,7 +237,7 @@ function o:OnTick(delta)
 			if e then
 
 				if debugMarek then
-					Game:Print("gracz zraniony dist = "..Player._lastTimeHit.." "..Game.currentTime)
+					Game:Print("gracz zraniony dist = "..self._AIBrain.Target._lastTimeHit.." "..Game.currentTime)
 					self.yzdebug1 = PX + 0.1
 					self.yzdebug2 = PY - 5 + d
 					self.yzdebug3 = PZ

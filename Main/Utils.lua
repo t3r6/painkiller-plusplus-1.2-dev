@@ -423,7 +423,7 @@ function LoadTML(path,file,leveltemplate)
 		return
 	end				-- juz zaladowany (moze jakies dziecko go potrzebowalo?)
 	
-	if Game.GMode == GModes.SingleGame then
+	if true then --Game.GMode == GModes.SingleGame
 		TemplatesPaths[file] = {
 			path = path.."/"..file,
 			levtml = leveltemplate,
@@ -437,20 +437,22 @@ function LoadTML(path,file,leveltemplate)
 	end
 end
 --============================================================================
-function PreloadTemplates(path,leveltemplates)
-    --setmetatable(Templates,{__mode="k"})
-    local files = FS.FindFiles(path.."/*.C*",1,0)
-    for i=1,table.getn(files) do
-        LoadTML(path,files[i],leveltemplates)
-        PMENU.LoadingProgress()
-    end
-    local dirs = FS.FindFiles(path.."/*.*",0,1)
-    for i=1,table.getn(dirs) do
+function PreloadTemplates(path,leveltemplates)	
+	
+	--setmetatable(Templates,{__mode="k"})
+	
+	local files = FS.FindFiles(path.."/*.C*",1,0)
+	for i=1,table.getn(files) do
+		LoadTML(path,files[i],leveltemplates)
+		PMENU.LoadingProgress()
+	end
+	local dirs = FS.FindFiles(path.."/*.*",0,1)
+	for i=1,table.getn(dirs) do
 		if Game.GMode == GModes.SingleGame or (Game.GMode ~= GModes.SingleGame and
-		 not leveltemplates and dirs[i] ~= "Monsters" and dirs[i] ~= "Items" and dirs[i] ~= "Treasures") then
+		not leveltemplates and dirs[i] ~= "Monsters" and dirs[i] ~= "Items" and dirs[i] ~= "Treasures") then
 			PreloadTemplates(path.."/"..dirs[i],leveltemplates)
-	    end
-    end    
+		end
+	end
 end
 --============================================================================
 function BindPoint(e,ox,oy,oz)

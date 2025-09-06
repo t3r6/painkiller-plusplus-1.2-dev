@@ -128,18 +128,6 @@ function Loki_Small:Explode()
 		--AddObject("FX_rexplode.CActor",1,Vector:New(x,y,z),r,true) 
 		self:AddPFX("explode")
 		
-		--[[ physical parts
-		local px,py,pz = x+nx/2,y+ny/2,z+nz/2
-		local n = math.random(4,6) -- how many (min,max)
-		for i = 1, n do
-			local scale = FRand(0.5,0.8) -- size (min,max)
-			local ke = AddItem("KamykWybuchRakieta.CItem",scale,Vector:New(px+FRand(-0.2,0.2),py+FRand(-0.2,0.2),pz+FRand(-0.2,0.2)))
-			vx,vy,vz  = r:TransformVector(FRand(-30,30),FRand(22,34),FRand(-30,30))
-			ENTITY.SetVelocity(ke,vx,vy,vz)
-			ENTITY.SetTimeToDie(ke,FRand(1,2)) -- lifetime (min,max)
-			--ENTITY.PO_SetPinned(ke,true)
-		end
-		--]]
 		-- light
 		
 		AddAction({{"Light:a[1],a[2],a[3],200,200,100, 8, 10 , 1, 0.02,0.1,0.02"}},nil,nil,x,y,z)
@@ -147,18 +135,12 @@ function Loki_Small:Explode()
 			local g = Templates["Grenade.CItem"]
 			Game._EarthQuakeProc:Add(x,y,z, 5, g.ExplosionCamDistance, g.ExplosionCamMove, g.ExplosionCamRotate, false)
 		end
-
-
-        --local e = AddItem("BarrelSmall.CItem",nil,self.Pos,nil,Quaternion:New_FromEuler( 0, -self.angle, math.pi/2))
-        --ENTITY.PO_Enable(e, false)
-	    --ENTITY.ExplodeItem(e, "../Data/Items/beczka_mala_zlom.dat", self.BarrelExplosion.streng, self.BarrelExplosion.Radius, false, false, self.BarrelExplosion.LifetimeAfterExplosion)
-        --ENTITY.Release(e)
         if self.Health > 0 then
 			self:OnDamage(self.Health + 2, self)
 		end
-		local distToPlayer = Dist3D(Player._groundx, Player._groundy, Player._groundz, self._groundx, self._groundy, self._groundz)
+		local distToPlayer = Dist3D(self._AIBrain.Target._groundx, self._AIBrain.Target._groundy, self._AIBrain.Target._groundz, self._groundx, self._groundy, self._groundz)
 		if distToPlayer < aiParams.Explosion.ExplosionRange then
-			Player:OnDamage(aiParams.Explosion.Damage, self)
+			self._AIBrain.Target:OnDamage(aiParams.Explosion.Damage, self)
 		end
 		--
 	end

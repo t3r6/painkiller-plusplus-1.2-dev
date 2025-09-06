@@ -265,7 +265,9 @@ function DriverElectro:StartAltFireFX(pe,ammo)
         cw._lockedEntity = nil
         local x,y,z = ENTITY.PO_GetPawnHeadPos(player._Entity)
         local fv = player.ForwardVector
+        if cw and cw.TipPoint and x and y and z and fv.X and fv.Y and fv.Z and s and s.ElectroLength then
         cw.TipPoint:Set(x+fv.X*s.ElectroLength, y+fv.Y*s.ElectroLength, z+fv.Z*s.ElectroLength)
+        end
         player.Ammo.Electro = ammo
         cw._ShotInterval = 0
         cw.ShotTimeOut = s.AltFireTimeout * (s.MinBurst-1) -- min ilosc naboi

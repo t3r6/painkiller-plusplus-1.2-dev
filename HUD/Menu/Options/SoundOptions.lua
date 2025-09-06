@@ -5,8 +5,8 @@ SoundOptions =
 
 	fontBigSize = 36,
 	sliderWidth = 340,
-	fontBig		= "timesbd",
-	fontSmall	= "timesbd",
+	fontBig		= Cfg.DefaultFont,
+	fontSmall	= Cfg.DefaultFont,
 
 --	backAction = "PainMenu:ActivateScreen(OptionsMenu)",
 	backAction = "PainMenu:ApplySettings(); PainMenu:ApplyAudioSettings(true); PainMenu:ActivateScreen(OptionsMenu)",

@@ -4,8 +4,8 @@ Pkgui =
 	bgEndFrame   = { 180, 267, 291 },
 
 	fontBigSize = 32,
-	fontBig		= "timesbd",
-	fontSmall	= "timesbd",
+	fontBig		= Cfg.DefaultFont,
+	fontSmall	= Cfg.DefaultFont,
 
 	backAction = "PainMenu:ApplySettings(false); PainMenu:ActivateScreen(OptionsMenu)",
 	applyAction = "PainMenu:ApplySettings(true); WORLD.SetMaxFPS(Cfg.MaxFpsMP); PainMenu:ReloadFOV(); PainMenu:ApplyVideoSettings(); PainMenu:ReloadBrightskins(); Hud.CrossScale = Cfg.CrosshairSize; PMENU.SetItemVisibility('ApplyButton',false)",

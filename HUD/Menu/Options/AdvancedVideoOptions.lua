@@ -7,7 +7,9 @@ AdvancedVideoOptions =
 
 	backAction = "PainMenu:ApplySettings(); HUD.SetTransparency(Cfg.HUDTransparency); PainMenu:ActivateScreen(OptionsMenu)",
 	applyAction = "PainMenu:ApplySettings(true); PainMenu:ReloadWeaponsTextures(); PainMenu:SetShadowsQuality(); PainMenu:ApplyVideoSettings()",
-
+	fontBig		= Cfg.DefaultFont,
+	fontSmall	= Cfg.DefaultFont,
+			
 	items =
 	{
 		VideoBorder =

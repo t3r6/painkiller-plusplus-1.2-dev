@@ -80,7 +80,7 @@ function Vamp_Big_throwragdoll:Take()
             -- self._proc.CopyWholeMatrix = true
             GObjects:Add(TempObjName(), self._proc)
     
-            self:RotateToVector(Player._groundx, Player._groundy, Player._groundz)
+            self:RotateToVector(self._AIBrain.Target._groundx, self._AIBrain.Target._groundy, self._AIBrain.Target._groundz)
 
         else
             Game:Print("missed!")
@@ -117,7 +117,7 @@ function Vamp_Big_throwragdoll:Throw()
 
 
 -- rzut prosty
---		local v = Vector:New(Player._groundx - self._groundx, Player._groundy - self._groundy, Player._groundz - self._groundz)
+--		local v = Vector:New(self._AIBrain.Target._groundx - self._groundx, self._AIBrain.Target._groundy - self._groundy, self._AIBrain.Target._groundz - self._groundz)
 --		v.Y = v.Y + 1.7
 --		v:Normalize()
 --		brain.Objhostage2._velx = v.X*force

@@ -1,11 +1,11 @@
 function o:OnInitTemplate()
-    self:SetAIBrain()
+	self:SetAIBrain()
 	self._AIBrain._lastThrowTime = -100
 end
 
 function o:OnApply()
 	--ENTITY.PO_EnableGravity(self._Entity,false)
-    ENTITY.PO_Enable(self._Entity,false)
+	ENTITY.PO_Enable(self._Entity,false)
 	self._flyWithAngle = true
 	self._flyloop = self:BindRandomSound("fly",nil,nil,nil,nil,true)
 	SND.SetVelocityScaleFactor(self._flyloop, 0.0)
@@ -46,10 +46,10 @@ function o:OnThrow(vx,vy,vz,angle,pitch)
 	else
 		Game:Print("targt not found")
 	end
-    self._objTakenToThrow._lastAngle = angle + math.pi
+	self._objTakenToThrow._lastAngle = angle + math.pi
 	self._objTakenToThrow._lastPitch = pitch
-	
-	
+
+
 	local bindOffset = Vector:New(0,0,0)
 	if self._bindedLight then
 		ENTITY.UnregisterAllChildren(self._Entity)		-- dodac typ
@@ -76,7 +76,7 @@ function o:CustomOnDeath()
 		end
 		self._flyloop = nil
 	end
-    ENTITY.UnregisterAllChildren(self._Entity, ETypes.ParticleFX)
+	ENTITY.UnregisterAllChildren(self._Entity, ETypes.ParticleFX)
 end
 
 function o:CustomOnDeathAfterRagdoll()
@@ -109,32 +109,32 @@ function o:OnTick(delta)
 		end
 	end
 
-    local aiParams = self.AiParams
-    if not self._splineMove then
+	local aiParams = self.AiParams
+	if not self._splineMove then
 		if debugMarek then
 			self._debugP = {}
 		end
-        if aiParams.walkAreaPingPong then
-            if self._upSpline then
-                self._Factor = 0.0
-                self._upSpline = false
-            else
-                self._Factor = 1.0
-                self._upSpline = true
-            end
-        else
-            self._Factor = 0.0
-        end
-        self._splineMove = true
-    else
-        if self._lastPosX then
-            local x,z = self.Pos.X,self.Pos.Z
-            x = (x - self._lastPosX)
-            z = (z - self._lastPosZ)
-            if debugMarek then
-	            self.DEBUG_P1 = self._lastPosX
-		        self.DEBUG_P2 = self.Pos.Y
-			    self.DEBUG_P3 = self._lastPosZ
+		if aiParams.walkAreaPingPong then
+			if self._upSpline then
+				self._Factor = 0.0
+				self._upSpline = false
+			else
+				self._Factor = 1.0
+				self._upSpline = true
+			end
+		else
+			self._Factor = 0.0
+		end
+		self._splineMove = true
+	else
+		if self._lastPosX then
+			local x,z = self.Pos.X,self.Pos.Z
+			x = (x - self._lastPosX)
+			z = (z - self._lastPosZ)
+			if debugMarek then
+				self.DEBUG_P1 = self._lastPosX
+				self.DEBUG_P2 = self.Pos.Y
+				self.DEBUG_P3 = self._lastPosZ
 
 				DEBUG1 = self.Pos.X
 				DEBUG2 = self.Pos.Y
@@ -143,27 +143,29 @@ function o:OnTick(delta)
 				DEBUG5 = self.Pos.Y
 				DEBUG6 = self.Pos.Z + z * 50
 			end
-            --if math.sqrt((x*x) + (z*z)) > 0.01 then
-                self:RotateToVector(self.Pos.X + x, 0, self.Pos.Z + z)
-            --end
-        end
-        self._lastPosX = self.Pos.X
-        self._lastPosZ = self.Pos.Z
+			--if math.sqrt((x*x) + (z*z)) > 0.01 then
+			self:RotateToVector(self.Pos.X + x, 0, self.Pos.Z + z)
+			--end
+		end
+		self._lastPosX = self.Pos.X
+		self._lastPosZ = self.Pos.Z
 
 		if debugMarek then
-         if not self._debugP then
-			self._debugP = {}
-		 end
-		 --table.insert(self._debugP, {self._lastPosX,self.Pos.Y,self._lastPosZ})
+			if not self._debugP then
+				self._debugP = {}
+			end
+			--table.insert(self._debugP, {self._lastPosX,self.Pos.Y,self._lastPosZ})
 		end
-		
-    end
-    
-	local p = NCubicPoint(self._CubicSpline,self._Factor)
-	ENTITY.SetPosition(self._Entity, p.X, p.Y, p.Z)
-	self.Pos.X = p.X
-	self.Pos.Y = p.Y
-	self.Pos.Z = p.Z
+
+	end
+
+	if self._CubicSpline then
+		local p = NCubicPoint(self._CubicSpline,self._Factor)
+		ENTITY.SetPosition(self._Entity, p.X, p.Y, p.Z)
+		self.Pos.X = p.X
+		self.Pos.Y = p.Y
+		self.Pos.Z = p.Z
+	end
 end
 
 
@@ -172,7 +174,7 @@ o._CustomAiStates = {}
 
 o._CustomAiStates.FNunFlyArea = {
 	name = "FNunFlyArea",
-    _lastTimeSound = 0,
+	_lastTimeSound = 0,
 }
 
 
@@ -193,16 +195,16 @@ end
 
 o._CustomAiStates.FNunThrow = {
 	name = "FNunThrow",
-    _lastTimeSound = 0,
+	_lastTimeSound = 0,
 	delayRandom = FRand(3,6),
 }
 
 function o._CustomAiStates.FNunThrow:OnInit(brain)
 	local actor = brain._Objactor
 	local aiParams = actor.AiParams
-	
+
 	actor:SetAnim(aiParams.throwAnim, false)
-    actor._disableHits = true
+	actor._disableHits = true
 	self.active = true
 end
 
@@ -212,7 +214,7 @@ function o._CustomAiStates.FNunThrow:OnUpdate(brain)
 	if not actor._isAnimating or actor.Animation ~= aiParams.throwAnim then
 		self.active = false
 		actor:SetAnim("fly", true)
-        actor._disableHits = false
+		actor._disableHits = false
 	end
 	brain._lastThrowTime = brain._currentTime
 end
@@ -223,15 +225,15 @@ function o._CustomAiStates.FNunThrow:OnRelease(brain)
 
 	self.delayRandom = FRand(0,aiParams.minDelayBetweenThrow)
 	self.active = false
-    actor._disableHits = nil
-    if actor._objTakenToThrow then
-        Game:Print(actor._Name.." ERROR: actor._objTakenToThrow still exists")
-    end
-    
-    
+	actor._disableHits = nil
+	if actor._objTakenToThrow then
+		Game:Print(actor._Name.." ERROR: actor._objTakenToThrow still exists")
+	end
+
+
 	if not actor._bindedLight then
-   		if actor.s_SubClass.bindFX then
-       		for i,v in actor.s_SubClass.bindFX do
+		if actor.s_SubClass.bindFX then
+			for i,v in actor.s_SubClass.bindFX do
 				actor:BindFX(v[1], v[2], v[3], v[4], v[5], v[6])
 			end
 		end
@@ -246,17 +248,17 @@ function o._CustomAiStates.FNunThrow:OnRelease(brain)
 			actor._bindedLight = obj
 		end
 	end
-	
+
 end
 
 function o._CustomAiStates.FNunThrow:Evaluate(brain)
 	if self.active then
 		return 0.8
 	else
-        if brain.r_closestEnemy then
-		    local actor = brain._Objactor
+		if brain.r_closestEnemy then
+			local actor = brain._Objactor
 			local aiParams = actor.AiParams
-            if brain._lastThrowTime + self.delayRandom + aiParams.minDelayBetweenThrow < brain._currentTime then
+			if brain._lastThrowTime + self.delayRandom + aiParams.minDelayBetweenThrow < brain._currentTime then
 				if aiParams.throwAmmo > 0 then
 					if brain._distToNearestEnemy < aiParams.throwRangeMax and brain._distToNearestEnemy > aiParams.throwRangeMin then
 						return 0.61
@@ -269,8 +271,8 @@ function o._CustomAiStates.FNunThrow:Evaluate(brain)
 end
 
 function o:OnToKill()
-    if not LEVEL_RELEASING then
-        self:PlaySound("disap")
-    end
+	if not LEVEL_RELEASING then
+		self:PlaySound("disap")
+	end
 	ENTITY.Release(self._flyloop)
 end

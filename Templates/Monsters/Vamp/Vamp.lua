@@ -196,7 +196,7 @@ end
 
 function Vamp._CustomAiStates.walkVamp:OnUpdate(brain)
 	local actor = brain._Objactor
-	if self.mode == 0 and not actor._isRotating then
+	if brain._walkArea and self.mode == 0 and not actor._isRotating then
 		local rnd = self.rnd
 		actor:WalkTo(brain._walkArea.Points[rnd].X, brain._walkArea.Points[rnd].Y, brain._walkArea.Points[rnd].Z, false)
 		self.timerWalk = math.random(200,400)

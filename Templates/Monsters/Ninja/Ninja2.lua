@@ -19,7 +19,7 @@ function Ninja2:Throw()
 		obj.Pos.Y = y
 		obj.Pos.Z = z
 
-		local v = Vector:New(Player._groundx - x, (Player._groundy + 1.7) - y, Player._groundz - z)
+		local v = Vector:New(self._AIBrain.Target._groundx - x, (self._AIBrain.Target._groundy + 1.7) - y, self._AIBrain.Target._groundz - z)
 		v:Normalize()
 		
 		local angleToPlayer = math.atan2(v.X, v.Z)
@@ -100,7 +100,7 @@ function AiStates.ninjaRoll:OnUpdate(brain)
 				actor._proc = nil
 			end--]]
 		else
-			actor:RotateToVector(Player._groundx, Player._groundy, Player._groundz)
+			actor:RotateToVector(brain.Target._groundx, brain.Target._groundy, brain.Target._groundz)
 		end
 	end
 	brain._lastRollTime = brain._currentTime

@@ -19,7 +19,7 @@ function Ninja1:Throw()
 		obj.Pos.Y = y
 		obj.Pos.Z = z
 
-		local v = Vector:New(Player._groundx - x, 0, Player._groundz - z)
+		local v = Vector:New(self._AIBrain.Target._groundx - x, 0, self._AIBrain.Target._groundz - z)
 		v:Normalize()
 		
 		local angleToPlayer = math.atan2(v.X, v.Z)
@@ -34,7 +34,7 @@ function Ninja1:Throw()
 
 		self:BindFX("fire")
 
-		local distToPlayer = Dist3D(x,0,z, Player._groundx, 0, Player._groundz)
+		local distToPlayer = Dist3D(x,0,z, self._AIBrain.Target._groundx, 0, self._AIBrain.Target._groundz)
 		v.X = v.X * distToPlayer
 		v.Y = v.Y * distToPlayer
 		v.Z = v.Z * distToPlayer
@@ -42,7 +42,7 @@ function Ninja1:Throw()
         obj.PosDest = {}
         obj.PosDest.X = v.X + x
         obj.PosDest.Z = v.Z + z
-		obj.PosDest.Y = Player._groundy + 1.7
+		obj.PosDest.Y = self._AIBrain.Target._groundy + 1.7
 		
 		obj.Rot:FromEuler( 0, -self.angle, 0)
 		
@@ -197,7 +197,7 @@ function o._CustomAiStates.ninjaTeleport:OnUpdate(brain)
 	local aiParams = actor.AiParams
 	self._lastTimeTeleport = brain._currentTime
 	if self.state < 3 then
-		actor:RotateToVector(Player._groundx, Player._groundy, Player._groundz)
+		actor:RotateToVector(self._AIBrain.Target._groundx, self._AIBrain.Target._groundy, self._AIBrain.Target._groundz)
 	end
     if self.state == 0 then
 		if not actor._isWalking then
@@ -263,7 +263,7 @@ function o._CustomAiStates.ninjaTeleport:OnUpdate(brain)
 				actor:Stop()
 				actor:RotateToVector(brain.r_closestEnemy._groundx, brain.r_closestEnemy._groundy, brain.r_closestEnemy._groundz)
 				
-				--Game:Print(actor._Name.." teleport anim "..(Dist3D(Player._groundx,Player._groundy,Player._groundz,actor._groundx,actor._groundy,actor._groundz)))
+				--Game:Print(actor._Name.." teleport anim "..(Dist3D(self._AIBrain.Target._groundx,self._AIBrain.Target._groundy,self._AIBrain.Target._groundz,actor._groundx,actor._groundy,actor._groundz)))
 				self.state = 3
 				return
 			end
@@ -276,13 +276,13 @@ function o._CustomAiStates.ninjaTeleport:OnUpdate(brain)
                     ENTITY.UnregisterAllChildren(actor._Entity, ETypes.ParticleFX)
                     actor:Stop()
                     actor:RotateToVector(brain.r_closestEnemy._groundx, brain.r_closestEnemy._groundy, brain.r_closestEnemy._groundz)
-                    --Game:Print(actor._Name.." teleport anim "..(Dist3D(Player._groundx,Player._groundy,Player._groundz,actor._groundx,actor._groundy,actor._groundz)))
+                    --Game:Print(actor._Name.." teleport anim "..(Dist3D(self._AIBrain.Target._groundx,self._AIBrain.Target._groundy,self._AIBrain.Target._groundz,actor._groundx,actor._groundy,actor._groundz)))
                     self.state = 3
                     return
                 end
             end
             self.active = false
-            --Game:Print(actor._Name.." teleport FAILED "..(Dist3D(Player._groundx,Player._groundy,Player._groundz,actor._groundx,actor._groundy,actor._groundz)))
+            --Game:Print(actor._Name.." teleport FAILED "..(Dist3D(self._AIBrain.Target._groundx,self._AIBrain.Target._groundy,self._AIBrain.Target._groundz,actor._groundx,actor._groundy,actor._groundz)))
             return
         end
 	end
@@ -323,7 +323,7 @@ function o._CustomAiStates.ninjaTeleport:Evaluate(brain)
         local actor = brain._Objactor
         local aiParams = actor.AiParams
 		if math.random(100) < 10 then
-            if self._lastTimeTeleport + aiParams.minimumTimeBetweenTeleport < brain._currentTime and actor._state ~= "ATTACKING" and Player._velocity < 1 then		-- dodac random do czasu
+            if self._lastTimeTeleport + aiParams.minimumTimeBetweenTeleport < brain._currentTime and actor._state ~= "ATTACKING" and brain.Target._velocity < 1 then		-- dodac random do czasu
         		local enemy = brain.r_closestEnemy
 				local v2 = Vector:New(math.sin(enemy.angle), 0, math.cos(enemy.angle))
        			v2:Normalize()

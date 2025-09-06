@@ -527,12 +527,12 @@ function o._CustomAiStates.throwStuff:Evaluate(brain)
 									jointI = MDL.GetJointIndex(v._Entity, aiParams.destJoint)
 								end
 								if vl < 2.0 and jointI >= 0 and not v.ObjOwner then
-									local b,d = WORLD.LineTraceFixedGeom(v.Pos.X,v.Pos.Y,v.Pos.Z, Player._groundx, Player._groundy + 1.7, Player._groundz)	-- moze nie co update?
+									local b,d = WORLD.LineTraceFixedGeom(v.Pos.X,v.Pos.Y,v.Pos.Z, self._AIBrain.Target._groundx, self._AIBrain.Target._groundy + 1.7, self._AIBrain.Target._groundz)	-- moze nie co update?
 									if not b then
 										--Game:Print("sees "..v._Name)
 										if not v.Model or MDL.GetJointIndex(v._Entity, aiParams.destJoint) >= 0 then
 											local x,y,z = ENTITY.GetPosition(v._Entity)
-											local b,d = WORLD.LineTraceFixedGeom(x,y,z, Player._groundx, Player._groundy + 1.7, Player._groundz)	-- moze nie co update?
+											local b,d = WORLD.LineTraceFixedGeom(x,y,z, self._AIBrain.Target._groundx, self._AIBrain.Target._groundy + 1.7, self._AIBrain.Target._groundz)	-- moze nie co update?
 											--Game:Print("#-2 "..v._Name)
 											if not b then
 	 											local v2 = Vector:New(math.sin(actor.angle), 0, math.cos(actor.angle))
@@ -541,7 +541,7 @@ function o._CustomAiStates.throwStuff:Evaluate(brain)
 												--self.destx = x - v2.X
 												--self.desty = y
 												--self.destz = z - v2.Z
-												local distToPlayer = Dist3D(x,y,z, Player._groundx,Player._groundy,Player._groundz)
+												local distToPlayer = Dist3D(x,y,z, self._AIBrain.Target._groundx,self._AIBrain.Target._groundy,self._AIBrain.Target._groundz)
 												local distToTarget = Dist3D(x,y,z, actor._groundx,actor._groundy,actor._groundz)
 												--local distToTargetBack = Dist3D(self.destx, self.desty, self.destz, actor._groundx,actor._groundy,actor._groundz)
 												--Game:Print("dist to target = "..dist..", dist to targetBack = "..distToTargetBack)
@@ -551,7 +551,7 @@ function o._CustomAiStates.throwStuff:Evaluate(brain)
 													local b = WORLD.LineTraceFixedGeom(x,y,z, x,y + 3.0,z)
 													if not b then
 														--Game:Print("#1 "..v._Name)
-														local b = WORLD.LineTraceFixedGeom(x,y + 3.0,z,Player._groundx,Player._groundy+1.7,Player._groundz)
+														local b = WORLD.LineTraceFixedGeom(x,y + 3.0,z,self._AIBrain.Target._groundx,self._AIBrain.Target._groundy+1.7,self._AIBrain.Target._groundz)
 														if not b and candidateDistance > distToTarget then
 															--Game:Print("#2 "..v._Name)
 															candidate = v
@@ -599,7 +599,7 @@ function o:CustomOnHit()
 					self._AIBrain._currentGoal = nil
 					self._disableHits = true
 					self:Stop()
-					self:RotateToVector(Player._groundx, Player._groundy, Player._groundz)
+					self:RotateToVector(self._AIBrain.Target._groundx, self._AIBrain.Target._groundy, self._AIBrain.Target._groundz)
 					--if self.Health > 1 then
 						--self.Health = 1
 					--end
@@ -670,7 +670,7 @@ function o:CustomUpdate()
 			end
 		end
 		if self._ABdo == 2 then
-            local dist = Dist3D(Player._groundx, Player._groundy, Player._groundz, self._groundx,self._groundy,self._groundz)
+            local dist = Dist3D(self._AIBrain.Target._groundx, self._AIBrain.Target._groundy, self._AIBrain.Target._groundz, self._groundx,self._groundy,self._groundz)
             if (not self._isAnimating or self.Animation ~= self.AiParams.ThrowAnim) or dist < 4 then
 				self:OnDamage(self.Health + 2, self)
                 local aiParams = self.AiParams

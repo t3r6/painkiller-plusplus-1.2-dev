@@ -10,10 +10,10 @@ end
 
 
 function Amputee_ceiling:CustomUpdate()
-	if self._DontCheckFloors then
-		local dist = Dist3D(self._groundx, self._groundy, self._groundz, Player._groundx,Player._groundy,Player._groundz)
+	if self._AIBrain.Target and self._DontCheckFloors then
+		local dist = Dist3D(self._groundx, self._groundy, self._groundz, self._AIBrain.Target._groundx,self._AIBrain.Target._groundy,self._AIBrain.Target._groundz)
 		if dist < 6 then		-- pozniej trace, zeby nie wykrywal pietro nizej
-			local dist2 = Dist3D(self._groundx, 0, self._groundz, Player._groundx,0,Player._groundz)
+			local dist2 = Dist3D(self._groundx, 0, self._groundz, self._AIBrain.Target._groundx,0,self._AIBrain.Target._groundz)
 			if dist2 < 2 then
 				--[[Game:Print(self._Name.." dist to player < 2")
 				self.CreatePO = true

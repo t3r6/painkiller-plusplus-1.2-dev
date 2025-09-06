@@ -38,9 +38,9 @@ function o:OnUpdate()
 	--WORLD.Explosion2(self.Pos.X,self.Pos.Y,self.Pos.Z, 1000, 10, self.ObjOwner._Entity, AttackTypes.Rocket, 100)
 	local dist = Dist2D(self.Pos.X,self.Pos.Z, PX, PZ)
 	if self._lastTimeDamage + 40 < Game.currentTime then
-		if dist < 5 and Player then
+		if dist < 5 and self.ObjOwner._AIBrain.Target then
 			self._lastTimeDamage = Game.currentTime
-			Player:OnDamage(self.damage, self.ObjOwner)
+			self.ObjOwner._AIBrain.Target:OnDamage(self.damage, self.ObjOwner)
 		end
 	end
 end

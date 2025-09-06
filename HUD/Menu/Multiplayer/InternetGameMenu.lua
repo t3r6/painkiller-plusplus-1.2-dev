@@ -5,8 +5,8 @@ InternetGameMenu =
 
 	firstTimeShowItems = 80,
 	menuWidth   = 880,
-	fontBig		= "timesbd",
-	fontSmall	= "timesbd",
+	fontBig		= Cfg.DefaultFont,
+	fontSmall	= Cfg.DefaultFont,
 
 	backAction = "PainMenu:ActivateScreen(MultiplayerMenu)",
 
@@ -111,7 +111,7 @@ InternetGameMenu =
 			action = "",
 --			fontBig = "default",
 --			fontBigSize = 0,
-			fontBig = "timesbd",
+			fontBig = Cfg.DefaultFont,
 			fontBigSize = 18,
 			disabledColor = R3D.RGB( 200, 0, 0 ),
 			type = MenuItemTypes.ServerList,

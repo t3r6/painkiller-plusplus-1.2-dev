@@ -58,10 +58,12 @@ end
 
 
 function BubbleV2:OnUpdate()
-	local dist = Dist3D(Player._groundx, Player._groundy + 1.7, Player._groundz, self.Pos.X, self.Pos.Y, self.Pos.Z)
+	if self.ObjOwner and self.ObjOwner._AIBrain and self.ObjOwner._AIBrain.Target then
+	local dist = Dist3D(self.ObjOwner._AIBrain.Target._groundx, self.ObjOwner._AIBrain.Target._groundy + 1.7, self.ObjOwner._AIBrain.Target._groundz, self.Pos.X, self.Pos.Y, self.Pos.Z)
 	if dist < self.DamageDist then
-		Player:OnDamage(self.Damage, self.ObjOwner)
+		self.ObjOwner._AIBrain.Target:OnDamage(self.Damage, self.ObjOwner)
 		self:OnDamage()
+	end
 	end
 	if self.Pos.Y < 63 then
 		self:OnDamage()

@@ -1,5 +1,5 @@
 function o:OnInitTemplate()
-    self:SetAIBrain()
+	self:SetAIBrain()
 end
 
 function o:OnCreateEntity()
@@ -8,13 +8,13 @@ function o:OnCreateEntity()
 end
 
 function o:OnThrow()
-    local brain = self._AIBrain
+	local brain = self._AIBrain
 	brain._lastHitTime = brain._currentTime
 	brain._lastMissedTime = brain._currentTime - 1
-    self._playSndCol = false
+	self._playSndCol = false
 end
 
 function o:OnAttack()
 	self._ataklFX = self:BindFX("atakl")
-    self._atakpFX = self:BindFX("atakp")
+	self._atakpFX = self:BindFX("atakp")
 end

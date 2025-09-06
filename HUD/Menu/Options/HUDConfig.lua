@@ -4,8 +4,8 @@ HUDConfig =
 	bgEndFrame   = { 180, 267, 291 },
 
 	fontBigSize = 36,
-	fontBig		= "timesbd",
-	fontSmall	= "timesbd",
+	fontBig		= Cfg.DefaultFont,
+	fontSmall	= Cfg.DefaultFont,
 
 	backAction = "PainMenu:ApplySettings(true); HUD.SetTransparency(Cfg.HUDTransparency); PainMenu:ActivateScreen(OptionsMenu)",
 	applyAction = "",

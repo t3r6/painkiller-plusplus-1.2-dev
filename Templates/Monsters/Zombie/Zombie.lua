@@ -85,7 +85,7 @@ function Zombie:OffWithHisHead(target,vx,vy,vz)
 
 		--target._proc = PMove:New(target, target.AiParams.moveSpeedWhileBerserk)
 		target._proc = Templates["PMove.CProcess"]:New(target, target.AiParams.moveSpeedWhileBerserk)
-		target._proc:SetDir(Vector:New(Player._groundx - x, 0, Player._groundz - z))
+		target._proc:SetDir(Vector:New(self._AIBrain.Target._groundx - x, 0, self._AIBrain.Target._groundz - z))
 		GObjects:Add(TempObjName(), target._proc)
 
 		if target.Health > 0 then

@@ -94,9 +94,9 @@ function BubbleV2_moving:OnUpdate()
 		self.__Pos.X = self._moveTarget1.Pos.X
 		self.__Pos.Y = self._moveTarget1.Pos.Y
 		self.__Pos.Z = self._moveTarget1.Pos.Z
-		local dist = Dist3D(Player._groundx, Player._groundy + 2, Player._groundz, self.Pos.X, self.Pos.Y, self.Pos.Z)
+		local dist = Dist3D(self.ObjOwner._AIBrain.Target._groundx, self.ObjOwner._AIBrain.Target._groundy + 2, self.ObjOwner._AIBrain.Target._groundz, self.Pos.X, self.Pos.Y, self.Pos.Z)
 		if dist < self.DamageDist then
-			Player:OnDamage(self.Damage, self.ObjOwner)
+			self.ObjOwner._AIBrain.Target:OnDamage(self.Damage, self.ObjOwner)
 			self:OnDamage(self.Health + 2,self)
 		end
 

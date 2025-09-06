@@ -73,7 +73,7 @@ end
 	local aiParams = self.AiParams
 	Player._soundSample = SOUND2D.Create(self.s_SubClass.Sounds.bzzz)
 	SOUND2D.SetLoopCount(Player._soundSample, 30)
-    local dist = Dist3D(Player._groundx, Player._groundy, Player._groundz, self._groundx, self._groundy, self._groundz)
+    local dist = Dist3D(self._AIBrain.Target._groundx, self._AIBrain.Target._groundy, self._AIBrain.Target._groundz, self._groundx, self._groundy, self._groundz)
 	if dist < aiParams.screamDistance then
 		Player._deaf = aiParams.PlayerDeafTime
 		Player._deafDownTo = aiParams.lowPass
@@ -116,7 +116,7 @@ function o._CustomAiStates.bansheeAttack:OnUpdate(brain)
 			if FRand(0.0, 1.0) < aiParams.screamFreq and self.mode ~= 1 and self.mode ~= 2 then
 				Game:Print("scream")
 				actor:Stop()
-				actor:RotateToVector(Player._groundx, Player._groundy, Player._groundz)
+				actor:RotateToVector(brain.Target._groundx, brain.Target._groundy, brain.Target._groundz)
 				actor:SetAnim("atak1", false)
 				actor._state = "ATTACKING"			
 				self.mode = 1
@@ -127,7 +127,7 @@ function o._CustomAiStates.bansheeAttack:OnUpdate(brain)
 				self.mode = 0
 			else
 				if brain._distToNearestEnemy < aiParams.attackRange then
-					actor:RotateToVector(Player._groundx, Player._groundy, Player._groundz)
+					actor:RotateToVector(brain.Target._groundx, brain.Target._groundy,brain.Target._groundz)
 					self.mode = 0
 				end
 			end
@@ -141,11 +141,11 @@ function o._CustomAiStates.bansheeAttack:OnUpdate(brain)
 				--Game._procBanshee = nil
 			else
 				if math.random(100) < 45 then
-					actor:RotateToVector(Player._groundx, Player._groundy, Player._groundz)
+					actor:RotateToVector(brain.Target._groundx, brain.Target._groundy, brain.Target._groundz)
 				end
 				if actor.Animation == "atak1" and actor._sndScream then
 					if actor:IsPlayingLastSound(actor._sndScream) then
-						local dist = Dist3D(Player._groundx, Player._groundy, Player._groundz, actor._groundx, actor._groundy, actor._groundz)
+						local dist = Dist3D(brain.Target._groundx, brain.Target._groundy, brain.Target._groundz, actor._groundx, actor._groundy, actor._groundz)
 						
 						if dist <= aiParams.screamDistanceMax then
 							if not Game._procBanshee then

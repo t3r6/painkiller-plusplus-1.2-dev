@@ -465,8 +465,8 @@ function o._CustomAiStates.ApocZombierunToPlayer:OnUpdate(brain)
 			actor:WalkTo(brain.r_closestEnemy._groundx, brain.r_closestEnemy._groundy, brain.r_closestEnemy._groundz)
 		end
 	end
-
-	local dist = Dist3D(actor._groundx, actor._groundy, actor._groundz, Player._groundx, Player._groundy, Player._groundz)
+	if not brain.Target then return end
+	local dist = Dist3D(actor._groundx, actor._groundy, actor._groundz, brain.Target._groundx, brain.Target._groundy, brain.Target._groundz)
 	if dist < aiParams.actionDistance + aiParams.actionDistanceBonusAtak1 then
 		local anim = actor._animType
 		if anim > 1 then
@@ -481,7 +481,7 @@ function o._CustomAiStates.ApocZombierunToPlayer:OnUpdate(brain)
 			actor._finishedWalkAnim = false
 			self._waitForAnim = true
 			actor.doNotUseWP = true
-			actor:RotateToVector(Player._groundx, Player._groundy, Player._groundz)
+			actor:RotateToVector(brain.Target._groundx, brain.Target._groundy, brain.Target._groundz)
 			actor.disableFreeze = true
 			actor._disableHits = true
 			actor:WalkForward(50)

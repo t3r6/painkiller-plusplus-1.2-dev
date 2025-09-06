@@ -20,7 +20,7 @@ function Zombie_2:Take()
 			Game.BodyCountTotal = Game.BodyCountTotal - 1
 			local obj = GObjects:Add(TempObjName(),CloneTemplate(brain.Objhostage2.BaseObj))
 			
-			local v = Vector:New(Player._groundx - self._groundx, Player._groundy - self._groundy, Player._groundz - self._groundz)
+			local v = Vector:New(self._AIBrain.Target._groundx - self._groundx, self._AIBrain.Target._groundy - self._groundy, self._AIBrain.Target._groundz - self._groundz)
 		    v:Normalize()
 
 			if self.reviveFXsrc then
@@ -46,9 +46,9 @@ function Zombie_2:Take()
 			obj.angle = self.angle
 			obj._angleDest = self._angleDest
 			obj:Apply()
-			obj._AIBrain._enemyLastSeenPoint.X = Player._groundx				-- hunt PLAYER
-			obj._AIBrain._enemyLastSeenPoint.Y = Player._groundy
-			obj._AIBrain._enemyLastSeenPoint.Z = Player._groundz
+			obj._AIBrain._enemyLastSeenPoint.X = self._AIBrain.Target._groundx				-- hunt PLAYER
+			obj._AIBrain._enemyLastSeenPoint.Y = self._AIBrain.Target._groundy
+			obj._AIBrain._enemyLastSeenPoint.Z = self._AIBrain.Target._groundz
 			obj._AIBrain._enemyLastSeenTime = obj._AIBrain._currentTime
 			obj:Synchronize()
 			if brain.Objhostage2._deathTimer then

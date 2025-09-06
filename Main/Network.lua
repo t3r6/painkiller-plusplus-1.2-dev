@@ -131,7 +131,8 @@ function Network:RegisterMethod(name,sendto,mode,args)
             --return
         end
     end
-    
+    Logfile:Write("REGISTERED : "..name)
+    --CONSOLE_AddMessage("REGISTERED : "..name)
     dostring("tmpfunc = "..name)    
     for i2,o2 in Network.SortedMethods do         
         if o2[2] == name then 
@@ -247,6 +248,8 @@ function GetNetEvent(msg,clientID)
     --Game:Print("* GetNetEvent: After Decompose")
     
 	--	local a1 = INP.GetTimeFromTimerReset()		-- ###Marek, test szybkosci dzialania funkcji
+		--CONSOLE_AddMessage(tostring(event[2]))
+		--if tostring(event[2]) == "Teleport.MovePlayer" and Player and args[2] ~= Player._Entity then return end
     event[6](nil,unpack(args))
 	--    local a2 = INP.GetTimeFromTimerReset()
 end

@@ -90,13 +90,13 @@ function HellAngel:CustomOnDeath(obj)
 		--
 		
 		function ghost:CustomUpdate()
-			local dist = Dist3D(Player._groundx, Player._groundy, Player._groundz, self._groundx, self._groundy, self._groundz)
+			local dist = Dist3D(self._AIBrain.Target._groundx, self._AIBrain.Target._groundy, self._AIBrain.Target._groundz, self._groundx, self._groundy, self._groundz)
 			local aiParams = self.AiParams
 			if (not self._isWalking or math.random(100) < 10) and dist > 0.1 then
-				self:WalkTo(Player._groundx, Player._groundy, Player._groundz, nil, nil, "walk_ghost")
+				self:WalkTo(self._AIBrain.Target._groundx, self._AIBrain.Target._groundy, self._AIBrain.Target._groundz, nil, nil, "walk_ghost")
 			end
 			if dist < 1.5 and FRand(0.0, 1.0) < aiParams.ghostDamageFreq then
-				Player:OnDamage(aiParams.ghostDamage, self)
+				self._AIBrain.Target:OnDamage(aiParams.ghostDamage, self)
 			end
 			if self.TimeToLive then
 				self.TimeToLive = self.TimeToLive - 1

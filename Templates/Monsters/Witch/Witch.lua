@@ -1,5 +1,5 @@
 function Witch:OnInitTemplate()
-    self:SetAIBrain()
+	self:SetAIBrain()
 	self._AIBrain._lastThrowTime = -100
 end
 
@@ -37,7 +37,7 @@ function Witch:CustomOnDeath()
 		end
 		self._flyloop = nil
 	end
-    ENTITY.UnregisterAllChildren(self._Entity, ETypes.ParticleFX)
+	ENTITY.UnregisterAllChildren(self._Entity, ETypes.ParticleFX)
 end
 
 function Witch:CustomOnDeathAfterRagdoll()
@@ -68,32 +68,32 @@ function Witch:OnTick(delta)
 		end
 	end
 
-    local aiParams = self.AiParams
-    if not self._splineMove then
+	local aiParams = self.AiParams
+	if not self._splineMove then
 		if debugMarek then
 			self._debugP = {}
 		end
-        if aiParams.walkAreaPingPong then
-            if self._upSpline then
-                self._Factor = 0.0
-                self._upSpline = false
-            else
-                self._Factor = 1.0
-                self._upSpline = true
-            end
-        else
-            self._Factor = 0.0
-        end
-        self._splineMove = true
-    else
-        if self._lastPosX then
-            local x,z = self.Pos.X,self.Pos.Z
-            x = (x - self._lastPosX)
-            z = (z - self._lastPosZ)
-            if debugMarek then
-	            self.DEBUG_P1 = self._lastPosX
-		        self.DEBUG_P2 = self.Pos.Y
-			    self.DEBUG_P3 = self._lastPosZ
+		if aiParams.walkAreaPingPong then
+			if self._upSpline then
+				self._Factor = 0.0
+				self._upSpline = false
+			else
+				self._Factor = 1.0
+				self._upSpline = true
+			end
+		else
+			self._Factor = 0.0
+		end
+		self._splineMove = true
+	else
+		if self._lastPosX then
+			local x,z = self.Pos.X,self.Pos.Z
+			x = (x - self._lastPosX)
+			z = (z - self._lastPosZ)
+			if debugMarek then
+				self.DEBUG_P1 = self._lastPosX
+				self.DEBUG_P2 = self.Pos.Y
+				self.DEBUG_P3 = self._lastPosZ
 
 				DEBUG1 = self.Pos.X
 				DEBUG2 = self.Pos.Y
@@ -102,27 +102,28 @@ function Witch:OnTick(delta)
 				DEBUG5 = self.Pos.Y
 				DEBUG6 = self.Pos.Z + z * 50
 			end
-            --if math.sqrt((x*x) + (z*z)) > 0.01 then
-                self:RotateToVector(self.Pos.X + x, 0, self.Pos.Z + z)
-            --end
-        end
-        self._lastPosX = self.Pos.X
-        self._lastPosZ = self.Pos.Z
+			--if math.sqrt((x*x) + (z*z)) > 0.01 then
+			self:RotateToVector(self.Pos.X + x, 0, self.Pos.Z + z)
+			--end
+		end
+		self._lastPosX = self.Pos.X
+		self._lastPosZ = self.Pos.Z
 
 		if debugMarek then
-         if not self._debugP then
-			self._debugP = {}
-		 end
-		 --table.insert(self._debugP, {self._lastPosX,self.Pos.Y,self._lastPosZ})
+			if not self._debugP then
+				self._debugP = {}
+			end
+			--table.insert(self._debugP, {self._lastPosX,self.Pos.Y,self._lastPosZ})
 		end
-		
-    end
-    
-	local p = NCubicPoint(self._CubicSpline,self._Factor)
-	ENTITY.SetPosition(self._Entity, p.X, p.Y, p.Z)
-	self.Pos.X = p.X
-	self.Pos.Y = p.Y
-	self.Pos.Z = p.Z
+
+	end
+	if self._CubicSpline then
+		local p = NCubicPoint(self._CubicSpline,self._Factor)
+		ENTITY.SetPosition(self._Entity, p.X, p.Y, p.Z)
+		self.Pos.X = p.X
+		self.Pos.Y = p.Y
+		self.Pos.Z = p.Z
+	end
 end
 
 
@@ -139,8 +140,8 @@ Witch._CustomAiStates.witchFlyArea = {
 --end
 
 function Witch._CustomAiStates.witchFlyArea:OnUpdate(brain)
---	local actor = brain._Objactor
---	local aiParams = actor.AiParams
+	--	local actor = brain._Objactor
+	--	local aiParams = actor.AiParams
 end
 
 --function Witch._CustomAiStates.witchFlyArea:OnRelease(brain)
@@ -157,7 +158,7 @@ end
 
 Witch._CustomAiStates.witchThrow = {
 	name = "witchThrow",
-    _lastTimeSound = 0,
+	_lastTimeSound = 0,
 	delayRandom = FRand(3,6),
 }
 
@@ -165,11 +166,11 @@ function Witch._CustomAiStates.witchThrow:OnInit(brain)
 	local actor = brain._Objactor
 	local aiParams = actor.AiParams
 	self.oldAnim = actor.Animation
-    if self.oldAnim == aiParams.throwAnim then
-        self.oldAnim = "idle"
-    end
+	if self.oldAnim == aiParams.throwAnim then
+		self.oldAnim = "idle"
+	end
 	actor:SetAnim(aiParams.throwAnim, false)
-    actor._disableHits = true
+	actor._disableHits = true
 	self.active = true
 end
 
@@ -189,20 +190,20 @@ function Witch._CustomAiStates.witchThrow:OnRelease(brain)
 
 	self.delayRandom = FRand(0,aiParams.minDelayBetweenThrow)
 	self.active = false
-    actor._disableHits = nil
-    if actor._objTakenToThrow then
-        Game:Print(actor._Name.." ERROR: actor._objTakenToThrow still exists")
-    end
+	actor._disableHits = nil
+	if actor._objTakenToThrow then
+		Game:Print(actor._Name.." ERROR: actor._objTakenToThrow still exists")
+	end
 end
 
 function Witch._CustomAiStates.witchThrow:Evaluate(brain)
 	if self.active then
 		return 0.8
 	else
-        if brain.r_closestEnemy then
-		    local actor = brain._Objactor
+		if brain.r_closestEnemy then
+			local actor = brain._Objactor
 			local aiParams = actor.AiParams
-            if brain._lastThrowTime + self.delayRandom + aiParams.minDelayBetweenThrow < brain._currentTime then
+			if brain._lastThrowTime + self.delayRandom + aiParams.minDelayBetweenThrow < brain._currentTime then
 				if aiParams.throwAmmo > 0 then
 					if brain._distToNearestEnemy < aiParams.throwRangeMax and brain._distToNearestEnemy > aiParams.throwRangeMin then
 						return 0.61

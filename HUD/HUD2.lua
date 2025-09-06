@@ -4,18 +4,18 @@ local w,h = R3D.ScreenSize()
 --==SHOWFPS
      if Cfg.FPS or (Cfg.ShowFPS and Game.GMode ~= GModes.SingleGame) then --CONFUSED which one is right? I think Cfg.ShowFPS?
         local fps = string.format("%d",R3D.GetFPS())
-        if Cfg.ShowFPSShadow then HUD.PrintXY(900*w/1024+Cfg.ShowFPSShadowLevel,10*h/768+Cfg.ShowFPSShadowLevel,fps,"Impact",0,0,0,26) end
-        if Cfg.ShowFPSShadow then HUD.PrintXY((900+50)*w/1024+2,10*h/768+2,"fps","Impact",0,0,0,26) end 
-        HUD.PrintXY(900*w/1024,10*h/768,fps,"Impact",255,255,255,26)
-        HUD.PrintXY((900+50)*w/1024,10*h/768,"fps","Impact",255,255,255,26)
+        if Cfg.ShowFPSShadow then HUD.PrintXY(900*w/1024+Cfg.ShowFPSShadowLevel,10*h/768+Cfg.ShowFPSShadowLevel,fps,Cfg.DefaultFont,0,0,0,26) end
+        if Cfg.ShowFPSShadow then HUD.PrintXY((900+50)*w/1024+2,10*h/768+2,"fps",Cfg.DefaultFont,0,0,0,26) end 
+        HUD.PrintXY(900*w/1024,10*h/768,fps,Cfg.DefaultFont,255,255,255,26)
+        HUD.PrintXY((900+50)*w/1024,10*h/768,"fps",Cfg.DefaultFont,255,255,255,26)
      end
      if(Player)then
 	      if (Cfg.ShowPing and Game.GMode ~= GModes.SingleGame) then --CONFUSED which one is right? I think Cfg.ShowFPS?
 	        local ping = string.format("ping: %d",tonumber(Game.PlayerStats[Player.ClientID].Ping))
-	        --if Cfg.ShowPingShadow then HUD.PrintXY((Cfg.ShowPingX)*w+Cfg.ShowPingShadowLevel,Cfg.ShowPingY*h+Cfg.ShowPingShadowLevel,"ping","Impact",0,0,0,26) end
-	        if Cfg.ShowPingShadow then HUD.PrintXY(Cfg.ShowPingX*w+2,Cfg.ShowPingY*h+2,tostring(ping),"Impact",0,0,0,26) end
-	        --HUD.PrintXY((Cfg.ShowPingX)*w,Cfg.ShowPingY*h,"ping","Impact",255,255,255,26)
-	        HUD.PrintXY(Cfg.ShowPingX*w,Cfg.ShowPingY*h,tostring(ping),"Impact",255,255,255,26)
+	        --if Cfg.ShowPingShadow then HUD.PrintXY((Cfg.ShowPingX)*w+Cfg.ShowPingShadowLevel,Cfg.ShowPingY*h+Cfg.ShowPingShadowLevel,"ping",Cfg.DefaultFont,0,0,0,26) end
+	        if Cfg.ShowPingShadow then HUD.PrintXY(Cfg.ShowPingX*w+2,Cfg.ShowPingY*h+2,tostring(ping),Cfg.DefaultFont,0,0,0,26) end
+	        --HUD.PrintXY((Cfg.ShowPingX)*w,Cfg.ShowPingY*h,"ping",Cfg.DefaultFont,255,255,255,26)
+	        HUD.PrintXY(Cfg.ShowPingX*w,Cfg.ShowPingY*h,tostring(ping),Cfg.DefaultFont,255,255,255,26)
 	     end
      end
 --==
@@ -43,11 +43,11 @@ function Hud:DrawTimer()
 		local time = string.format(m..":"..string.format("%02d",s))
 			if (Cfg.ShowTimer) and Game.GMode ~= GModes.SingleGame then
 				if red then
-					if Cfg.ShowTimerShadow then HUD.PrintXY(Cfg.ShowTimerX*w+Cfg.ShowTimerShadowLevel,Cfg.ShowTimerY*h+Cfg.ShowTimerShadowLevel,time,"Impact",0,0,0,timerfontsize) end
-					HUD.PrintXY(Cfg.ShowTimerX*w,Cfg.ShowTimerY*h,time,"Impact",230,0,0,timerfontsize)
+					if Cfg.ShowTimerShadow then HUD.PrintXY(Cfg.ShowTimerX*w+Cfg.ShowTimerShadowLevel,Cfg.ShowTimerY*h+Cfg.ShowTimerShadowLevel,time,Cfg.DefaultFont,0,0,0,timerfontsize) end
+					HUD.PrintXY(Cfg.ShowTimerX*w,Cfg.ShowTimerY*h,time,Cfg.DefaultFont,230,0,0,timerfontsize)
 				else
-					if Cfg.ShowTimerShadow then HUD.PrintXY(Cfg.ShowTimerX*w+2,Cfg.ShowTimerY*h+2,time,"Impact",0,0,0,timerfontsize) end
-					HUD.PrintXY(Cfg.ShowTimerX*w,Cfg.ShowTimerY*h,time,"Impact",255,255,255,timerfontsize)
+					if Cfg.ShowTimerShadow then HUD.PrintXY(Cfg.ShowTimerX*w+2,Cfg.ShowTimerY*h+2,time,Cfg.DefaultFont,0,0,0,timerfontsize) end
+					HUD.PrintXY(Cfg.ShowTimerX*w,Cfg.ShowTimerY*h,time,Cfg.DefaultFont,255,255,255,timerfontsize)
 				end
 			end
 	  	end
@@ -56,7 +56,7 @@ end
 function Hud:AmmoList()
     local w,h = R3D.ScreenSize()
 
-	local font ="Impact"
+	local font =Cfg.DefaultFont
 	local armor = Player.Armor
 	local sgammo = Player.Ammo.Shotgun
 	local iceammo = Player.Ammo.IceBullets
@@ -235,7 +235,7 @@ function Hud:CurrentWeaponBG()
 --=====================================================================================
 function Hud:FragMessage(fname)
     local w,h = R3D.ScreenSize()
-    local font ="Impact"
+    local font =Cfg.DefaultFont
     HUD.PrintXY(-1,400*h/768+2,"You killed: "..HUD.StripColorInfo(fname).."!",font,0,0,0,22)
     HUD.PrintXY(-1,400*h/768,"You killed: "..fname.."!",font,255,255,255,22)
 end
@@ -246,7 +246,7 @@ end
 --============================================================================
 function Hud:Simplehud()
 	local w,h = R3D.ScreenSize()
-	local font ="Impact"
+	local font =Cfg.DefaultFont
 	local armor = math.floor(Player.Armor)
 	local sgammo = Player.Ammo.Shotgun
 	local iceammo = Player.Ammo.IceBullets
@@ -433,7 +433,7 @@ end
 function Hud:DrawPlayerVsPlayer()
 	if MPCfg.GameState == GameStates.WarmUp or MPCfg.GameState == GameStates.Counting then
 		local w,h = R3D.ScreenSize()	
-		--HUD.PrintXY(11*w/1024+1.1,71*h/768+1.1,"Warm Up","Impact",160,160,160,28)
+		--HUD.PrintXY(11*w/1024+1.1,71*h/768+1.1,"Warm Up",Cfg.DefaultFont,160,160,160,28)
 		if MPCfg.GameMode == "Duel" then	
 			local p1name
 		    	local p2name
@@ -449,8 +449,8 @@ function Hud:DrawPlayerVsPlayer()
 		    	if not p1name then p1name = "" end
 		    	if not p2name then p2name = "" end
 		    	if(p1name~="" and p2name~="")then
-		    			HUD.PrintXY(-1,200*h/768+2,""..p1name.."  -versus-  "..p2name.."","Impact",0,0,0,32)
-		        	HUD.PrintXY(-1,200*h/768,""..p1name.."  -versus-  "..p2name.."","Impact",255,255,255,32)
+		    			HUD.PrintXY(-1,200*h/768+2,""..p1name.."  -versus-  "..p2name.."",Cfg.DefaultFont,0,0,0,32)
+		        	HUD.PrintXY(-1,200*h/768,""..p1name.."  -versus-  "..p2name.."",Cfg.DefaultFont,255,255,255,32)
 			end
 	    	end
 	end

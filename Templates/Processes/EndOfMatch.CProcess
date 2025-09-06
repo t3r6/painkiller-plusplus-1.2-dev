@@ -133,42 +133,42 @@ function EndOfMatch:Render(delta)
         if self.Mode == 0 or (Game:IsServer() and self.Mode ~= 2) then            
             if MPCfg.GameState ~= GameStates.Counting then
                 --Log("EndOfMatch:Render - 3\n")    
-                HUD.SetFont("impact",22)
+                HUD.SetFont(Cfg.DefaultFont,22)
                 --Log("EndOfMatch:Render - 4\n")    
                 local tw = HUD.GetTextWidth(TXT.MPStats.PressFire)
-                HUD.PrintXY(w/2-tw/2+1,h-29,TXT.MPStats.PressFire,"impact",15,15,15,22)
-                HUD.PrintXY(w/2-tw/2,h-30,TXT.MPStats.PressFire,"impact",225,65,68,22)
+                HUD.PrintXY(w/2-tw/2+1,h-29,TXT.MPStats.PressFire,Cfg.DefaultFont,15,15,15,22)
+                HUD.PrintXY(w/2-tw/2,h-30,TXT.MPStats.PressFire,Cfg.DefaultFont,225,65,68,22)
                 --Log("EndOfMatch:Render - 5\n")    
             end
         end
         if self.Mode == 1 then
             --Log("EndOfMatch:Render - 6\n")    
-			HUD.SetFont("impact",26)
+			HUD.SetFont(Cfg.DefaultFont,26)
             --Log("EndOfMatch:Render - 7\n")    
 			local tw = HUD.GetTextWidth(TXT.MPStats.FinalResults)
-			HUD.PrintXY(w/2-tw/2+1,31,TXT.MPStats.FinalResults..":","impact",15,15,15,26)
-            HUD.PrintXY(w/2-tw/2,30,TXT.MPStats.FinalResults..":","impact",225,25,25,26)
+			HUD.PrintXY(w/2-tw/2+1,31,TXT.MPStats.FinalResults..":",Cfg.DefaultFont,15,15,15,26)
+            HUD.PrintXY(w/2-tw/2,30,TXT.MPStats.FinalResults..":",Cfg.DefaultFont,225,25,25,26)
             --Log("EndOfMatch:Render - 8\n")    
         end
         if self.Mode == 2 then
-			HUD.SetFont("impact",22)
+			HUD.SetFont(Cfg.DefaultFont,22)
 			if MPGameRules[MPCfg.GameMode].StartState == GameStates.WarmUp then
                 --Log("EndOfMatch:Render - 9\n")    
 				local tw = HUD.GetTextWidth(TXT.MPStats.PressFireReady)
-				HUD.PrintXY(w/2-tw/2+1,h-49,TXT.MPStats.PressFireReady,"impact",15,15,15,22)
-				HUD.PrintXY(w/2-tw/2,h-50,TXT.MPStats.PressFireReady,"impact",225,65,68,22)
+				HUD.PrintXY(w/2-tw/2+1,h-49,TXT.MPStats.PressFireReady,Cfg.DefaultFont,15,15,15,22)
+				HUD.PrintXY(w/2-tw/2,h-50,TXT.MPStats.PressFireReady,Cfg.DefaultFont,225,65,68,22)
                 --Log("EndOfMatch:Render - 10\n")    
                 if MPCfg.GameMode ~= "People Can Fly" then
 					tw = HUD.GetTextWidth(TXT.MPStats.PressAltFireSwitch)
-					HUD.PrintXY(w/2-tw/2+1,h-29,TXT.MPStats.PressAltFireSwitch,"impact",15,15,15,22)
-					HUD.PrintXY(w/2-tw/2,h-30,TXT.MPStats.PressAltFireSwitch,"impact",225,65,68,22)
+					HUD.PrintXY(w/2-tw/2+1,h-29,TXT.MPStats.PressAltFireSwitch,Cfg.DefaultFont,15,15,15,22)
+					HUD.PrintXY(w/2-tw/2,h-30,TXT.MPStats.PressAltFireSwitch,Cfg.DefaultFont,225,65,68,22)
 				end
                 --Log("EndOfMatch:Render - 11\n")    
 			else
                 --Log("EndOfMatch:Render - 12\n")    
                 local tw = HUD.GetTextWidth(TXT.MPStats.PressFire)
-                HUD.PrintXY(w/2-tw/2+1,h-29,TXT.MPStats.PressFire,"impact",15,15,15,22)
-                HUD.PrintXY(w/2-tw/2,h-30,TXT.MPStats.PressFire,"impact",225,65,68,22)
+                HUD.PrintXY(w/2-tw/2+1,h-29,TXT.MPStats.PressFire,Cfg.DefaultFont,15,15,15,22)
+                HUD.PrintXY(w/2-tw/2,h-30,TXT.MPStats.PressFire,Cfg.DefaultFont,225,65,68,22)
                 --Log("EndOfMatch:Render - 13\n")    
 			end
 		end

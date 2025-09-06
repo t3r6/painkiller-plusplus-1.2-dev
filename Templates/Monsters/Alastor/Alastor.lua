@@ -7,7 +7,7 @@ end
 
 
 function Alastor:OnInitTemplate()
-    self:SetAIBrain()
+	self:SetAIBrain()
 end
 
 function Alastor:CustomDelete()
@@ -28,31 +28,10 @@ function Alastor:CustomUpdate()
 		Game.MegaBossHealth = self.Health
 	end
 	if self._flameFX then
-		if math.random(100) < 15 then		
-			self:CheckDamageFromFlame()
+		if math.random(100) < 15 then
+			self:CheckDamageFromFlame(brain)
 		end
 	end
---[[	if debugMarek then
-		if not self.moder then
-			self.moder = 0
-		end
-		if not self._isRotating and not self.x then
-			--Game:Print("actor.angle "..(self.angle * 180/math.pi))
-			--self.x = 1
-			if self.moder == 0 then
-				self:RotateWithAnim(45)
-			end
-			if self.moder == 1 then
-				self:RotateWithAnim(-45)
-			end
-			if self.moder == 2 then
-				self:RotateWithAnim(90)
-			end
-			if self.moder == 3 then
-				self:RotateWithAnim(-90)
-			end
-		end
-    end--]]
 end
 
 
@@ -61,7 +40,7 @@ function Alastor:OnCreateEntity()
 	--ENTITY.PO_SetCollisionGroup(self._Entity, ECollisionGroups.OnlyWithFixedSpecial)
 	self._disableHits = true
 	Game.MegaBossHealthMax = self.Health
-	Game.MegaBossHealth = self.Health	
+	Game.MegaBossHealth = self.Health
 	ENTITY.PO_EnableGravity(self._Entity,false)
 	ENTITY.PO_SetMovedByExplosions(self._Entity, false)
 	self._speedDamping = true
@@ -79,8 +58,8 @@ function Alastor:OnCreateEntity()
 		Game.showCompassArrow = false
 	end
 	self._delayExplTime = 3
-	
-    --self._HasMovingCurveRot = "ROOOT"
+
+	--self._HasMovingCurveRot = "ROOOT"
 	--self._HasMovingCurveX = true
 	self._moveWithAnimationDoNotUpdateAngle = true
 	DebugSpheres = {}
@@ -91,8 +70,8 @@ function Alastor:OnCreateEntity()
 		self.collisionsNumber = 0
 		--local count = 0
 		PHYSICS.ActiveMeshGroupSetActivationParams(1, true, self.StoneParams.collisionMinimumFrequency, self.StoneParams.collisionMinimumStrength,
-						self.StoneParams.miminalMassReportingCollision,self.StoneParams.maximalMassReportingCollision, self.StoneParams.amountReportingCollisions * 100,
-						self.StoneParams.timeToLive,self.StoneParams.timeToLiveRandomize)
+		self.StoneParams.miminalMassReportingCollision,self.StoneParams.maximalMassReportingCollision, self.StoneParams.amountReportingCollisions * 100,
+		self.StoneParams.timeToLive,self.StoneParams.timeToLiveRandomize)
 		--Game:Print("Enable collision to "..count.." meshes")
 		Lev.ObjBoss = self
 
@@ -106,19 +85,19 @@ function Alastor:OnCreateEntity()
 	end
 
 	--[[if debugMarek then		-- set phase 1 immid
-		ENTITY.PO_SetMonsterMovementConst(self._Entity, self.havokInfluenceInMonsterMovementOnGround, false)
-		self._speedDamping = nil
-		ENTITY.PO_EnableGravity(self._Entity,true)
-		self._phase = 1
-		self._floorNo = 4
-		--self:CreateMonks()
-		self.AiParams.towerRadius = self.AiParams.towerRadiusBottom
-		self.AiParams.towerRange = self.AiParams.towerRangeBottom
-		for i,v in self._monks do
-			ENTITY.EnableDraw(v._Entity,true)
-		end
-		self._randomizedParams.RotateSpeed = self.RotateSpeedGround
-	end--]]
+	ENTITY.PO_SetMonsterMovementConst(self._Entity, self.havokInfluenceInMonsterMovementOnGround, false)
+	self._speedDamping = nil
+	ENTITY.PO_EnableGravity(self._Entity,true)
+	self._phase = 1
+	self._floorNo = 4
+	--self:CreateMonks()
+	self.AiParams.towerRadius = self.AiParams.towerRadiusBottom
+	self.AiParams.towerRange = self.AiParams.towerRangeBottom
+	for i,v in self._monks do
+		ENTITY.EnableDraw(v._Entity,true)
+	end
+	self._randomizedParams.RotateSpeed = self.RotateSpeedGround
+end--]]
 
 end
 
@@ -127,7 +106,7 @@ function Alastor:OnApply()
 	self._flySound = self:BindSound("actor/alastor/alastor_fly-loop",16, 60, true)
 end
 
-function Alastor:CheckDamageFromFlame()
+function Alastor:CheckDamageFromFlame(brain)
 	-- dodac min. time between attacks
 	local idx  = MDL.GetJointIndex(self._Entity,"k_szyja")
 	local idx2  = MDL.GetJointIndex(self._Entity,"k_glowa")
@@ -135,13 +114,13 @@ function Alastor:CheckDamageFromFlame()
 	local x3,y3,z3 = MDL.TransformPointByJoint(self._Entity, idx2)
 	local v2 = Vector:New(x3 - x2, y3 - y2, z3 - z2)
 	v2:Normalize()
-	
+
 	-- spr. kilka sfer na drodze promienia, czy Player jest w zasiegu plomienia
 	local i = 5
 	if debugMarek then
 		DebugSpheres = {}
 	end
-	
+
 	local dist = 60
 	local size = 9
 	if self.Animation ~= "zieje02" and self.Animation ~= "zieje02a" then
@@ -159,14 +138,14 @@ function Alastor:CheckDamageFromFlame()
 		y3 = y3 + 1.0
 	end
 	--Game:Print("dist = "..dist.." size = "..size)
-	
-	
+
+
 	while i < dist do
 		local v3 = Clone(v2)
 		v3:MulByFloat(i)
 		i = i + size
 		local x,y,z = x3 + v3.X, y3 + v3.Y, z3 + v3.Z
-		
+
 		if debugMarek then
 			local a = {}
 			a.X = x
@@ -175,9 +154,9 @@ function Alastor:CheckDamageFromFlame()
 			a.Size = size
 			table.insert(DebugSpheres, a)
 		end
-		local dist = Dist3D(x,y,z, Player._groundx, Player._groundy + 1.5, Player._groundz)
+		local dist = Dist3D(x,y,z, brain.Target._groundx, brain.Target._groundy + 1.5, brain.Target._groundz)
 		if dist < size then
-			Player:OnDamage(self.flameDamage, self)
+			brain.Target:OnDamage(self.flameDamage, self)
 			break
 		end
 	end
@@ -192,7 +171,7 @@ function Alastor:CustomOnDamage(he,x,y,z,obj,damage,type,nx,ny,nz)
 		self._disableDemonic = true
 		Game.MegaBossHealth = nil
 		self._deathTimer = self.DeathTimer
-		GObjects:Add(TempObjName(),CloneTemplate("EndLevel.CProcess"))
+		if Game.GMode == GModes.SingleGame then GObjects:Add(TempObjName(),CloneTemplate("EndLevel.CProcess")) end
 		Game.MegaBossHealthMax = nil
 		Game:Print("ERROR: ALASTOR POZA LEVELEM")
 		return true
@@ -244,10 +223,10 @@ function Alastor:CustomOnDamage(he,x,y,z,obj,damage,type,nx,ny,nz)
 					end
 					Game.BodyCountTotal = Game.BodyCountTotal + 1
 					--AddItem("EndOfLevel.CItem",nil,Vector:New(0, 36, 0), true)
-					
+
 					self._disableDemonic = true
 					self._timerToDemon = 4
-					
+
 					return true
 				else
 					--Game:Print("Monks destroyed = "..monkNotDestroyed)
@@ -256,7 +235,7 @@ function Alastor:CustomOnDamage(he,x,y,z,obj,damage,type,nx,ny,nz)
 			--Game:Print("HEALTH < 0 : ABDO "..self._floorNo)
 			self._ABdo = 1
 		else
-			-- narazie 
+			-- narazie
 			if self.Health * 0.4 < self._HealthMax then
 				self._pissedOffRatio = 0.7
 			end
@@ -266,7 +245,7 @@ function Alastor:CustomOnDamage(he,x,y,z,obj,damage,type,nx,ny,nz)
 
 	return true
 end
- 
+
 
 
 -----------------
@@ -287,7 +266,7 @@ end
 function Alastor._CustomAiStates.idleAlastor:OnUpdate(brain)
 	local actor = brain._Objactor
 	local aiParams = actor.AiParams
-	
+
 	if self.lastAmbient + 1.0 < brain._currentTime and actor._phase == 0 then
 		local tabl = aiParams.actions
 		--Game:Print("losowanie check "..brain._currentTime)
@@ -342,10 +321,10 @@ function Alastor._CustomAiStates.attackFlyAlastor:OnInit(brain)
 	local actor = brain._Objactor
 	brain._submode = nil
 	self.mode = -1
-	
+
 	-- random pos
 	--if not self.angle then
-		self.angle = math.random(0,360)
+	self.angle = math.random(0,360)
 	--else
 	--	self.angle = self.angle + math.random(-60,60) + 180
 	--end
@@ -368,26 +347,26 @@ end
 
 function Alastor._CustomAiStates.attackFlyAlastor:OnUpdate(brain)
 	local actor = brain._Objactor
-	if self.mode == -1 then
+	if brain.Target and self.mode == -1 then
 		actor._groundx,actor._groundy,actor._groundz = ENTITY.PO_GetPawnFloorPos(actor._Entity)
-		actor:RotateToVector(Player._groundx, self.posClose, Player._groundz)
+		actor:RotateToVector(brain.Target._groundx, self.posClose, brain.Target._groundz)
 		self.mode = 0
 		return
 	end
 	if self.mode == 0 and not actor._isRotating then
 		--Game:Print("fly up")
 		--Game.freezeUpdate = true
-		local x,y,z = Player._groundx, self.posFar, Player._groundz
+		local x,y,z = brain.Target._groundx, self.posFar, brain.Target._groundz
 		actor:FlyForward(self.distFly2, nil, self.posFar - self.posVFar)		-- cel zawsze na ts wysokosci
 		self.mode = 1
 		return
 	end
-	
+
 	if self.mode == 1 and not actor._isWalking then
 		--Game.freezeUpdate = true
 		self.delay = FRand(actor.delayBetweenFlyAttacks,actor.delayBetweenFlyAttacks*1.5)
 		actor._groundx,actor._groundy,actor._groundz = ENTITY.PO_GetPawnFloorPos(actor._Entity)
-		local x,y,z = Player._groundx, self.posClose, Player._groundz
+		local x,y,z = brain.Target._groundx, self.posClose, brain.Target._groundz
 		actor:FlyTo(x,y,z)		-- cel zawsze na ts wysokosci
 		--actor:FlyForward(self.distFly, nil, self.posClose - self.posFar)		-- cel zawsze na ts wysokosci
 		self._targetX = x
@@ -396,8 +375,8 @@ function Alastor._CustomAiStates.attackFlyAlastor:OnUpdate(brain)
 		self.mode = 2
 		self._animSpeed = MDL.GetAnimTimeScale(actor._Entity, actor._CurAnimIndex)
 		--Game:Print("1 "..self._animSpeed)
-        self.speed = self._animSpeed
-        self._actorSpeed = actor._Speed
+		self.speed = self._animSpeed
+		self._actorSpeed = actor._Speed
 		return
 	end
 
@@ -422,9 +401,9 @@ function Alastor._CustomAiStates.attackFlyAlastor:OnUpdate(brain)
 			if dist < 45 and not self._sound then
 				self._sound = true
 				--if math.random(100) < 60 then
-					local j = MDL.GetJointIndex(actor._Entity, "k_szczeka")
-					local snd = actor:PlaySoundHitBinded({"alastor_attack1-attackvoice","alastor_onfly1"},40, 200, j)
-					SND.SetVelocityScaleFactor(snd, 0,0)
+				local j = MDL.GetJointIndex(actor._Entity, "k_szczeka")
+				local snd = actor:PlaySoundHitBinded({"alastor_attack1-attackvoice","alastor_onfly1"},40, 200, j)
+				SND.SetVelocityScaleFactor(snd, 0,0)
 				--end
 			end
 		end
@@ -456,7 +435,7 @@ function Alastor._CustomAiStates.attackFlyAlastor:OnUpdate(brain)
 			actor.DEBUGl2 = y
 			actor.DEBUGl3 = z + v.Z
 
-		
+
 			self.speed = self.speed - 0.035
 			actor._Speed = actor._Speed - 0.035
 			if self.speed < self._animSpeed then
@@ -507,14 +486,15 @@ Alastor._CustomAiStates.attackFlameAlastor = {		-- dodac spr. czy plajer nie wyp
 }
 
 function Alastor._CustomAiStates.attackFlameAlastor:OnInit(brain)
-	local dist = Dist3D(Player._groundx, 0, Player._groundz, 0,0,0)
+	if not brain.Target then return end
+	local dist = Dist3D(brain.Target._groundx, 0, brain.Target._groundz, 0,0,0)
 	self.PosClose = 220 + FRand(0.6, 1.2)
 	--Game:Print("attackFlame "..dist)
 	local actor = brain._Objactor
 	brain._submode = nil
 	self.mode = -1
 
-	local v = Vector:New(Player._groundx, 0, Player._groundz)
+	local v = Vector:New(brain.Target._groundx, 0, brain.Target._groundz)
 
 	local distPlayerFromCentre = v:Len()
 	if distPlayerFromCentre < 0.01 then
@@ -544,7 +524,7 @@ function Alastor._CustomAiStates.attackFlameAlastor:OnUpdate(brain)
 	local actor = brain._Objactor
 	if self.mode == -1 then
 		actor._groundx,actor._groundy,actor._groundz = ENTITY.PO_GetPawnFloorPos(actor._Entity)
-		actor:RotateToVector(Player._groundx, self.posClose, Player._groundz)
+		actor:RotateToVector(brain.Target._groundx, self.posClose, brain.Target._groundz)
 		self.mode = 0
 		return
 	end
@@ -557,7 +537,7 @@ function Alastor._CustomAiStates.attackFlameAlastor:OnUpdate(brain)
 		--Game.freezeUpdate = true
 		self.delay = 100
 		actor._groundx,actor._groundy,actor._groundz = ENTITY.PO_GetPawnFloorPos(actor._Entity)
-		local x,y,z = Player._groundx, self.posClose, Player._groundz
+		local x,y,z = brain.Target._groundx, self.posClose, brain.Target._groundz
 		x = 0
 		z = 0
 		local v = Clone(self.dest)
@@ -567,9 +547,9 @@ function Alastor._CustomAiStates.attackFlameAlastor:OnUpdate(brain)
 		self._targetY = y
 		self._targetZ = z
 		self.mode = 2
-        self.speed = self._animSpeed
-        self._actorSpeed = actor._Speed
-        --MDL.SetAnimTimeScale(actor._Entity, actor._CurAnimIndex, self.speed * 1.6)
+		self.speed = self._animSpeed
+		self._actorSpeed = actor._Speed
+		--MDL.SetAnimTimeScale(actor._Entity, actor._CurAnimIndex, self.speed * 1.6)
 		return
 	end
 
@@ -580,15 +560,15 @@ function Alastor._CustomAiStates.attackFlameAlastor:OnUpdate(brain)
 					actor:PlaySound({"alastor_attack2-attack"},40,200,"k_szczeka")
 					actor:StartFlame()
 				else
-					if math.random(100) < 15 then		
+					if math.random(100) < 15 then
 						--actor:CheckDamageFromFlame()
-						actor:RotateToVector(Player._groundx,Player._groundy,Player._groundz)
+						actor:RotateToVector(brain.Target._groundx,brain.Target._groundy,brain.Target._groundz)
 					end
 				end
-				
+
 				-- fade anim to 1.0
 				--MDL.SetAnimTimeScale(actor._Entity, actor._CurAnimIndex, self.speed )
-				
+
 				self.delay = self.delay - 1
 				if self.delay < 0 then
 					self.delay = nil
@@ -605,7 +585,7 @@ function Alastor._CustomAiStates.attackFlameAlastor:OnUpdate(brain)
 				actor:FlyTo(v.X,self.posFar,v.Z,false,"fly_up")
 				--MDL.SetAnimTimeScale(actor._Entity, actor._CurAnimIndex, self.speed * 0.6)
 			end
-		end		
+		end
 	end
 
 	if self.mode == 3 then
@@ -617,7 +597,7 @@ function Alastor._CustomAiStates.attackFlameAlastor:OnUpdate(brain)
 		end
 		return
 	end
-		
+
 	if self.mode == 4 then
 		if not actor._isWalking then
 			if self.delay then
@@ -654,8 +634,8 @@ Alastor._CustomAiStates.ABAlastor = {
 
 function Alastor._CustomAiStates.ABAlastor:OnInit(brain)
 	local actor = brain._Objactor
-    local aiParams = actor.AiParams
-    actor:Stop()
+	local aiParams = actor.AiParams
+	actor:Stop()
 	if actor._phase == 0 then
 		ENTITY.Release(actor._flySound)
 		actor._flySound = nil
@@ -667,9 +647,9 @@ function Alastor._CustomAiStates.ABAlastor:OnInit(brain)
 		actor._selfrotate = true
 		self.mode = 0
 		actor:SetAnim("spada", true)
-		
+
 		actor._randomizedParams.RotateSpeed = actor.RotateSpeedGround
-		
+
 		self.b1 = actor:BindFX(actor.fallingFX, 1.0, "wing_l_z1_3")
 		self.b2 = actor:BindFX(actor.fallingFX, 1.0, "wing_l_z_3")
 		self.b3 = actor:BindFX(actor.fallingFX, 1.0, "wing_p_z1_2")
@@ -695,7 +675,7 @@ end
 
 function Alastor._CustomAiStates.ABAlastor:OnUpdate(brain)
 	local actor = brain._Objactor
-    local aiParams = actor.AiParams
+	local aiParams = actor.AiParams
 	--Game:Print("actor._groundy = "..actor._groundy.." "..brain._velocity)
 	if actor._phase == 0 then
 		if self.mode == 0 then
@@ -704,12 +684,12 @@ function Alastor._CustomAiStates.ABAlastor:OnUpdate(brain)
 				self._sound = true
 				actor:BindSound("actor/giant/meteor-fall3",100,400,false)
 			end
-			
+
 			if actor._groundy < 190 then
 				actor._selfrotate = false
 				self.mode = 1
 				--Game:Print("KOLIZJA! at vel: "..brain._velocityy)
-				
+
 				actor:ExplodePhase()
 
 				ENTITY.PO_SetMonsterMovementConst(actor._Entity, self.havokInfluenceInMonsterMovementOnGround, true)
@@ -730,7 +710,7 @@ function Alastor._CustomAiStates.ABAlastor:OnUpdate(brain)
 		if self.mode == 1 then
 			if self.delay then
 				self.delay = self.delay - 1
-				
+
 				if self.delay == 3 then
 					local fx = actor.resurectFX
 					if fx then
@@ -763,7 +743,7 @@ function Alastor._CustomAiStates.ABAlastor:OnUpdate(brain)
 					actor.Pos.Z = z
 					actor:ForceAnim("idle2",true)
 					--ENTITY.PO_EnableGravity(actor._Entity,true)
-				end				
+				end
 				Game.MegaBossHealthMax = actor.HealthOnGround
 				actor._HealthMax = actor.HealthOnGround
 				actor.Health = actor.HealthOnGround
@@ -771,14 +751,14 @@ function Alastor._CustomAiStates.ABAlastor:OnUpdate(brain)
 				PARTICLE.Die(self.b2)
 				PARTICLE.Die(self.b3)
 				PARTICLE.Die(self.b4)
-				
+
 				actor:ExplodePhase2()
 
 				actor._ABdo = nil
 				self.mode = 2
 				--Game:Print("ozywianie")
-				
-			    SOUND.StreamPlay(1) -- od poczatku
+
+				SOUND.StreamPlay(1) -- od poczatku
 				AddObject(Templates["PMusicFade.CProcess"]:New(1,SOUND.StreamGetVolume(1),Cfg.MusicVolume,0.1))
 				AddObject(Templates["PMusicFade.CProcess"]:New(0,SOUND.StreamGetVolume(0),0,0.1,"SOUND.StreamPause(0);Lev._fade=false"))
 			end
@@ -812,10 +792,10 @@ function Alastor._CustomAiStates.ABAlastor:OnUpdate(brain)
 				actor:SetAnim("charge",false)
 				local fx = actor.chargeFX
 				if fx then
-                    actor._fxcharge = {}
-                    for i,v in fx.joints do
-                        table.insert(actor._fxcharge,actor:BindFX(fx.name, fx.scale, v))
-                    end
+					actor._fxcharge = {}
+					for i,v in fx.joints do
+						table.insert(actor._fxcharge,actor:BindFX(fx.name, fx.scale, v))
+					end
 				end
 				actor._soundSampleCharge = SOUND2D.Create("actor/alastor/alastor-chargingfigures-stereo-loop")
 				SOUND2D.SetLoopCount(actor._soundSampleCharge, 0)
@@ -843,19 +823,19 @@ function Alastor._CustomAiStates.ABAlastor:OnUpdate(brain)
 			--	self.mode = 0
 			--	Game:Print("ABdo = false")
 			--else
-				if not self._fallen then
-					local b,d,x,y,z = WORLD.LineTraceFixedGeom(actor._groundx, actor._groundy + 0.5, actor._groundz, actor._groundx, actor._groundy - 2.5, actor._groundz)
-					if x then
-						actor:FootFX('s_l_kostka')
-						actor:FootFX('s_p_kostka')
-						actor:PlaySound({'alastor_attacks-naskok'}, 40, 200)
-						Game._EarthQuakeProc:Add(Player._groundx,Player._groundy,Player._groundz, actor.StompTimeOut, actor.StompRange, actor.CameraMov, actor.CameraRot, 1.0)
-						self._fallen = true
-						actor.Health = actor._HealthMax
-						actor._ABdo = nil
-						self.mode = 0
-					end
-				end		
+			if not self._fallen then
+				local b,d,x,y,z = WORLD.LineTraceFixedGeom(actor._groundx, actor._groundy + 0.5, actor._groundz, actor._groundx, actor._groundy - 2.5, actor._groundz)
+				if x then
+					actor:FootFX('s_l_kostka')
+					actor:FootFX('s_p_kostka')
+					actor:PlaySound({'alastor_attacks-naskok'}, 40, 200)
+					Game._EarthQuakeProc:Add(brain.Target._groundx,brain.Target._groundy,brain.Target._groundz, actor.StompTimeOut, actor.StompRange, actor.CameraMov, actor.CameraRot, 1.0)
+					self._fallen = true
+					actor.Health = actor._HealthMax
+					actor._ABdo = nil
+					self.mode = 0
+				end
+			end
 			--end
 		end
 		if self.mode == 4 then
@@ -865,11 +845,11 @@ function Alastor._CustomAiStates.ABAlastor:OnUpdate(brain)
 					SOUND2D.Forget(actor._soundSampleCharge)
 					actor._soundSampleCharge = nil
 				end
-                if actor._fxcharge then
-                    for i,v in actor._fxcharge do
-                        PARTICLE.Die(v)
-                    end
-                end
+				if actor._fxcharge then
+					for i,v in actor._fxcharge do
+						PARTICLE.Die(v)
+					end
+				end
 
 				for i,v in actor._monks do
 					if v.Health > 0 then
@@ -884,7 +864,7 @@ function Alastor._CustomAiStates.ABAlastor:OnUpdate(brain)
 				self.mode = 0
 				--Game:Print("ABdo = false")
 			else
-                local monkNotDestroyed = 0
+				local monkNotDestroyed = 0
 				for i,v in actor._monks do
 					if v.Health > 0 then
 						monkNotDestroyed = monkNotDestroyed + 1
@@ -930,14 +910,14 @@ end
 -------------
 function Alastor:OnTick(delta)
 
---- cheat ---
-    if not IsFinalBuild() then
-        if INP.Key(Keys.PgUp) == 1 then 
-            self:OnDamage(1500, Player,nil,nil,nil,nil,AttackTypes.Rocket,nil,nil,0)
-            Game:Print("DAMAGE alastor")
-        end
+	--- cheat ---
+	if not IsFinalBuild() then
+		if INP.Key(Keys.PgUp) == 1 then
+			self:OnDamage(1500, brain.Target,nil,nil,nil,nil,AttackTypes.Rocket,nil,nil,0)
+			Game:Print("DAMAGE alastor")
+		end
 	end
--------------
+	-------------
 
 	if self._flameFX then
 		local idx  = MDL.GetJointIndex(self._Entity,"k_szyja")
@@ -952,10 +932,10 @@ function Alastor:OnTick(delta)
 		--q.W, q.X, q.Y, q.Z = LookAtToQuat(x2,y2,z2, x3,y3,z3, 0,0,1)
 
 		q:ToEntity(self._flameFX)
-		ENTITY.SetPosition(self._flameFX,x3,y3,z3) 
+		ENTITY.SetPosition(self._flameFX,x3,y3,z3)
 	end
-	
-	if self._isWalking or self._moveWithAnimation then	
+
+	if self._isWalking or self._moveWithAnimation then
 		self._delayExplTime = self._delayExplTime - 1
 		if self._delayExplTime < 0 then
 			if self._flying then
@@ -982,7 +962,7 @@ function Alastor:OnTick(delta)
 			end
 		end
 	end
-	
+
 	if self._selfrotate then
 		self.angle = self.angle + self.fallingRotateSpeed * delta
 		self._angleDest = self.angle
@@ -994,53 +974,53 @@ end
 
 -----------------------------
 function Alastor:ExplodePhase2()
-    local actor = self
-    local aiParams = self.AiParams
+	local actor = self
+	local aiParams = self.AiParams
 	if self._floorNo == 2 then
 		PHYSICS.ActiveMeshGroupEnable(5, true)		-- 3 korona
 		PHYSICS.ActiveMeshGroupSetActivationParams(5, true, self.StoneParams.collisionMinimumFrequency, self.StoneParams.collisionMinimumStrength,
-						self.StoneParams.miminalMassReportingCollision,
-						self.StoneParams.maximalMassReportingCollision, self.StoneParams.amountReportingCollisions * 100,
-						self.StoneParams.timeToLive,self.StoneParams.timeToLiveRandomize)
-						
+		self.StoneParams.miminalMassReportingCollision,
+		self.StoneParams.maximalMassReportingCollision, self.StoneParams.amountReportingCollisions * 100,
+		self.StoneParams.timeToLive,self.StoneParams.timeToLiveRandomize)
+
 	end
 	if self._floorNo == 3 then
 		PHYSICS.ActiveMeshGroupEnable(9, true)
 		PHYSICS.ActiveMeshGroupEnable(18, true)		-- 4 korona
 		PHYSICS.ActiveMeshGroupSetActivationParams(9, true, self.StoneParams.collisionMinimumFrequency, self.StoneParams.collisionMinimumStrength,
-						self.StoneParams.miminalMassReportingCollision,
-						self.StoneParams.maximalMassReportingCollision, self.StoneParams.amountReportingCollisions * 100,
-						self.StoneParams.timeToLive,self.StoneParams.timeToLiveRandomize)
+		self.StoneParams.miminalMassReportingCollision,
+		self.StoneParams.maximalMassReportingCollision, self.StoneParams.amountReportingCollisions * 100,
+		self.StoneParams.timeToLive,self.StoneParams.timeToLiveRandomize)
 		PHYSICS.ActiveMeshGroupSetActivationParams(18, true, self.StoneParams.collisionMinimumFrequency, self.StoneParams.collisionMinimumStrength,
-						self.StoneParams.miminalMassReportingCollision,
-						self.StoneParams.maximalMassReportingCollision, self.StoneParams.amountReportingCollisions * 100,
-						self.StoneParams.timeToLive,self.StoneParams.timeToLiveRandomize)
+		self.StoneParams.miminalMassReportingCollision,
+		self.StoneParams.maximalMassReportingCollision, self.StoneParams.amountReportingCollisions * 100,
+		self.StoneParams.timeToLive,self.StoneParams.timeToLiveRandomize)
 	end
 	if self._floorNo == 4 then
 		self.AiParams.towerRadius = self.AiParams.towerRadiusBottom
 		self.AiParams.towerRange = self.AiParams.towerRangeBottom
 		PHYSICS.ActiveMeshGroupEnable(8, true)
 		PHYSICS.ActiveMeshGroupSetActivationParams(8, true, self.StoneParams.collisionMinimumFrequency, self.StoneParams.collisionMinimumStrength,
-						self.StoneParams.miminalMassReportingCollision,
-						self.StoneParams.maximalMassReportingCollision, self.StoneParams.amountReportingCollisions * 100,
-						self.StoneParams.timeToLive,self.StoneParams.timeToLiveRandomize)
+		self.StoneParams.miminalMassReportingCollision,
+		self.StoneParams.maximalMassReportingCollision, self.StoneParams.amountReportingCollisions * 100,
+		self.StoneParams.timeToLive,self.StoneParams.timeToLiveRandomize)
 
 		WORLD.SetCollisionGroupMeshGroup(12, ECollisionGroups.Fixed)
 	end
 end
 
 function Alastor:ExplodePhase()
-    local actor = self
-    local aiParams = self.AiParams
-	Game._EarthQuakeProc:Add(Player._groundx,Player._groundy,Player._groundz, self.StompTimeOut, self.StompRange, self.CameraMov, self.CameraRot, 1.0)
+	local actor = self
+	local aiParams = self.AiParams
+	Game._EarthQuakeProc:Add(self._AIBrain.Target._groundx,self._AIBrain.Target._groundy,self._AIBrain.Target._groundz, self.StompTimeOut, self.StompRange, self.CameraMov, self.CameraRot, 1.0)
 	PlaySound2D("actor/giant/giant_hit-ground")
 	if self._floorNo == 1 then
 		PHYSICS.ActiveMeshGroupSetActivationParams(2, true, self.StoneParams.collisionMinimumFrequency, self.StoneParams.collisionMinimumStrength,
-			self.StoneParams.miminalMassReportingCollision,	1000000.0, self.StoneParams.amountReportingCollisions * 100)
-	
+		self.StoneParams.miminalMassReportingCollision,	1000000.0, self.StoneParams.amountReportingCollisions * 100)
+
 		PHYSICS.ActiveMeshGroupEnable(2, true)		-- 2 podloga
-         PHYSICS.ActiveMeshGroupEnable(14, true)    -- ?
-		WORLD.EnableDrawMeshGroup(5, true)			-- 3 korona 
+		PHYSICS.ActiveMeshGroupEnable(14, true)    -- ?
+		WORLD.EnableDrawMeshGroup(5, true)			-- 3 korona
 		WORLD.EnableDrawMeshGroup(6, true)			-- 3 podloga
 		WORLD.EnableDrawMeshGroup(16, true)			-- 3 podloga
 		PHYSICS.ActiveMeshGroupStaticMeshEnable(5, true)
@@ -1065,94 +1045,94 @@ function Alastor:ExplodePhase()
 		WORLD.Explosion2(self._groundx,200,self._groundz, aiParams.Explosion.ExplosionStrength,aiParams.Explosion.ExplosionRange,nil,AttackTypes.Rocket,aiParams.Explosion.Damage)
 
 		--[[for i=1,4 do
-			local angle = FRand(0, 6.28)	
-			local dist = math.random(30, 40)
-			local x = math.sin(angle) + math.cos(angle)
-			local z = math.cos(angle) - math.sin(angle)
-			x = x * dist
-			y = 180
-			z = z * dist
-			WORLD.Explosion2(x,y,z, aiParams.Explosion.ExplosionStrength,16,nil,AttackTypes.Rocket,aiParams.Explosion.Damage)		
-		end	--]]	
-		
-		WORLD.SetTimeToDeleteMeshGroup(14, self.WallsTimeToDelete, self.WallsTimeToDeleteRandomize, true)	-- 1 korona
-		WORLD.SetTimeToDeleteMeshGroup(1,self.CoronasTimeToDelete, self.CoronasTimeToDeleteRandomize, true)	-- 1 boczna
-		WORLD.SetTimeToDeleteMeshGroup(2, self.FloorsTimeToDelete, self.FloorsTimeToDeleteRandomize, false)	-- 2 podloga
+		local angle = FRand(0, 6.28)
+		local dist = math.random(30, 40)
+		local x = math.sin(angle) + math.cos(angle)
+		local z = math.cos(angle) - math.sin(angle)
+		x = x * dist
+		y = 180
+		z = z * dist
+		WORLD.Explosion2(x,y,z, aiParams.Explosion.ExplosionStrength,16,nil,AttackTypes.Rocket,aiParams.Explosion.Damage)
+	end	--]]
 
+	WORLD.SetTimeToDeleteMeshGroup(14, self.WallsTimeToDelete, self.WallsTimeToDeleteRandomize, true)	-- 1 korona
+	WORLD.SetTimeToDeleteMeshGroup(1,self.CoronasTimeToDelete, self.CoronasTimeToDeleteRandomize, true)	-- 1 boczna
+	WORLD.SetTimeToDeleteMeshGroup(2, self.FloorsTimeToDelete, self.FloorsTimeToDeleteRandomize, false)	-- 2 podloga
+
+end
+
+if self._floorNo == 2 then
+	PHYSICS.ActiveMeshGroupSetActivationParams(6, true, self.StoneParams.collisionMinimumFrequency, self.StoneParams.collisionMinimumStrength,
+	self.StoneParams.miminalMassReportingCollision,	1000000.0, self.StoneParams.amountReportingCollisions * 100)
+
+	PHYSICS.ActiveMeshGroupEnable(6, true)		-- 3 podloga
+	WORLD.EnableDrawMeshGroup(9, true)
+	WORLD.EnableDrawMeshGroup(10, true)			-- ost. podloga
+	WORLD.EnableDrawMeshGroup(16, true)
+	WORLD.EnableDrawMeshGroup(18, true)			-- 4 korona
+	--WORLD.EnableDrawMeshGroup(11, true)
+
+	PHYSICS.ActiveMeshGroupStaticMeshEnable(9, true)
+	PHYSICS.ActiveMeshGroupStaticMeshEnable(10, true)
+	PHYSICS.ActiveMeshGroupStaticMeshEnable(16, true)
+	PHYSICS.ActiveMeshGroupStaticMeshEnable(18, true)
+	--PHYSICS.ActiveMeshGroupStaticMeshEnable(11, true)
+
+	if self.floorsCollisionGroup then
+		WORLD.SetCollisionGroupMeshGroup(6, self.floorsCollisionGroup)
+		WORLD.SetCollisionGroupMeshGroup(5, self.floorsCollisionGroup)
+		WORLD.SetCollisionGroupMeshGroup(16, self.floorsCollisionGroup)
+	end
+	if self.nextFloorCollisionGroup then
+		WORLD.SetCollisionGroupMeshGroup(10, self.nextFloorCollisionGroup)
 	end
 
-	if self._floorNo == 2 then
-		PHYSICS.ActiveMeshGroupSetActivationParams(6, true, self.StoneParams.collisionMinimumFrequency, self.StoneParams.collisionMinimumStrength,
-			self.StoneParams.miminalMassReportingCollision,	1000000.0, self.StoneParams.amountReportingCollisions * 100)
+	WORLD.Explosion2(0,160,0, aiParams.Explosion.ExplosionStrength,aiParams.Explosion.ExplosionRange,nil,AttackTypes.Rocket,aiParams.Explosion.Damage)
 
-		PHYSICS.ActiveMeshGroupEnable(6, true)		-- 3 podloga
-		WORLD.EnableDrawMeshGroup(9, true)
-		WORLD.EnableDrawMeshGroup(10, true)			-- ost. podloga
-		WORLD.EnableDrawMeshGroup(16, true)
-		WORLD.EnableDrawMeshGroup(18, true)			-- 4 korona
-		--WORLD.EnableDrawMeshGroup(11, true)
+	WORLD.SetTimeToDeleteMeshGroup(16, self.WallsTimeToDelete, self.WallsTimeToDeleteRandomize, true)
+	WORLD.SetTimeToDeleteMeshGroup(5,self.CoronasTimeToDelete, self.CoronasTimeToDeleteRandomize, true)
+	WORLD.SetTimeToDeleteMeshGroup(6, self.FloorsTimeToDelete, self.FloorsTimeToDeleteRandomize, false)-- 3 podloga
+end
 
-		PHYSICS.ActiveMeshGroupStaticMeshEnable(9, true)
-		PHYSICS.ActiveMeshGroupStaticMeshEnable(10, true)
-		PHYSICS.ActiveMeshGroupStaticMeshEnable(16, true)
-		PHYSICS.ActiveMeshGroupStaticMeshEnable(18, true)
-		--PHYSICS.ActiveMeshGroupStaticMeshEnable(11, true)
-		
-		if self.floorsCollisionGroup then
-			WORLD.SetCollisionGroupMeshGroup(6, self.floorsCollisionGroup)
-			WORLD.SetCollisionGroupMeshGroup(5, self.floorsCollisionGroup)
-			WORLD.SetCollisionGroupMeshGroup(16, self.floorsCollisionGroup)
-		end
-		if self.nextFloorCollisionGroup then
-			WORLD.SetCollisionGroupMeshGroup(10, self.nextFloorCollisionGroup)
-		end
-		
-		WORLD.Explosion2(0,160,0, aiParams.Explosion.ExplosionStrength,aiParams.Explosion.ExplosionRange,nil,AttackTypes.Rocket,aiParams.Explosion.Damage)
-
-		WORLD.SetTimeToDeleteMeshGroup(16, self.WallsTimeToDelete, self.WallsTimeToDeleteRandomize, true)
-		WORLD.SetTimeToDeleteMeshGroup(5,self.CoronasTimeToDelete, self.CoronasTimeToDeleteRandomize, true)
-		WORLD.SetTimeToDeleteMeshGroup(6, self.FloorsTimeToDelete, self.FloorsTimeToDeleteRandomize, false)-- 3 podloga
+if self._floorNo == 3 then
+	for i,v in self._monks do
+		ENTITY.EnableDraw(v._Entity,true)
 	end
 
-	if self._floorNo == 3 then
-		for i,v in self._monks do
-			ENTITY.EnableDraw(v._Entity,true)
-		end
+	PHYSICS.ActiveMeshGroupSetActivationParams(10, true, self.StoneParams.collisionMinimumFrequency, self.StoneParams.collisionMinimumStrength,
+	self.StoneParams.miminalMassReportingCollision,	1000000.0, self.StoneParams.amountReportingCollisions * 100)
 
-		PHYSICS.ActiveMeshGroupSetActivationParams(10, true, self.StoneParams.collisionMinimumFrequency, self.StoneParams.collisionMinimumStrength,
-			self.StoneParams.miminalMassReportingCollision,	1000000.0, self.StoneParams.amountReportingCollisions * 100)
+	PHYSICS.ActiveMeshGroupEnable(10, true)		-- 4 podloga
 
-		PHYSICS.ActiveMeshGroupEnable(10, true)		-- 4 podloga
-
-		WORLD.EnableDrawMeshGroup(12, true)
-		WORLD.EnableDrawMeshGroup(8, true)
-		PHYSICS.ActiveMeshGroupStaticMeshEnable(12, true)
-		PHYSICS.ActiveMeshGroupStaticMeshEnable(8, true)
-		if self.floorsCollisionGroup then
-			WORLD.SetCollisionGroupMeshGroup(10, self.floorsCollisionGroup)
-			WORLD.SetCollisionGroupMeshGroup(18, self.floorsCollisionGroup)
-			WORLD.SetCollisionGroupMeshGroup(9, self.floorsCollisionGroup)
-		end
-		if self.floorsCollisionGroup then
-			WORLD.SetCollisionGroupMeshGroup(12, self.nextFloorCollisionGroup)		-- ###
-		end
-
-		WORLD.Explosion2(0,125,0, aiParams.Explosion.ExplosionStrength,aiParams.Explosion.ExplosionRange,nil,AttackTypes.Rocket,aiParams.Explosion.Damage)
-
-		WORLD.SetTimeToDeleteMeshGroup(18,self.CoronasTimeToDelete, self.CoronasTimeToDeleteRandomize, true)	-- 3 boczna
-		WORLD.SetTimeToDeleteMeshGroup(9, self.CoronasTimeToDelete, self.CoronasTimeToDeleteRandomize, true)
-		WORLD.SetTimeToDeleteMeshGroup(10, self.FloorsTimeToDelete, self.FloorsTimeToDeleteRandomize, false)	-- 4 podloga
+	WORLD.EnableDrawMeshGroup(12, true)
+	WORLD.EnableDrawMeshGroup(8, true)
+	PHYSICS.ActiveMeshGroupStaticMeshEnable(12, true)
+	PHYSICS.ActiveMeshGroupStaticMeshEnable(8, true)
+	if self.floorsCollisionGroup then
+		WORLD.SetCollisionGroupMeshGroup(10, self.floorsCollisionGroup)
+		WORLD.SetCollisionGroupMeshGroup(18, self.floorsCollisionGroup)
+		WORLD.SetCollisionGroupMeshGroup(9, self.floorsCollisionGroup)
 	end
-	self._floorNo = self._floorNo + 1	
-	if C4L4_Alastor then
-		C4L4_Alastor._floorNo = self._floorNo
+	if self.floorsCollisionGroup then
+		WORLD.SetCollisionGroupMeshGroup(12, self.nextFloorCollisionGroup)		-- ###
 	end
+
+	WORLD.Explosion2(0,125,0, aiParams.Explosion.ExplosionStrength,aiParams.Explosion.ExplosionRange,nil,AttackTypes.Rocket,aiParams.Explosion.Damage)
+
+	WORLD.SetTimeToDeleteMeshGroup(18,self.CoronasTimeToDelete, self.CoronasTimeToDeleteRandomize, true)	-- 3 boczna
+	WORLD.SetTimeToDeleteMeshGroup(9, self.CoronasTimeToDelete, self.CoronasTimeToDeleteRandomize, true)
+	WORLD.SetTimeToDeleteMeshGroup(10, self.FloorsTimeToDelete, self.FloorsTimeToDeleteRandomize, false)	-- 4 podloga
+end
+self._floorNo = self._floorNo + 1
+if C4L4_Alastor then
+	C4L4_Alastor._floorNo = self._floorNo
+end
 end
 
 
 function Alastor:Throw()
 	local aiParams = self.AiParams
-    local brain = self._AIBrain
+	local brain = self._AIBrain
 
 	local Joint = MDL.GetJointIndex(self._Entity, "d_l_5_3")
 	local x,y,z = MDL.TransformPointByJoint(self._Entity,Joint,0,0,0)
@@ -1168,9 +1148,9 @@ function Alastor:Throw()
 	obj:Apply()
 	obj:Synchronize()
 	self._objTakenToThrow = obj
-	brain._enemyLastSeenPoint.X = Player._groundx
-	brain._enemyLastSeenPoint.Y = Player._groundy
-	brain._enemyLastSeenPoint.Z = Player._groundz
+	brain._enemyLastSeenPoint.X = brain.Target._groundx
+	brain._enemyLastSeenPoint.Y = brain.Target._groundy
+	brain._enemyLastSeenPoint.Z = brain.Target._groundz
 	self:ThrowTaken(nil, true)
 end
 
@@ -1189,11 +1169,11 @@ function Alastor:StrikeGround()
 		self.d5 = y - 3.0
 		self.d6 = z
 	end
-	
+
 	if self.FXwhenHit then
 		AddObject(self.FXwhenHit,1.0, Vector:New(x,y,z), nil, true)
 	end
-	
+
 	if self.HitDecal then
 		local b,d,x,y,z,nx,ny,nz,he,e = WORLD.LineTraceFixedGeom(x,y,z,x,y - 3.0,z)
 		if e then
@@ -1210,7 +1190,7 @@ function Alastor:StartFlame()
 		local idx2  = MDL.GetJointIndex(self._Entity,"k_glowa")
 		local x2,y2,z2 = MDL.TransformPointByJoint(self._Entity, idx)
 		local x3,y3,z3 = MDL.TransformPointByJoint(self._Entity, idx2)
-		
+
 		local v2 = Vector:New(x3 - x2, y3 - y2, z3 - z2)
 		v2:Normalize()
 		local q = Clone(Quaternion)
@@ -1224,8 +1204,8 @@ function Alastor:StartFlame()
 			self.yaadebug5 = y3
 			self.yaadebug6 = z3
 		end
-		
-		
+
+
 		local size = 2.3
 		if self.Animation ~= "zieje02" and self.Animation ~= "zieje02a" then
 			if self._phase == 0 then
@@ -1236,9 +1216,9 @@ function Alastor:StartFlame()
 				end
 			end
 		end
-		
+
 		--Game:Print("PARTICLE size "..size)
-		
+
 		self._flameFX = AddPFX(self.flamerFX, size, Vector:New(x3,y3,z3), q)
 	end
 end
@@ -1255,30 +1235,30 @@ function Alastor:Stomp(joint, modif)
 end
 
 function Alastor:FootFX(joint)
-    local j = MDL.GetJointIndex(self._Entity, joint)
-    local x,y,z = MDL.TransformPointByJoint(self._Entity, j,0,0,0)
-    AddPFX('but',0.8,Vector:New(x,y,z))
+	local j = MDL.GetJointIndex(self._Entity, joint)
+	local x,y,z = MDL.TransformPointByJoint(self._Entity, j,0,0,0)
+	AddPFX('but',0.8,Vector:New(x,y,z))
 end
 
 function Alastor:CreateMonks()
 	local monks = rawget(getfenv(),"monks")
 	self._monks = {}
 
-    if monks then
+	if monks then
 		local h = 1
-        for i,v in monks.Points do
-            local r = Clone(Quaternion)
-		    r:FromEulerZYX(0,-v.A+math.pi/2,0)
-            --local r = q:FromEulerZYX(0,-v.A+math.pi/2,0)
-            local obj, e = AddObject("MonkStatue.CItem",nil,Vector:New(v.X,v.Y + 8,v.Z),r,true)
-            ENTITY.PO_SetPinned(e,true)
-            obj.Immortal = true
-            obj.particleQ = Quaternion:New(unpack(self.particles[h]))
-            obj.particleP = Vector:New(unpack(self.particles[h+1]))
-            h = h + 2
-            table.insert(self._monks, obj)
-        end
-    end
+		for i,v in monks.Points do
+			local r = Clone(Quaternion)
+			r:FromEulerZYX(0,-v.A+math.pi/2,0)
+			--local r = q:FromEulerZYX(0,-v.A+math.pi/2,0)
+			local obj, e = AddObject("MonkStatue.CItem",nil,Vector:New(v.X,v.Y + 8,v.Z),r,true)
+			ENTITY.PO_SetPinned(e,true)
+			obj.Immortal = true
+			obj.particleQ = Quaternion:New(unpack(self.particles[h]))
+			obj.particleP = Vector:New(unpack(self.particles[h+1]))
+			h = h + 2
+			table.insert(self._monks, obj)
+		end
+	end
 end
 
 function Alastor:Charge()
@@ -1317,11 +1297,11 @@ end
 Alastor._CustomAiStates.groundAttackAlastor = {
 	name = "groundAttackAlastor",
 	active = false,
-	
+
 	-- atak1 - 27 <- przebyty dystans
 	-- atak2 - 30
 	-- atak3 - 27
-	
+
 	--atak1minDistance = 54.0,	-- fireball
 	atak3minDistance = 35.0,	-- atak lapami
 	minAttackDistance = 25.0,
@@ -1335,8 +1315,8 @@ function Alastor._CustomAiStates.groundAttackAlastor:OnInit(brain)
 	--self.mode = 0
 	self.active = true
 	actor:SetAnim("idle1",false)
-	actor:RotateToVectorWithAnim(Player._groundx,Player._groundy,Player._groundz)
-	--actor:RotateToVector(Player._groundx,Player._groundy,Player._groundz)
+	actor:RotateToVectorWithAnim(brain.Target._groundx,brain.Target._groundy,brain.Target._groundz)
+	--actor:RotateToVector(brain.Target._groundx,brain.Target._groundy,brain.Target._groundz)
 	self.attackMode = false
 	self.breathPoints = rawget(getfenv(),"alastorBreath")
 	self.breathPointsWrong = rawget(getfenv(),"alastorBreathWrong")
@@ -1344,8 +1324,8 @@ end
 
 function Alastor._CustomAiStates.groundAttackAlastor:OnUpdate(brain)
 	local actor = brain._Objactor
-    local aiParams = actor.AiParams
-	
+	local aiParams = actor.AiParams
+
 	if not self.attackMode then
 		if actor._ABdo then
 			self.active = false
@@ -1359,12 +1339,12 @@ function Alastor._CustomAiStates.groundAttackAlastor:OnUpdate(brain)
 			if brain._distToNearestEnemy < self.minAttackDistance then
 				-- gracz jest blisko: obrot o 180, albo idzie na gracza
 				if math.random(100) < 70 + actor._pissedOffRatio * 20 then
-					--actor:RotateToVector(Player._groundx,Player._groundy,Player._groundz)
+					--actor:RotateToVector(brain.Target._groundx,brain.Target._groundy,brain.Target._groundz)
 					local v = Vector:New(math.sin(actor.angle), 0, math.cos(actor.angle))
 					v:Normalize()
-					
-					
-					-- sprawdzanie, zeby nie spadl 
+
+
+					-- sprawdzanie, zeby nie spadl
 					local dist = 40
 					local ok = false
 					while not ok do
@@ -1384,7 +1364,7 @@ function Alastor._CustomAiStates.groundAttackAlastor:OnUpdate(brain)
 					--
 					actor:WalkTo(actor._groundx + v.X*dist, actor._groundy, actor._groundz + v.Z*dist)
 				else
-					local v = Vector:New(Player._groundx - actor._groundx, 0, Player._groundz - actor._groundz)
+					local v = Vector:New(brain.Target._groundx - actor._groundx, 0, brain.Target._groundz - actor._groundz)
 					v:Normalize()
 					local angleToPlayer = math.atan2(v.X, v.Z)
 					local aDist = AngDist(actor.angle, angleToPlayer)
@@ -1392,20 +1372,20 @@ function Alastor._CustomAiStates.groundAttackAlastor:OnUpdate(brain)
 
 					if math.random(100) < 30 then
 						if math.abs(aDist) > 60.0 * math.pi/180 and brain._distToNearestEnemy > 8 then
-							actor:RotateToVectorWithAnim(Player._groundx,Player._groundy,Player._groundz)
+							actor:RotateToVectorWithAnim(brain.Target._groundx,brain.Target._groundy,brain.Target._groundz)
 							if debugMarek then Game:Print("zly kat zeby ziac!!!!!!!!!!!!!!!!!") end
 							--Game.freezeUpdate = true
 							return
 						end
-					
+
 						actor:SetAnim("zieje01",false)
 						self.attackMode = "zieje01"
 						--Game:Print("zieje01 close")
 						return
 					end
-					
+
 					if math.abs(aDist) > 90.0 * math.pi/180 and brain._distToNearestEnemy > 10 then
-						actor:RotateToVectorWithAnim(Player._groundx,Player._groundy,Player._groundz)
+						actor:RotateToVectorWithAnim(brain.Target._groundx,brain.Target._groundy,brain.Target._groundz)
 						if debugMarek then Game:Print("zly kat zeby idle!!!!!!!!!!!!!!!!!") end
 						return
 					end
@@ -1422,27 +1402,27 @@ function Alastor._CustomAiStates.groundAttackAlastor:OnUpdate(brain)
 						--Game:Print("idle2 close")
 						return
 					else
-						actor:RotateToVectorWithAnim(Player._groundx,Player._groundy,Player._groundz)
+						actor:RotateToVectorWithAnim(brain.Target._groundx,brain.Target._groundy,brain.Target._groundz)
 						--Game:Print("rotate close")
 					end
 				end
 			else
-				local v = Vector:New(Player._groundx - actor._groundx, 0, Player._groundz - actor._groundz)
+				local v = Vector:New(brain.Target._groundx - actor._groundx, 0, brain.Target._groundz - actor._groundz)
 				v:Normalize()
 				local angleToPlayer = math.atan2(v.X, v.Z)
 				local aDist = AngDist(actor.angle, angleToPlayer)
 
 				if math.abs(aDist) > 30.1 * math.pi/180 then
-					actor:RotateToVectorWithAnim(Player._groundx,Player._groundy,Player._groundz)
+					actor:RotateToVectorWithAnim(brain.Target._groundx,brain.Target._groundy,brain.Target._groundz)
 					return
 				end
 
-				local dist = Dist2D(Player._groundx, Player._groundz, 0,0)
+				local dist = Dist2D(brain.Target._groundx, brain.Target._groundz, 0,0)
 				local distSelf = Dist2D(actor._groundx, actor._groundz, 0,0)
 				if debugMarek then
 					self.a = actor._groundx
 					self.c = actor._groundz
-					--Game:Print("player at "..dist.." dy = "..(actor._groundx - Player._groundx))
+					--Game:Print("player at "..dist.." dy = "..(actor._groundx - brain.Target._groundx))
 				end
 				actor._canRotate = false
 				actor._moveWithAnimationDoNotUpdateAngle = false
@@ -1479,7 +1459,7 @@ function Alastor._CustomAiStates.groundAttackAlastor:OnUpdate(brain)
 						if p then
 							self.destPoint = nil
 							for i,v in p.Points do
-								local dist = Dist3D(Player._groundx, 0, Player._groundz, v.X, 0, v.Z)
+								local dist = Dist3D(brain.Target._groundx, 0, brain.Target._groundz, v.X, 0, v.Z)
 								if dist < closest then
 									closest = dist
 									self.destPoint = v
@@ -1487,7 +1467,7 @@ function Alastor._CustomAiStates.groundAttackAlastor:OnUpdate(brain)
 							end
 							local p2 = self.breathPointsWrong
 							for i,v in p2.Points do
-								local dist = Dist3D(Player._groundx, 0, Player._groundz, v.X, 0, v.Z)
+								local dist = Dist3D(brain.Target._groundx, 0, brain.Target._groundz, v.X, 0, v.Z)
 								if dist < closest then
 									closest = dist
 									ok = false
@@ -1546,7 +1526,7 @@ function Alastor._CustomAiStates.groundAttackAlastor:OnUpdate(brain)
 						return
 					else
 						if (math.random(100) < 25 and dist < 40) or (distSelf > 33 and actor._floorNo < 4) then		-- dist - odl. gracza od srodka
-							actor:WalkTo(Player._groundx, Player._groundy, Player._groundz, false, FRand(20, 40))
+							actor:WalkTo(brain.Target._groundx, brain.Target._groundy, brain.Target._groundz, false, FRand(20, 40))
 							--Game:Print("walkTo PLAYER")
 						else
 							actor:SetAnim("atak1", false)
@@ -1585,16 +1565,16 @@ function Alastor._CustomAiStates.groundAttackAlastor:OnUpdate(brain)
 			actor._moveWithAnimationDoNotUpdateAngle = true
 		else
 			if actor._canRotate then
-				actor:RotateToVector(Player._groundx,Player._groundy,Player._groundz)
+				actor:RotateToVector(brain.Target._groundx,brain.Target._groundy,brain.Target._groundz)
 			else
 				if actor._isRotating then
 					actor:FullStop()
 				end
 			end
 			--if self.attackMode == "atak2" then
-				--if actor._flameFX and  math.random(100) < 15 then		
-				--	actor:CheckDamageFromFlame()
-				--end
+			--if actor._flameFX and  math.random(100) < 15 then
+			--	actor:CheckDamageFromFlame()
+			--end
 			--end
 		end
 	end
@@ -1631,7 +1611,7 @@ end
 
 function Alastor._CustomAiStates.breathAlastor:OnUpdate(brain)
 	local actor = brain._Objactor
-    local aiParams = actor.AiParams
+	local aiParams = actor.AiParams
 
 	if self.mode == 0 and not actor._isRotating then
 		local distToPoint = Dist3D(brain._point.X, 0, brain._point.Z, actor._groundx, 0, actor._groundz)
@@ -1650,8 +1630,8 @@ function Alastor._CustomAiStates.breathAlastor:OnUpdate(brain)
 			self.mode = 2
 			return
 		else
-			local dist = Dist3D(Player._groundx, 0, Player._groundz, 0,0,0)
-			local distFromPoint = Dist3D(Player._groundx, 0, Player._groundz, brain._point.X,0,brain._point.Z)
+			local dist = Dist3D(brain.Target._groundx, 0, brain.Target._groundz, 0,0,0)
+			local distFromPoint = Dist3D(brain.Target._groundx, 0, brain.Target._groundz, brain._point.X,0,brain._point.Z)
 			if dist < 70 or distFromPoint > 70 then
 				actor:Stop()
 				self.active = false
@@ -1705,7 +1685,7 @@ function Alastor:CustomOnDeathUpdate()
 			self._timerToDemon = nil
 		end
 	else
-		if self._demonfx and self._demonfx.TickCount > self._demonfx.EffectTime - 1.0 then
+		if Game.GMode == GModes.SingleGame and self._demonfx and self._demonfx.TickCount > self._demonfx.EffectTime - 1.0 then
 			self._demonfx = nil
 			GObjects:Add(TempObjName(),CloneTemplate("EndLevel.CProcess"))
 		end

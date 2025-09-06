@@ -41,7 +41,7 @@ function SamuraiV2:CustomUpdate()
 		--
 		-- spr. tylko odleglosci
 		--local testDist = 2.5
-		--local dist = Dist3D(x1 - v.X*testDist,y1 - v.Y*testDist,z1 - v.Z*testDist, Player._groundx, Player._groundy +1.7, Player._groundz)
+		--local dist = Dist3D(x1 - v.X*testDist,y1 - v.Y*testDist,z1 - v.Z*testDist, self._AIBrain.Target._groundx, self._AIBrain.Target._groundy +1.7, self._AIBrain.Target._groundz)
 		--Game:Print("dist = "..dist)
 		--self.DEBUG_P1 = x1 - v.X*testDist
 		--self.DEBUG_P2 = y1 - v.Y*testDist
@@ -121,7 +121,7 @@ function SamuraiV2:Throw()
 			end
 
 			local x,y,z = obj.Pos.X, obj.Pos.Y, obj.Pos.Z
-			local v = Vector:New(Player._groundx - x, (Player._groundy + 1.7) - y, Player._groundz - z)
+			local v = Vector:New(self._AIBrain.Target._groundx - x, (self._AIBrain.Target._groundy + 1.7) - y, self._AIBrain.Target._groundz - z)
 			v:Normalize()
 			
 			local angleToPlayer = math.atan2(v.X, v.Z)
@@ -194,7 +194,7 @@ function SamuraiV2:ChargeNinjas()
 		Game:Print("samuraj death "..dist)
     end
     if dist < aiParams.chargeNinjasPlayerDamageDistance then
-		Player:OnDamage(aiParams.chargeNinjasPlayerDamage * (aiParams.chargeNinjasPlayerDamageDistance - dist)/aiParams.chargeNinjasPlayerDamageDistance, self)
+		self._AIBrain.Target:OnDamage(aiParams.chargeNinjasPlayerDamage * (aiParams.chargeNinjasPlayerDamageDistance - dist)/aiParams.chargeNinjasPlayerDamageDistance, self)
     end
 end
 

@@ -45,6 +45,7 @@ end
 function PSpectatorControler:SetPlayerVisibility(e,enable,state)
      
     ENTITY.EnableDraw(e,enable,true)    
+	
     
     --[[
     MDL.SetMeshVisibility(e,"-all-",true)
@@ -94,16 +95,16 @@ function PSpectatorControler:SetPlayerVisibility(e,enable,state)
 end
 --============================================================================
 function PSpectatorControler:Init()
-    Hud.Enabled = false
-    MOUSE.Lock(true)
-    self._entCam =  ENTITY.Create(ETypes.Mesh,"../Data/Items/granat.dat","polySurfaceShape234",1)   
-    ENTITY.PO_Create(self._entCam,BodyTypes.Sphere,0.3,ECollisionGroups.InsideItems)
-    ENTITY.PO_EnableGravity(self._entCam,false)
-    ENTITY.PO_SetMovedByExplosions(self._entCam, false) 
-    ENTITY.PO_HideFromPrediction(self._entCam)
-    ENTITY.SetPosition(self._entCam,Lev.Pos.X,Lev.Pos.Y,Lev.Pos.Z)
-    self._lastCamPos:Set(Lev.Pos)
-    ENTITY.PO_SetMissile( self._entCam, MPProjectileTypes.Spectator )
+		Hud.Enabled = false
+		MOUSE.Lock(true)
+		self._entCam =  ENTITY.Create(ETypes.Mesh,"../Data/Items/granat.dat","polySurfaceShape234",1)   
+		ENTITY.PO_Create(self._entCam,BodyTypes.Sphere,0.3,ECollisionGroups.InsideItems)
+		ENTITY.PO_EnableGravity(self._entCam,false)
+		ENTITY.PO_SetMovedByExplosions(self._entCam, false) 
+		ENTITY.PO_HideFromPrediction(self._entCam)
+		ENTITY.SetPosition(self._entCam,Lev.Pos.X,Lev.Pos.Y,Lev.Pos.Z)
+		self._lastCamPos:Set(Lev.Pos)
+		ENTITY.PO_SetMissile( self._entCam, MPProjectileTypes.Spectator )
     Mapview:Load(Lev.Map)  
     self._matMapView            = MATERIAL.Create("../PKPlusData/Textures/Electro.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)  
     local filename = string.gsub (Lev.Map,"(%a+).mpk", "%1")
@@ -194,6 +195,10 @@ if(not Hud) then return end
         
     end
 
+	if( Cfg.HUDShowItemTimers )then
+		self:DrawItemTimers()
+	end
+	
 	Hud:DrawTeamScores(self.player)
 	if self.player ~= -1 and self.mode == CameraStates.Follow or self.player ~= -1 and self.mode == CameraStates.Auto and self.autoineyes == 1 then
 		self:SpectatorHUD()
@@ -505,6 +510,16 @@ function PSpectatorControler:Tick3(delta)
 end
 --============================================================================
 function PSpectatorControler:CameraModeSwitch()
+
+	--[[
+	if( MPCfg.GameMode == "Race") then 
+		--for i,o in Game.PlayerStats do    			HIDES OTHER PLAYERS
+			--self:SetPlayerVisibility(o._Entity,false)
+		--end
+		return 
+	end -- Race Additions [ THRESHER ]
+	]]--
+     
     if INP.Action(Actions.Fire) then
         if not self._fire then
             Game:Print(self.player)
@@ -601,8 +616,10 @@ function PSpectatorControler:SpectatorHUD()
 	
 	local ammo1warning = nil
 	local ammo2warning = nil
-if Cfg.Simplehud == true then
 
+	
+if Cfg.Simplehud == true then
+	
         if armortype == 0 then
 	Hud:QuadTrans(Hud._matArmorNormal,(007)*w/1024,(722)*h/768,1,false,255)		
             if Cfg.SimplehudShadow then HUD.PrintXY((054*w/1024),722*h/768,armor,font,0,0,0,50) end
@@ -963,3 +980,84 @@ function PSpectatorControler:MapViewConfigure()
     end
     Mapview:Save(Lev.Map)  
 end
+--============================================================================
+--============================================================================
+function PSpectatorControler:DrawItemTimers()
+		-- [ THRESHER ]
+		-- BEGIN ITEM TIMERS
+		--local armorsWeak    = GObjects:GetElementsWithFieldValue( "_Name", "ArmorWeak*" )
+		--local armorsMedium = GObjects:GetElementsWithFieldValue( "_Name", "ArmorMedium*" )
+		--local armorsStrong   = GObjects:GetElementsWithFieldValue( "_Name", "ArmorStrong*" )
+
+		-- search for armor and mega health items and store them into tables
+
+		local fntStyle = "Impact"
+		local w,h = R3D.ScreenSize()
+		local armPos = 0
+		
+		local armorInfos = nil
+			--table.insert( armorInfos, GObjects:GetElementsWithFieldValue( "_Name", "Armor*" ) )
+			armorInfos = GObjects:GetElementsWithFieldValue( "_Name", "Armor*" )
+			--armorInfos = GObjects:GetElementsWithFieldValue( "_Name", "ArmorMedium*" )
+			--armorInfos = GObjects:GetElementsWithFieldValue( "_Name", "ArmorWeak*" )
+		local armorTimerSize = table.getn( armorInfos )	
+		
+		-- BUBBLE SORT THAT SHIT
+		for a in armorInfos do 
+			for b in armorInfos do 
+				if(armorInfos[a].RescueFactor > armorInfos[b].RescueFactor)then
+					local temp = armorInfos[a]
+					armorInfos[a] = armorInfos[b]
+					armorInfos[b] = temp
+				end
+			end
+		end
+		
+		local megaInfos = nil
+			megaInfos = GObjects:GetElementsWithFieldValue( "_Name", "MegaHealth*" )
+				
+		if armorTimerSize > 0 and armorTimerSize ~= nil then
+			
+			for i = 1, armorTimerSize, 1 do
+				-- need to make this so that if there are two of the same armors, they won't stack on top of eachother		
+				if( armorInfos[ i ].BaseObj == "ArmorStrong.CItem" ) then 
+				
+					--table.insert( itemTimerTable, armorInfos[ i ] )
+					
+					Hud:QuadTrans( Hud._matArmorRed, (003)*w/1024, ( (100) + armPos )*h/768, 1, false, 255 ) 
+					if armorInfos[ i ]._Rst > 0 then HUD.PrintXY( (048)*w/1024, ( (105) + armPos )*h/768, math.ceil( armorInfos[ i ]._Rst - INP.GetTime() ), fntStyle, 255, 255, 255, 25 ) end
+				end
+				
+				if( armorInfos[ i ].BaseObj == "ArmorMedium.CItem" ) then 
+				
+					--table.insert( itemTimerTable, armorInfos[ i ] )
+				
+					Hud:QuadTrans(Hud._matArmorYellow, (003)*w/1024,( (100) + armPos )*h/768,1,false,255)
+					if armorInfos[ i ]._Rst > 0 then HUD.PrintXY( (048)*w/1024, ( (105) + armPos )*h/768, math.ceil( armorInfos[ i ]._Rst - INP.GetTime() ), fntStyle, 255, 255, 255, 25 ) end
+				end
+				
+				if( armorInfos[ i ].BaseObj == "ArmorWeak.CItem" ) then 
+				
+					--table.insert( itemTimerTable, armorInfos[ i ] )
+				
+					Hud:QuadTrans(Hud._matArmorGreen, (003)*w/1024,( (100) + armPos )*h/768,1,false,255) 
+					if armorInfos[ i ]._Rst > 0 then HUD.PrintXY( (048)*w/1024, ( (105) + armPos )*h/768, math.ceil( armorInfos[ i ]._Rst - INP.GetTime() ), fntStyle, 255, 255, 255, 25 ) end
+				end
+				
+				armPos = armPos + 50
+				
+			end
+
+		end
+		
+		if  table.getn( megaInfos ) > 0 and table.getn( megaInfos ) ~= nil then
+			for i = 1, table.getn( megaInfos ), 1 do
+			
+				Hud:QuadRGBA( Hud._matHealth, (003)*w/1024, ( (100) + armPos )*h/768, 1, false, 0, 144, 200, 255 )
+				if megaInfos[ i ]._Rst > 0 then HUD.PrintXY( (048)*w/1024, ( (105) + armPos )*h/768, math.ceil( megaInfos[ i ]._Rst - INP.GetTime() ), fntStyle, 255, 255, 255, 25 ) end
+			
+				armPos = armPos + 50
+			end
+		end
+end
+--[[ END ITEM TIMERS ]]--

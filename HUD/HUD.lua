@@ -125,7 +125,7 @@ function Hud:LoadData()
 	self._matArmor = self._matArmorNormal
 
 --PK++
-
+	
 if Cfg.ColouredIcons then
         Hud._matTeamRed        = MATERIAL.Create("../PKPlusData/Textures/team_redcol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
         Hud._matTeamBlue       = MATERIAL.Create("../PKPlusData/Textures/team_bluecol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
@@ -265,6 +265,7 @@ function Hud:Render(delta)
 	
 	Hud:DrawTimer()
 	Hud:DrawFPS()
+	Hud:DrawRaceTimer()
 
 	if Game and MPCfg.GameState == GameStates.Counting and Game._countTimer and Game._countTimer > 0.99 then
 		HUD.SetFont("Impact",26)
@@ -477,6 +478,7 @@ end
 		local mw,mh = MATERIAL.Size(self._matPacketLoss)
 		HUD.DrawQuad(self._matPacketLoss,w-(mw+8)*w/1024,8*h/768,mw*w/1024,mh*h/768)
     end
+	
 end
 --============================================================================
 function Hud:DrawForDemo()
@@ -1094,10 +1096,10 @@ end
 function Hud_OnSayToTeam(txt,color)
 	if Game.GMode == GModes.SingleGame then return end
 	txt = string.sub(txt,1,200)
-    if Player then
+    --if Player then
 		if not color then color = R3D.RGB(0,255,0) end
         Game.SayToTeam(NET.GetClientID(), txt, color)
-    end
+    --end
     CONSOLE.Activate(false)
 end
 --============================================================================

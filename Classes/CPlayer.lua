@@ -6,7 +6,7 @@ CPlayer =
     IsMovedByExplosions = true,
     Weapons = {nil,nil,nil,nil,nil},
     ExplosiveFired = false,
-    State = 0, -- do animacji i efektow na kliencie
+    State = 0, -- do animacji i efektow na kliencie	ENGLISH: animation and effects on the client
     EnabledWeapons = {"PainKiller","Shotgun","StakeGunGL","MiniGunRL","DriverElectro","RifleFlameThrower","BoltGunHeater"},
     ForwardVector = Vector:New(0,0,0),
     RightVector = Vector:New(0,0,0),
@@ -54,6 +54,12 @@ CPlayer =
     _yaw = 0,
     _healthDecCnt = 0,
     _Class = "CPlayer",
+
+-- for Race [ THRESHER ]	
+	_raceStartTime = 0,
+	_raceFinishTime = 0,
+	_raceBestTime = 0,
+	_isRacing = false,
     
 -- for logic
 	_slowDown = nil,
@@ -550,6 +556,7 @@ function CPlayer:ClientTick(delta)
     ay = ay*(65535/math.pi)
     
     -- na kliencie ustawiam akcje non-stop
+	-- ENGLISH: the client sets the action non-stop
     CPlayer:SetupAction(self.ClientID,action,ax,ay)
     if Game._loonyProc then
         self.ForwardVector:Set(CAM.GetForwardVector())
@@ -584,7 +591,6 @@ end
 -- [ SERVER ]
 function CPlayer:ServerTick(delta)
 
-   
 
     if self._sendRagdollImpulse then
         local a = self._sendRagdollImpulse
@@ -631,6 +637,25 @@ function CPlayer:ServerTick(delta)
         self.Ammo.Bolt         = 999
         self.Ammo.HeaterBomb   = 999        
     end
+	
+	--[[ THRESHER ]]--
+	-- BUGFIX: spawn nade spam fix
+	if MPCfg.GameState == GameStates.Counting then 
+		self.Ammo.Shotgun      = 0
+        self.Ammo.MiniGun      = 0
+        self.Ammo.Grenades     = 0
+        self.Ammo.Stakes       = 0
+        self.Ammo.IceBullets   = 0
+        self.Ammo.Shurikens    = 0
+        self.Ammo.Electro      = 0
+        self.Ammo.Rifle        = 0
+        self.Ammo.FlameThrower = 0
+        self.Ammo.Bolt         = 0
+        self.Ammo.HeaterBomb   = 0 
+		for i=1,6 do
+			if self.Weapons[i] then WORLD.RemoveEntity(self.Weapons[i]._Entity) end
+		end
+	end
 
     if MPCfg.GameMode == "People Can Fly" then 
         self.Ammo.MiniGun      = 0
@@ -668,7 +693,7 @@ function CPlayer:ServerTick(delta)
         self:InterpretAction(delta)
 
 
-    --Game:Print("SetMPByte: "..self.State)
+    --CONSOLE_AddMessage("SetMPByte: "..self.State)
     PLAYER.SetMPByte(self._Entity,self.State)    
 end
 --============================================================================
@@ -993,6 +1018,26 @@ function CPlayer:ClientRender(delta)
         self.Ammo.Bolt         = 999
         self.Ammo.HeaterBomb   = 999        
     end
+	
+	--[[ THRESHER ]]--
+	-- BUGFIX: spawn nade spam fix
+	if MPCfg.GameState == GameStates.Counting then 
+		self.Ammo.Shotgun      = 0
+        self.Ammo.MiniGun      = 0
+        self.Ammo.Grenades     = 0
+        self.Ammo.Stakes       = 0
+        self.Ammo.IceBullets   = 0
+        self.Ammo.Shurikens    = 0
+        self.Ammo.Electro      = 0
+        self.Ammo.Rifle        = 0
+        self.Ammo.FlameThrower = 0
+        self.Ammo.Bolt         = 0
+        self.Ammo.HeaterBomb   = 0 
+		for i=1,6 do
+			if self.Weapons[i] then WORLD.RemoveEntity(self.Weapons[i]._Entity) end
+		end
+	end
+	
 
     if MPCfg.GameMode == "People Can Fly" then 
         self.Ammo.MiniGun      = 0
@@ -1103,6 +1148,7 @@ function CPlayer:OnDamage(damage,killer,attack_type,x,y,z,nx,ny,nz)
     if((MPCfg.ProPlus or not Cfg.FallingDamage) and MPCfg.GameState == GameStates.Playing and attack_type == AttackTypes.HitGround) then return end  
     if not Cfg.WarmupDamage and MPCfg.GameState ~= GameStates.Playing and attack_type ~= AttackTypes.ConsoleKill then return end
     if MPCfg.GameState == GameStates.WarmUp and MPCfg.GameMode == "Clan Arena" and attack_type ~= AttackTypes.ConsoleKill then return end
+	if MPCfg.GameMode == "Race" and attack_type ~= AttackTypes.ConsoleKill then return end -- Race Additions [ THRESHER ]
     if(killer~=nil)then if(self.ClientID~=killer.ClientID)then Game:AddToStats(killer.ClientID, attack_type, 1, 0, damage) end end
 
     local kID = 250 -- not exist
@@ -1341,6 +1387,11 @@ function CPlayer:FindFreeRespawnPoint(last,always)
         end
         areas = na
     end
+	
+	-- Race Additions [ THRESHER ]
+	if MPCfg.GameMode == "Race" then
+		-- respawn code
+	end
     
     if cnt == 1 then last = nil end
     if cnt > 0 then
@@ -1511,7 +1562,7 @@ function CPlayer:ResetStatus(weapon)
     end
 
 
-    -- max do testow broni
+    -- max do testow broni	ENGLISH: up to a test of arms
     if MPTEST then
         self.Health = 255
         self.EnabledWeapons = {"PainKiller","Shotgun","StakeGunGL","MiniGunRL","DriverElectro","RifleFlameThrower","BoltGunHeater"}    
@@ -1642,7 +1693,7 @@ function CPlayer:Steps(delta)
     --Game:Print(self._WalkTime)
     if ENTITY.PO_IsEnabled(Player._Entity) and self._Walking  then
         self._WalkTime = self._WalkTime + delta
-        if self._WalkTime > 0.2 then -- dopiero po kroku
+        if self._WalkTime > 0.2 then -- dopiero po kroku	ENGLISH: after step
             self._CamDisplacement = math.sin((self._WalkTime-0.2)*self.WalkBobSpeed)* Cfg.HeadBob/500   -- empirically found
         end
     else
@@ -1767,7 +1818,7 @@ function CPlayer:SetupAction(clientID,action,pitch,yaw)
     pitch = pitch / (65535/(math.pi*2))
     yaw = yaw / (65535/math.pi) - math.pi/2
     
-    local player = Game:FindPlayerByClientID(clientID) -- XXX przyspieszyc
+    local player = Game:FindPlayerByClientID(clientID) -- XXX przyspieszyc	ENGLISH: accelerate
     if not player then return end
 
     local q = Quaternion:New_FromEuler(yaw,pitch,0)
@@ -1912,7 +1963,7 @@ function CPlayer:Client_OnDamage(entity,health,armor,attack_type,damage,killerID
         PlaySound3D("actor/evilmonkv3/evil-fire-hit",x,y,z,20,40)
     end
     
-    -- dzwieki i fx w MP
+    -- dzwieki i fx w MP	ENGLISH: sounds and fx in MP
     if Game.GMode ~= GModes.SingleGame then 
         
         local fx = true

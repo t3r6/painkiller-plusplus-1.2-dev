@@ -8,6 +8,10 @@ if IsFinalBuild() or XBOX then
 	EditorFiles = nil
 end
 
+--LUA_INIT = "@../Bin/compat-5.1.lua"
+--LUA_PATH = "../libs/?.lua;?.lua"
+--LUA_CPATH = "../libs/c/?.dll;?.dll"
+
 --================================================================
 -- CHEAT STUFF
 --================================================================
@@ -37,6 +41,11 @@ if test2 then
     end
 end   
 path = "../Data/LScripts/"
+
+--DoFile("../libs/compat-5.1.lua")
+
+--myLIB = require "socket"
+
 if test3 then  
 -- CHECK FILE SIZE?  
 	checkfiles = {}
@@ -213,8 +222,8 @@ DoFile(path.."Classes/Entities/EVolumetric.lua")
 --DoFile(path.."Processes/PBulletTimeControler.lua")
 --DoFile(path.."Processes/PMove.lua")
 --DoFile(path.."Processes/PBurningItem.lua")
---DoFile(path.."Processes/PPlayerAnimation.lua")		-- zmienic w gameMP
---DoFile(path.."Processes/PSpectatorControler.lua")	-- zmienic w gameMP
+--DoFile(path.."Processes/PPlayerAnimation.lua")		-- change in gameMP
+--DoFile(path.."Processes/PSpectatorControler.lua")	-- change in gameMP
 ------------------------------------------------------------------------------
 DoFile(path.."Main/GObjects.lua")
 DoFile(path.."Main/Game.lua")
@@ -253,7 +262,6 @@ DoFile(path.."Editor/Editor.lua")
 if loadfile(path.."local.lua") then
 	dofile(path.."local.lua")
 end
-
 
 --collectgarbage(0)
 --Log("END LOADER.LUA : "..GetGCCount())

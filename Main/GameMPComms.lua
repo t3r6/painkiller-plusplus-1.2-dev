@@ -8,7 +8,7 @@ function Game:Server2ClientCommand(clientid,command,param)
 	    		for i,ps in Game.PlayerStats do
 	    			--if(Game.PlayerStats[ps.ClientID].Version==nil)then Game.PlayerStats[ps.ClientID].Version = false end
 				if(Game.PlayerStats[ps.ClientID].Version==false or Game.PlayerStats[ps.ClientID].Version==nil)then					
-					local txt = "Please install PK++ www.pkeuro.com"
+					local txt = "Please install PK++ www.pkzone.org"
 					SendNetMethod(Game.ConsoleClientMessage, ps.ClientID, true, true, ServerID, txt, 0)
 				end
 			end
@@ -88,7 +88,7 @@ function Game:Server2ClientRead(txt)
 		    	Game:SetStats(statsclientid,statsattacktype,statshits,statshots,statsdamage)    
 		    	return true   
 	    end
-	    if(txt == "Please install PK++ www.pkeuro.com")then
+	    if(txt == "Please install PK++ www.pkzone.org")then
 	    	CONSOLE_AddMessage("Attempting to auth with server.")
 	    	Game:Client2ServerCommand("CMD:PK++VERSIONOKAY")
 	    	return true
@@ -117,6 +117,10 @@ function Game:Server2ClientRead(txt)
 	    	Console:Cmd_STATSDUMP()
 	    	return true
 	    end	
+		if(txt=="CMD:GETPLAYERSETTINGS")then	-- This should force the client to print out net settings, model, etc...
+			Console:Cmd_GETPLAYERSETTINGS()
+			return true
+		end
 	    local cmdpattern = "CMD:(%w+):([0-9%a%p%d%s]+)"
 	    local cmdcmd = string.gsub(txt, pattern , "%1") 
 	    local cmdparam = string.gsub(txt, pattern , "%1")  	    

@@ -1,3 +1,6 @@
+function Console:Cmd_GETPLAYERSETTINGS()
+	CONSOLE_AddMessage(PKPLUSPLUS_VERSION) -- needs to send something like this, so that all clients send their info at once
+end
 --=======================================================================
 function Console:Cmd_STATSALL(player)
 	for i,ps in Game.PlayerStats do 
@@ -680,7 +683,7 @@ end
 function Console:Cmd_EXEC(enable)    
 	if(enable~=nil)then 
 	local temp = CfgFile 
-	CfgFile = enable..".ini" 
+	if( enable ~= "autoexec" ) then CfgFile = enable..".ini" end -- autoexec fix [ THRESHER ]
 	Cfg:Load() 
 	CfgFile = temp 
 	CONSOLE_AddMessage("Bin\\"..enable..".ini executed.") 
@@ -1006,7 +1009,7 @@ function Console:Cmd_AUTOSCREENSHOT(enable)
 end
 
 function Console:Cmd_VERSION()    
-	CONSOLE_AddMessage("PK++ 1.2.1.64")
+	CONSOLE_AddMessage(PKPLUSPLUS_VERSION)
 end	
 
 function Console:Cmd_BLOWFISH()   
@@ -1082,7 +1085,7 @@ function Console:Cmd_BLOWFISH()
 	Cfg.ImpureClientWarning = false
 	Cfg.InvertMouse = false
 	Cfg.ItemRespawnFix = true
-	Cfg.LimitServerFPS = true
+	Cfg.LimitServerFPS = false
 	Cfg.Logfile = "GameLog"
 	Cfg.LogfileDaily = true
 	Cfg.Logging = true
@@ -1410,4 +1413,133 @@ function Console:Cmd_NOMPCOMMENTS(enable)
 	CONSOLE_AddMessage("Help: Toggles NoMPComments.")
 	if Cfg.NoMPComments then CONSOLE_AddMessage("State: NoMPComments is currently on.")
 	else CONSOLE_AddMessage("State: NoMPComments is currently off.") end
+end
+
+--[[ legacy THRESHER
+function Console:Cmd_COINTOSS(coin)  
+	if( coin ~= nil ) then
+	
+		coin = tostring(coin)
+		
+		if( coin == "heads" or coin == "tails" ) then
+			coin = tostring(coin)
+			rnd  = FRand(1,1001)
+			result = "WON"
+				if( rnd <= 500 and coin == "tails" ) then result = "LOST"
+				elseif( rnd > 500 and coin == "tails" ) then result = "WON"
+				elseif( rnd > 500 and coin == "heads" ) then result = "LOST"
+				end
+				
+			if( rnd <= 500 ) then
+				Game.ConsoleMessageAll("COINTOSS "..string.upper(coin)..": It was HEADS! "..Cfg.PlayerName.." tossed a coin and "..result)
+			elseif( rnd > 500 ) then
+				Game.ConsoleMessageAll("COINTOSS "..string.upper(coin)..": It was TAILS! "..Cfg.PlayerName.." tossed a coin and "..result)
+			end
+		else
+			CONSOLE_AddMessage("Syntax: cointoss <heads|tails>")
+			CONSOLE_AddMessage("Help: simulates a cointoss for online games")
+		end
+	else
+		CONSOLE_AddMessage("Syntax: cointoss <heads|tails>")
+		CONSOLE_AddMessage("Help: simulates a cointoss for online games")
+	end
+end
+]]--
+
+function Console:Cmd_COINTOSS(clientID, coin)  
+	
+	if(clientID == ServerID and IsDedicatedServer()) then return end
+	
+	if( coin ~= nil and ( coin == "heads" or coin == "tails" ) ) then
+	
+		coin = tostring(coin)
+		
+		--if( coin == "heads" or coin == "tails" ) then
+			coin = tostring(coin)
+			rnd  = FRand(1,1001)
+			result = "WON"
+				if( rnd <= 500 and coin == "tails" ) then result = "LOST"
+				elseif( rnd > 500 and coin == "tails" ) then result = "WON"
+				elseif( rnd > 500 and coin == "heads" ) then result = "LOST"
+				end
+				
+			--[[
+			if( MPCfg.GameState ~= GameStates.WarmUp ) then
+				if( rnd <= 500 ) then
+				CONSOLE_AddMessage("COINTOSS "..string.upper(coin)..": It was HEADS! You tossed a coin and "..result)
+				elseif( rnd > 500 ) then
+				CONSOLE_ConsoleMessageAll("COINTOSS "..string.upper(coin)..": It was TAILS! You tossed a coin and "..result)
+				end
+			]]--
+			
+			--elseif( MPCfg.GameState == GameStates.WarmUp ) then
+			if( MPCfg.GameState == GameStates.WarmUp ) then
+				if( rnd <= 500 ) then
+					Game.ConsoleMessageAll("COINTOSS "..string.upper(coin)..": It was HEADS! "..Game.PlayerStats[clientID].Name.." tossed a coin and "..result)
+				elseif( rnd > 500 ) then
+					Game.ConsoleMessageAll("COINTOSS "..string.upper(coin)..": It was TAILS! "..Game.PlayerStats[clientID].Name.." tossed a coin and "..result)
+				end
+			end
+		--else
+			--CONSOLE_AddMessage("Syntax: cointoss <heads|tails>")
+			--CONSOLE_AddMessage("Help: simulates a cointoss for online games")
+		--end
+	else
+		--[[ THRESHER -- save this for a client update ]]--
+		--Game.ConsoleClientMessage(clientID,"Syntax: !cointoss <heads|tails>",R3D.RGB(255,0,0))
+		--Game.ConsoleClientMessage(clientID,"Help: simulates a cointoss for online games",R3D.RGB(255,0,0))
+	end
+end
+
+function Console:Cmd_SPECTALK(clientID, txt) 
+
+	local ps = Game.PlayerStats[clientID]
+	
+	if clientID == ServerID and not ps then
+        ps = {Name = "Dedicated Admin"}
+        
+    end
+	
+    if not ps or ps.Spectator == 0 then return end
+	
+	
+	--if(clientID == ServerID and IsDedicatedServer()) then return end	-- dedicated server can't spec talk :<
+	
+	if( txt == nil ) then return end -- no text, really shouldn't get here to be honest :)
+	
+	txt = tostring( txt )
+            
+    for i,o in Game.PlayerStats do
+        if o.Spectator == 1 then 
+            if o.ClientID == ServerID then
+				 --RawCallMethod(Game.ConsoleClientMessage, clientID, true, true, ServerID, txt, R3D.RGB(255,0,255))
+				 Game.ConsoleClientMessage(ServerID,false, true, ServerID, "[spec]"..txt, R3D.RGB(255,0,255))
+            else
+                --Game.ConsoleClientMessage("[spec]"..o.ClientID,txt,R3D.RGB(255,0,255))
+				 --RawCallMethod(Game.ConsoleClientMessage, o.clientID, true, true, ServerID, "[spec]"..txt, R3D.RGB(255,0,255))
+				 Game.ConsoleClientMessage(clientID,false, true, o.clientID, "[spec]"..txt, R3D.RGB(255,0,255))
+            end
+        end
+    end
+
+end
+
+function Console:Cmd_CHECKSOCKET()
+
+	--os.execute("for /F \"tokens=* skip=1\" %%n in ('WMIC path Win32_VideoController get Name ^| findstr \".\"') do set GPU_NAME=%%n")
+	
+		
+	--[[
+	local f = io.open( "MDL.ini","w")
+	
+		for key,value in pairs(MDL) do
+			f:write( "MDL.  ".. key .."\n" )
+		end
+	
+		io.close(f)
+	]]--
+	
+	 --CONSOLE_AddMessage( "DEV: ".. tostring(LUA_DEV) .. "\nPATH: " .. tostring(LUA_PATH) )
+	--return
+	
 end

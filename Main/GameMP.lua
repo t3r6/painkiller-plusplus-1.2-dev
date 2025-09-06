@@ -9,7 +9,7 @@ GameStates =
 
 MPCfg = 
 {
-    GameMode         = "Free For All", -- "Free For All", "Team Deathmatch", "People Can Fly", "Voosh", "The Light Bearer", "Capture The Flag", "Last Man Standing", "Duel", "Clan Arena"
+    GameMode         = "Free For All", -- "Free For All", "Team Deathmatch", "People Can Fly", "Voosh", "The Light Bearer", "Capture The Flag", "Last Man Standing", "Duel", "Clan Arena", "Race"
     GameState        = GameStates.Finished, -- "Counting", "Playing", "Finished"
     TeamDamage       = true,
     AllowBrightskins = true,
@@ -77,7 +77,13 @@ MPGameRules =
         StartState = GameStates.WarmUp,
         AutoRespawnAfterCountdown = false,
         Teams = true,
-    }, 
+    },
+	["Race"] =
+	{
+		StartState = GameStates.WarmUp,
+		AutoRespawnAfterCountdown = false,
+		Teams = false, -- changed from TRUE in last version, any bugs? :) [ THRESHER ]
+	},
 }
 
 MPCfgBackup = {}
@@ -152,7 +158,7 @@ function Game:AfterWorldSynchronization(mapName,levelName)
     Waypoint:Load(mapName)
     Game.ClearStats()
     
-    Cfg.ModName = "PK++ 1.2.1.64"
+    Cfg.ModName = PKPLUSPLUS_VERSION
     
     if linker~="versionB.txt ../Data/Hitsounds ../Data/Locs Hitsounds.pak" then MsgBox("Something isn't right here. Exiting.") Exit(1) end
     
@@ -214,14 +220,14 @@ function Game:AfterWorldSynchronization(mapName,levelName)
         NET.ClientPingReset()
     end
     
-    -- zglaszam request stworzenia mojego playera na serwerze
+    -- zglaszam request stworzenia mojego playera na serwerze		ENGLISH: I report my request to create player on the server
     if Game.GMode == GModes.MultiplayerServer or Game.GMode == GModes.MultiplayerClient then
 
         local pn = "Player_"..NET.GetClientID()
         if Cfg.PlayerName then pn = Cfg.PlayerName end
 
         if not NET.IsSpectator(NET.GetClientID()) then
-            -- wysylam do serwera zadanie stworzenia mojego playera w swiecie gry
+            -- wysylam do serwera zadanie stworzenia mojego playera w swiecie gry	ENGLISH: sends to the server task of creating my player in the game world
             self.NewPlayerRequest(NET.GetClientID(),pn,Cfg.PlayerModel,Cfg.Team,0,0)
         else
             self.NewPlayerRequest(NET.GetClientID(),pn,Cfg.PlayerModel,Cfg.Team,0,1)
@@ -257,7 +263,7 @@ function Game_SetupCustomGameSpyVariables()
 --  variable at any time later.
 
     -- NET.SetupGameSpyVariable("PiTaBOT",true,"hello")
-    -- NET.SetupGameSpyVariable("PK++ Version", true, "1.2.1.64")
+    -- NET.SetupGameSpyVariable("PK++ Version", true, PKPLUSPLUS_VERSION)
     if(Cfg.PitabotEnabled) then
     	LoadPiTaBOT()
     end
@@ -373,7 +379,7 @@ function Game:AfterNewClientConnected(clientID)
     SendNetMethod(Game.SetTimeLimit,clientID, true, true,MPCfg.TimeLimit,Game._TimeLimitOut,Game._countTimer)
     local rest = Cfg.MOTD
     
-    	local rest = "PK++ 1.2.1.64 Server - "
+    	local rest = "PK++ "..PKPLUSPLUS_VERSION.." Server - "
 	if(Cfg.RocketFix) then rest = rest .. "RocketFix on - " else rest = rest .. "RocketFix off - "  end -- - rf:"..tostring(Cfg.RocketFactor).." rfo:"..tostring(Cfg.RocketFactorOrder).."
 	if(MPCfg.ProPlus) then rest = rest .. "ProPlus on;" else rest = rest .. "ProPlus off;"  end
 	rest = rest .. "ServerFPS - "..tostring(Cfg.ServerFPS)..";"
@@ -396,7 +402,7 @@ function Game:AfterClientDisconnected(clientID)
     --end 
       
     Game:Print("AfterClientDisconnected: "..tostring(clientID)) 
-    -- powiadamiamy o tym wszystkich klientow
+    -- powiadamiamy o tym wszystkich klientow	ENGLISH: to inform all clients about
     Game.OnPlayerLeaveGame(clientID)
     
     if Game._voteCmd ~= "" then
@@ -577,9 +583,9 @@ function Game:OnMultiplayerServerTick(delta)
                 
                 -- BOT FAKE PING
                 if(Cfg.BotFakePing)then
-                if(Game.PlayerStats[o.ClientID]~= nil and Game.PlayerStats[o.ClientID].Bot~=nil)then marg[j+1] = math.floor(math.random(10)+30) end
+					if(Game.PlayerStats[o.ClientID]~= nil and Game.PlayerStats[o.ClientID].Bot~=nil)then marg[j+1] = math.floor(math.random(10)+30) end
                 else
-                if(Game.PlayerStats[o.ClientID]~= nil and Game.PlayerStats[o.ClientID].Bot~=nil)then marg[j+1] = 0 end
+					if(Game.PlayerStats[o.ClientID]~= nil and Game.PlayerStats[o.ClientID].Bot~=nil)then marg[j+1] = 0 end
                 end
                 
                 if marg[j+1] > 255 then marg[j+1] = 255 end -- max byte
@@ -856,7 +862,7 @@ function Game:NewPlayerRequest(clientID,name,model,team,state,spectator)
       
     Game.PlayerStats[clientID].Model = MPModels[model] -- pamietam na serwerze jakim modelem bedzie gral  
     
-    local txt = "Please install PK++ www.pkeuro.com"
+    local txt = "Please install PK++ www.pkzone.org"
     SendNetMethod(Game.ConsoleClientMessage, clientID, true, true, ServerID, txt, 0)
     if(MPCfg.ProPlus) then Game:Server2ClientCommand(0,"enableproplusall") else Game:Server2ClientCommand(0,"disenableproplusall") end
     Game:SendRocketFix()
@@ -912,22 +918,23 @@ function Game:OnNewPlayerInGame(clientID,entity,name,score,kills,deaths,pu_state
     local player = nil    
     if spectator == 0 then
         -- tworze obiekty logiczne tego gracza na serwerze oraz na kliencie, ktory bedzie nim sterowal
+		-- ENGLISH: formation of logical objects that the player on the server and the client will be directed to
         if Game:IsServer() or clientID == NET.GetClientID()  then 
-            player = Game:AddPlayer(nil,name,"player") -- na razie bez entity
+            player = Game:AddPlayer(nil,name,"player") -- na razie bez entity	ENGLISH: no entity yet
             player:ResetStatus()
             player.ClientID = clientID
-            player._died = true -- na dzien dobry
+            player._died = true -- na dzien dobry		ENGLISH: on a good day
             player.Team = team
         end
-        if clientID == NET.GetClientID() then -- to moj player --  
+        if clientID == NET.GetClientID() then -- to moj player --  ENGLISH: to my player
             GObjects:ToKill(Game._procSpec)
             Game._procSpec = nil
         end
     else
-        if clientID == NET.GetClientID() then -- to moj player --   
+        if clientID == NET.GetClientID() then -- to moj player --  ENGLISH: to my player
             Game._procSpec = GObjects:Add(TempObjName(),Templates["PSpectatorControler.CProcess"]:New())            
             Game._procSpec:Init()            
-            if Game._procStats  then -- kasuje okienko statystki
+            if Game._procStats  then -- kasuje okienko statystki    ENGLISH: clears the statistics window
                 GObjects:ToKill(Game._procStats)
                 Game._procStats = nil
             end
@@ -936,7 +943,7 @@ function Game:OnNewPlayerInGame(clientID,entity,name,score,kills,deaths,pu_state
    
     NET.SetSpectator(clientID,spectator)
 
-    -- tworze statystyke dla nowego playera
+    -- tworze statystyke dla nowego playera		ENGLISH: creates new statistics for the player
     Game.PlayerStats[clientID] = {ClientID = clientID, Name = name, Score = score, Kills = kills, Deaths = deaths, Ping = 0, PacketLoss = 0, Team = team, State = state, Spectator = spectator}
     local ps = Game.PlayerStats[clientID]
     MPSTATS.Update(ps.ClientID,ps.Name, ps.Score, ps.Kills, ps.Deaths, ps.Ping, ps.PacketLoss, ps.Team, ps.State, ps.Spectator)
@@ -948,25 +955,25 @@ function Game:OnNewPlayerInGame(clientID,entity,name,score,kills,deaths,pu_state
 
     if spectator == 0 then
 
-        -- dodaje proces animujacy postac gracza
+        -- dodaje proces animujacy postac gracza	ENGLISH: animate process adds the player character
         if Game.GMode ~= GModes.DedicatedServer then
             local p = GObjects:Add(TempObjName(),Templates["PPlayerAnimation.CProcess"]:New(nil,clientID))         
-            ps._animproc = p -- zapamietuje referencje do procesu animujacego playera
-            ps._animproc._Entity = entity -- juz byl na serwerze
+            ps._animproc = p -- zapamietuje referencje do procesu animujacego playera		ENGLISH: stores the references to the animating player
+            ps._animproc._Entity = entity -- juz byl na serwerze		ENGLISH: was already on the server
         end
             
-        -- odblokowuje gra na wlasciwym kliencie
-        if clientID == NET.GetClientID() then -- to moj player        
+        -- odblokowuje gra na wlasciwym kliencie	ENGLISH: Unlock the game on the right client
+        if clientID == NET.GetClientID() then -- to moj player        ENGLISH: to my player
             Player = player
             Player._Entity = entity
             --INP.Reinit(true)
             MOUSE.Lock(true)
-            -- zaczynam w trybie statystyki
+            -- zaczynam w trybie statystyki		ENGLISH: begin preliminary statistics
             local t = nil
             if MPGameRules[MPCfg.GameMode].StartState == GameStates.WarmUp then t = 2  end
             Game._procStats = GObjects:Add(TempObjName(),Templates["EndOfMatch.CProcess"]:New(t))
         else
-            -- ten player aktualnie gra na serwerze, wiec musze go widziec
+            -- ten player aktualnie gra na serwerze, wiec musze go widziec		ENGLISH: This player currently playing on the server, so I need to see it
             ENTITY.PO_SetFriction(entity,0.7)    
             ENTITY.EnableDraw(entity,true)
             --MDL.CreateShadowMap(entity,64)
@@ -1043,7 +1050,7 @@ Network:RegisterMethod("Game.SetTimeLimit", NCallOn.ServerAndAllClients, NMode.R
 function Game:OnPlayerLeaveGame(clientID)
     Game:Print("OnPlayerLeaveGame: "..clientID)            
     
-    -- kasuje rozlaczonego gracza na serwerze i na wlasciwym kliencie
+    -- kasuje rozlaczonego gracza na serwerze i na wlasciwym kliencie    ENGLISH: deletes the disconnected player on the server and client on the right
     for i,o in Game.Players do
         if o.ClientID == clientID then
             if Game:IsServer() then ENTITY.Release(o._Entity) end
@@ -1068,7 +1075,7 @@ function Game:OnPlayerLeaveGame(clientID)
     end
     -- end
        
-    -- usuwam procesy zwiazane z tym graczem
+    -- usuwam procesy zwiazane z tym graczem    ENGLISH: remove the processes associated with this player
     local pcs = GObjects:GetElementsWithFieldValue("_Class","CProcess*")
     for i,p in pcs do
         if p.ClientID == clientID then GObjects:ToKill(p) end
@@ -1171,6 +1178,7 @@ function Game:PlayerRespawnRequest(clientID)
         ENTITY.SetSynchroString(player._Entity,"CPlayer") -- for ENTITY_CREATE callback
         ENTITY.EnableDeathZoneTest(player._Entity,true) 
         ENTITY.PO_SetMovedByExplosions(player._Entity,true)
+		if( MPCfg.GameMode == "Race") then ENTITY.PO_SetCollisionGroup(player._Entity, ECollisionGroups.InsideItems) end -- Race Additions [ THRESHER ]
         ENTITY.EnableNetworkSynchronization(player._Entity,true,false,0,clientID,3)
         
         player:Respawn(x,y,z,a)
@@ -1647,7 +1655,7 @@ function Game:BrightSkin(entity, enable, team)
         WORLD.AddEntity(ei)        
         ENTITY.RegisterChild(entity,ei)
     end
-    
+	
     if Cfg.BrightSkins then
     
     if enable and MPCfg.AllowBrightskins then
@@ -1799,10 +1807,43 @@ Network:RegisterMethod("Game.PlayerPingInfo", NCallOn.ServerAndAllClients, NMode
 -- [NET - SERVER] --
 function Game:SayToAll(clientID,txt,color)
     local ps = Game.PlayerStats[clientID]
-    if not ps and not (clientID == ServerID and IsDedicatedServer()) then return end -- juz wyszedl
+    if not ps and not (clientID == ServerID and IsDedicatedServer()) then return end -- juz wyszedl	ENGLISH: already came out
     
     if(Game:Client2ServerRead(clientID, txt))then return end
     
+	--[[ THRESHER''s Cmd_COINTOSS script is called ( Console2.lua ) ]]--
+	if( string.lower(txt) == "!cointoss heads" or string.lower(txt) == "!cointoss tails" )then
+		txt = string.gsub(  txt, "!cointoss", "" )
+		txt = string.gsub ( txt, " ", "" )
+		Console:Cmd_COINTOSS(clientID, txt)
+		return
+	end
+	
+	--[[
+	if( string.find( txt, "!spec" ) == 1 ) then
+		txt = string.sub(txt, 6)
+		if( txt == "" or txt == nil) then return end -- no text
+		Console:Cmd_SPECTALK( clientID, txt )
+		return
+	end
+	]]--
+	
+	--[[
+	if( ps.Spectator == 1 and MPCfg.GameState ~= GameStates.WarmUp ) then  -- spec chat ftw
+			for i,o in Game.PlayerStats do
+					if o.Spectator == 1 then 
+							if o.ClientID == ServerID then
+									RawCallMethod( Game.ConsoleClientMessage, clientID, "[spec]"..txt, R3D.RGB( 255, 234, 0 ) ) 
+							else
+									SendNetMethod( Game.ConsoleClientMessage, o.ClientID, true, true, clientID, "[spec]"..txt, R3D.RGB( 255, 234, 0 ) )
+							end
+					end
+			end
+			
+			return
+    end
+	]]--
+	
     local onebotheardsomething = nil
     for i, pp in Game.PlayerStats do
     	if pp.Bot and onebotheardsomething == nil then
@@ -1811,6 +1852,7 @@ function Game:SayToAll(clientID,txt,color)
     	end
     end
     
+	
     Game.ConsoleClientMessage(clientID,txt,color)
 
     -- PiTaBOT server mod
@@ -1829,17 +1871,34 @@ Network:RegisterMethod("Game.SayToAll", NCallOn.Server, NMode.Reliable, "bsi")
 --============================================================================
 function Game:SayToTeam(clientID,txt,color)
     local ps = Game.PlayerStats[clientID]
-    if not ps or ps.Spectator == 1 then return end
-            
-    for i,o in Game.PlayerStats do
-        if o.Team == ps.Team then 
-            if o.ClientID == ServerID then
-                RawCallMethod(Game.ConsoleClientMessage,clientID,txt,color) 
-            else
-                SendNetMethod(Game.ConsoleClientMessage, o.ClientID, true, true, clientID,txt,color)
-            end
-        end
+	if not ps then return end
+    --if not ps or ps.Spectator == 1 then return end
+	 
+	 
+	if ps.Spectator == 1 then  -- spec chat ftw
+			for i,o in Game.PlayerStats do
+					if o.Spectator == 1 then 
+							if o.ClientID == ServerID then
+									RawCallMethod( Game.ConsoleClientMessage, clientID, "[spec]"..txt, R3D.RGB( 255, 234, 0 ) ) 
+							else
+									SendNetMethod( Game.ConsoleClientMessage, o.ClientID, true, true, clientID, "[spec]"..txt, R3D.RGB( 255, 234, 0 ) )
+							end
+					end
+			end
+		
+		return
     end
+	
+	
+			for i,o in Game.PlayerStats do
+					if o.Team == ps.Team then 
+							if o.ClientID == ServerID then
+									RawCallMethod(Game.ConsoleClientMessage,clientID,txt,color) 
+							else
+									SendNetMethod(Game.ConsoleClientMessage, o.ClientID, true, true, clientID,txt,color)
+							end
+					end
+			end
 end
 Network:RegisterMethod("Game.SayToTeam", NCallOn.Server, NMode.Reliable, "bsi")
 --============================================================================
@@ -1854,7 +1913,7 @@ function Game:ConsoleClientMessage(clientID,txt,color)
     
     if(Game:Server2ClientRead(txt)) then return end
     
-    if not ps then return end -- juz wyszedl
+    if not ps then return end -- juz wyszedl	ENGLISH: already came out
 
 	if color == nil or color == 0 then
 		CONSOLE_AddMessage(ps.Name .. ": "..txt,R3D.RGB(255,0,0))

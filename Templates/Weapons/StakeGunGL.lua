@@ -246,6 +246,7 @@ function StakeGunGL:FireSFX(pe,prediction)
 end
 Network:RegisterMethod("StakeGunGL.FireSFX", NCallOn.ServerAndAllClients, NMode.Reliable, "e") 
 -- potwierdzony poniewaz i tak doklei sie do komunikatu stworzenia nowego entity kolka
+-- ENGLISH: confirmed since August and so doklei to create a new entity currently colic
 --============================================================================
 function StakeGunGL:AltFireSFX(pe,ge)
     local player = EntityToObject[pe]

@@ -307,139 +307,139 @@ end
 --============================================================================
 function Cache:PrecacheLevel(name)
 
-    if CacheLog then
-        fLog = io.open ("cache.log","w")
-    end
+	Cached = {}
+	if not Cfg.DeferLoadingPlayers then
 
-    --if true then return end
-    Cached = {}
-    local overall = PMENU.GetLoadingScreenOverall() + table.getn(GObjects.Elements) + 8
-    if Game.PlayerEnabledWeapons then overall = overall + table.getn(Game.PlayerEnabledWeapons) end
-    PMENU.SetLoadingScreenOverall( overall, 20 )
-    for i,o in GObjects.Elements do
-        if o._Class == "CActor"      then self:PrecacheActor(o._Name)               end        
-        if o._Class == "CSpawnPoint" then self:PrecacheSpawnPoint(o._Name)          end        
-        if o._Class == "CItem"       then self:PrecacheItem(o._Name)                end                
-        if o._Class == "CParticleFX" then self:PrecacheParticleFX(o.Effect)         end                
-        if o._Class == "CSound"      then self:PrecacheSounds(Text2Tab(o.Sound,';')[1]) end
-        PMENU.LoadingProgress()
-    end
-    
-    if Lev.OnPrecache then Lev:OnPrecache() end
-    
-    self:PrecacheActor("PainKiller.CWeapon")    
-    if Game.GMode ~= GModes.SingleGame then 
-        self:PrecacheActor("Shotgun.CWeapon")
-        self:PrecacheActor("StakeGunGL.CWeapon")
-        self:PrecacheActor("MiniGunRL.CWeapon")
-        self:PrecacheActor("DriverElectro.CWeapon")        
-        self:PrecacheActor("RifleFlameThrower.CWeapon")        
-        self:PrecacheActor("BoltGunHeater.CWeapon")        
-        
-        if MPCfg.GameMode ~= "" then Game:BrightSkin(entity, true) end
-        self:PrecacheMPModel("mp-model-demon")
-        self:PrecacheMPModel("mp-model-fallenangel")        
-        self:PrecacheMPModel("mp-model-knight")        
-        self:PrecacheMPModel("mp-model-beast")        
-        if not IsMPDemo() then self:PrecacheMPModel("mp-model-painkiller") end
-        self:PrecacheMPModel("mp-model-player6")        
-        self:PrecacheMPModel("mp-model-player7")        
-        self:PrecacheActor("FX_ItemRespawn.CActor")        
-        self:PrecacheItem("SoulMP.CItem")        
-    end
+		if Game.GMode ~= GModes.SingleGame then
+			self:PrecacheActor("PainKiller.CWeapon")
+			self:PrecacheActor("Shotgun.CWeapon")
+			self:PrecacheActor("StakeGunGL.CWeapon")
+			self:PrecacheActor("MiniGunRL.CWeapon")
+			self:PrecacheActor("DriverElectro.CWeapon")
+			self:PrecacheActor("RifleFlameThrower.CWeapon")
+			self:PrecacheActor("BoltGunHeater.CWeapon")
 
-	self:PrecacheSoundsDef(CPlayer)
-    
-    PMENU.LoadingProgress()
-    if Game.PlayerEnabledWeapons then
-        for i,o in Game.PlayerEnabledWeapons do
-            self:PrecacheActor(o..".CWeapon")    
---            PMENU.LoadingProgress()
-        end    
-    end
+			--if MPCfg.GameMode ~= "" then 
+			Game:BrightSkin(entity, true) 
+			--end
+			self:PrecacheMPModel("mp-model-demon")
+			self:PrecacheMPModel("mp-model-fallenangel")
+			self:PrecacheMPModel("mp-model-knight")
+			self:PrecacheMPModel("mp-model-beast")
+			if not IsMPDemo() then self:PrecacheMPModel("mp-model-painkiller") end
+			self:PrecacheMPModel("mp-model-player6")
+			self:PrecacheMPModel("mp-model-player7")
+			self:PrecacheActor("FX_ItemRespawn.CActor")
+			self:PrecacheItem("SoulMP.CItem")
+			Game:BrightSkin(entity, true) 
+		end
+	end
 
-    MATERIAL.Create("items/1")
-    MATERIAL.Create("items/2")
-    MATERIAL.Create("items/3")
-    MATERIAL.Create("special/flashlight")
-    MATERIAL.Create("special/warp_dudv",4)    
-    self:PrecacheDecal("shadow")    
-    self:PrecacheTrail("trail_sword")
-    
-    -- treasures
-    self:PrecacheItem("CoinG.CItem")
-    self:PrecacheItem("CoinS.CItem")
-    --self:PrecacheItem("Cup1.CItem")
-    --self:PrecacheItem("Cup2.CItem")
-    --self:PrecacheItem("Host1.CItem")
-    --self:PrecacheItem("Host2.CItem")
+	if Cfg.DeferLoadingRest then
 
-	PMENU.LoadingProgress()
+		local overall = PMENU.GetLoadingScreenOverall() + table.getn(GObjects.Elements) + 8
+		if Game.PlayerEnabledWeapons then overall = overall + table.getn(Game.PlayerEnabledWeapons) end
+		PMENU.SetLoadingScreenOverall( overall, 20 )
+		for i,o in GObjects.Elements do
+			if o._Class == "CActor"      then self:PrecacheActor(o._Name)               end
+			if o._Class == "CSpawnPoint" then self:PrecacheSpawnPoint(o._Name)          end
+			if o._Class == "CItem"       then self:PrecacheItem(o._Name)                end
+			if o._Class == "CParticleFX" then self:PrecacheParticleFX(o.Effect)         end
+			if o._Class == "CSound"      then self:PrecacheSounds(Text2Tab(o.Sound,';')[1]) end
+			PMENU.LoadingProgress()
+		end
 
-    self:PrecacheItem("RingB.CItem")
-    self:PrecacheItem("RingR.CItem")
-    self:PrecacheItem("StoneB.CItem")
-    self:PrecacheItem("StoneG.CItem")
-    self:PrecacheItem("StoneR.CItem")
+		if Lev.OnPrecache then Lev:OnPrecache() end
 
-	PMENU.LoadingProgress()
-    
-    self:PrecacheItem("Energy.CItem")    
-    self:PrecacheItem("Blood.CItem")    
-    self:PrecacheActor("FX_Spawn.CActor")
-    self:PrecacheActor("FX_sground.CActor")
+		self:PrecacheSoundsDef(CPlayer)
 
-	PMENU.LoadingProgress()
+		PMENU.LoadingProgress()
+		if Game.PlayerEnabledWeapons then
+			for i,o in Game.PlayerEnabledWeapons do
+				self:PrecacheActor(o..".CWeapon")
+				--            PMENU.LoadingProgress()
+			end
+		end
 
-    self:PrecacheActor("FX_splash.CActor")
-    self:PrecacheActor("FX_splash.CActor",1.5)
---  self:PrecacheDecal("splash_big")
-    self:PrecacheDecal("bloodLeak")
+		MATERIAL.Create("items/1")
+		MATERIAL.Create("items/2")
+		MATERIAL.Create("items/3")
+		MATERIAL.Create("special/flashlight")
+		MATERIAL.Create("special/warp_dudv",4)
+		self:PrecacheDecal("shadow")
+		self:PrecacheTrail("trail_sword")
 
-	PMENU.LoadingProgress()
-        
-    self:PrecacheParticleFX("gibExplosion")        
-    self:PrecacheParticleFX("FX_gib_blood")    
-    self:PrecacheParticleFX("but")    
-    self:PrecacheParticleFX("butk")    
-    self:PrecacheParticleFX("butbig")    
-    self:PrecacheParticleFX("demonflame")           
-    self:PrecacheParticleFX("BodyBlood")           
-    self:PrecacheParticleFX("BodyExplosion")           
-    self:PrecacheParticleFX("elektrodeath")    
-    self:PrecacheParticleFX("RifleHitWall")        
-    self:PrecacheParticleFX("FX_BrokenGlass")        
-    self:PrecacheParticleFX("barrel_flame_FX")        
-    self:PrecacheParticleFX("barrel_part_FX")        
-    self:PrecacheParticleFX("energy")        
-    
-	PMENU.LoadingProgress()
-    
-    self:PrecacheSounds({"misc/weapon-hide","misc/weapon-show"})                    
-    self:PrecacheSounds({'specials/respawns/respawn_m1','specials/respawns/respawn_m2','specials/respawns/respawn_m3','specials/respawns/respawn_m4','specials/respawns/respawn_m5','specials/respawns/respawn_m6'})
-    self:PrecacheSounds("misc/spawn_ground")
-    self:PrecacheSounds({"impacts/gib_frozen1","impacts/gib_frozen2","impacts/gib_frozen3"})
-    self:PrecacheSounds({"impacts/gib_big","impacts/gib_big2","impacts/gib_big3"})
-    
-    local temp
-    -- precache processes
-    temp = Templates["FlashScreen.CProcess"]
-    temp = Templates["DemonFX.CProcess"]
-    temp = Templates["DemonFXWarp.CProcess"]
-    temp = Templates["EndLevel.CProcess"]
-    temp = Templates["PMusicFade.CProcess"]
-    temp = Templates["PFadeInOutLight.CProcess"]
-    temp = Templates["TStomp.CProcess"]
-    temp = Templates["TWait.CProcess"]
-	PMENU.LoadingProgress()
-    
-    Cached = nil
+		-- treasures
+		self:PrecacheItem("CoinG.CItem")
+		self:PrecacheItem("CoinS.CItem")
+		--self:PrecacheItem("Cup1.CItem")
+		--self:PrecacheItem("Cup2.CItem")
+		--self:PrecacheItem("Host1.CItem")
+		--self:PrecacheItem("Host2.CItem")
 
-	PMENU.LoadingProgress()
+		PMENU.LoadingProgress()
 
-    if CacheLog then
-        io.close(fLog)
-    end
+		self:PrecacheItem("RingB.CItem")
+		self:PrecacheItem("RingR.CItem")
+		self:PrecacheItem("StoneB.CItem")
+		self:PrecacheItem("StoneG.CItem")
+		self:PrecacheItem("StoneR.CItem")
+
+		PMENU.LoadingProgress()
+
+		self:PrecacheItem("Energy.CItem")
+		self:PrecacheItem("Blood.CItem")
+		self:PrecacheActor("FX_Spawn.CActor")
+		self:PrecacheActor("FX_sground.CActor")
+
+		PMENU.LoadingProgress()
+
+		self:PrecacheActor("FX_splash.CActor")
+		self:PrecacheActor("FX_splash.CActor",1.5)
+		--  self:PrecacheDecal("splash_big")
+		self:PrecacheDecal("bloodLeak")
+
+		PMENU.LoadingProgress()
+
+		self:PrecacheParticleFX("gibExplosion")
+		self:PrecacheParticleFX("FX_gib_blood")
+		self:PrecacheParticleFX("but")
+		self:PrecacheParticleFX("butk")
+		self:PrecacheParticleFX("butbig")
+		self:PrecacheParticleFX("demonflame")
+		self:PrecacheParticleFX("BodyBlood")
+		self:PrecacheParticleFX("BodyExplosion")
+		self:PrecacheParticleFX("elektrodeath")
+		self:PrecacheParticleFX("RifleHitWall")
+		self:PrecacheParticleFX("FX_BrokenGlass")
+		self:PrecacheParticleFX("barrel_flame_FX")
+		self:PrecacheParticleFX("barrel_part_FX")
+		self:PrecacheParticleFX("energy")
+
+		PMENU.LoadingProgress()
+
+		self:PrecacheSounds({"misc/weapon-hide","misc/weapon-show"})
+		self:PrecacheSounds({'specials/respawns/respawn_m1','specials/respawns/respawn_m2','specials/respawns/respawn_m3','specials/respawns/respawn_m4','specials/respawns/respawn_m5','specials/respawns/respawn_m6'})
+		self:PrecacheSounds("misc/spawn_ground")
+		self:PrecacheSounds({"impacts/gib_frozen1","impacts/gib_frozen2","impacts/gib_frozen3"})
+		self:PrecacheSounds({"impacts/gib_big","impacts/gib_big2","impacts/gib_big3"})
+
+		local temp
+		-- precache processes
+		temp = Templates["FlashScreen.CProcess"]
+		temp = Templates["DemonFX.CProcess"]
+		temp = Templates["DemonFXWarp.CProcess"]
+		temp = Templates["EndLevel.CProcess"]
+		temp = Templates["PMusicFade.CProcess"]
+		temp = Templates["PFadeInOutLight.CProcess"]
+		temp = Templates["TStomp.CProcess"]
+		temp = Templates["TWait.CProcess"]
+		PMENU.LoadingProgress()
+
+		Cached = nil
+
+		PMENU.LoadingProgress()
+	end
 end
 --============================================================================
 

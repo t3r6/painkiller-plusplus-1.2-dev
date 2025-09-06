@@ -131,6 +131,7 @@ PainMenu =
 	mapsOnServerCTF = {},
 	mapsOnServerDUE = {},
 	mapsOnServerLMS = {},
+	mapsOnServerRAC = {},
 	lastMPMode = "",
 
 	playerModel = nil,
@@ -1558,6 +1559,11 @@ function PainMenu:AddMapTable( name, item )
 		self.mapsOnServerCLA[i] = Cfg.ServerMapsCLA[i]
 	end
 	
+	self.mapsOnServerRAC = {}
+	for i=1,table.getn(Cfg.ServerMapsRAC) do
+		self.mapsOnServerRAC[i] = Cfg.ServerMapsRAC[i]
+	end
+	
 	self.mapsOnServerLMS = {}
 	for i=1,table.getn(Cfg.ServerMapsLMS) do
 		self.mapsOnServerLMS[i] = Cfg.ServerMapsLMS[i]
@@ -2546,6 +2552,9 @@ function PainMenu:UpdateMapTable(name,mode)
 	elseif self.lastMPMode == "Last Man Standing" then
 		self.mapsOnServerLMS = {}
 		Cfg.ServerMapsLMS = {}
+	elseif self.lastMPMode == "Race" then
+		self.mapsOnServerRAC = {}
+		Cfg.ServerMapsRAC = {}
 	end
 
 	local tmp_tab = PMENU.GetMapsOnServer()
@@ -2578,6 +2587,9 @@ function PainMenu:UpdateMapTable(name,mode)
 		elseif self.lastMPMode == "Last Man Standing" then
 			self.mapsOnServerLMS[i] = val
 			Cfg.ServerMapsLMS[i] = val
+		elseif self.lastMPMode == "Race" then
+			self.mapsOnServerRAC[i] = val
+			Cfg.ServerMapsRAC[i] = val
 		end
     end
 
@@ -2606,6 +2618,8 @@ function PainMenu:UpdateMapTable(name,mode)
 		tmp_tab = self.mapsOnServerLMS
 	elseif mode == "Clan Arena" then
 		tmp_tab = self.mapsOnServerCLA
+	elseif mode == "Race" then
+	    tmp_tab = self.mapsOnServerRAC
 	end
 
 	self.mapsOnServer = {}
@@ -2638,6 +2652,7 @@ function PainMenu:BackToLastScreen()
 end
 
 function PainMenu_MultiplayerErrorCallback( mtype, desc )
+	local _url = "\"http://pkzone.org/category/downloads/maps/\"" -- Used to send people who don't have the map to proper websites for maps [ THRESHER ]
     if IsDedicatedServer() then 
         if mtype ~= MultiplayerErrorTypes.Information then MsgBox(desc) end
         Game.LevelStarted = false
@@ -2646,10 +2661,22 @@ function PainMenu_MultiplayerErrorCallback( mtype, desc )
 	if mtype == MultiplayerErrorTypes.Information then
 		CONSOLE.Print( desc )
 	elseif mtype == MultiplayerErrorTypes.Disconnected then
+		-- [ THRESHER ]
+		-- Fixes confusion about player not having map
+		if( string.find( string.lower( desc ), "net error: the map we are trying to load" ) ) then
+		    desc = "You most likely don't have the required map that is on the server, by clicking OK, you will be directed to the map repository."
+			PainMenu:AskYesNo( desc, "PainMenu:BackToLastScreen() PMENU.LaunchURL( ".._url.." )" , "PainMenu:BackToLastScreen()" )
+			Game:NewLevel('NoName','','',0.3); WORLD.Release()
+			Game.LevelStarted = false
+			PMENU.ShowMenu()
+		else
 		Game:NewLevel('NoName','','',0.3); WORLD.Release()
 		Game.LevelStarted = false
 		PMENU.ShowMenu()
 		PainMenu:ShowInfo( desc, "PainMenu:BackToLastScreen()" )
+		-- [ THRESHER ] 
+		--PainMenu:AskYesNo( desc, "PainMenu:BackToLastScreen() PMENU.LaunchURL( ".._url.." )" , "PainMenu:BackToLastScreen()" )
+		end
 	elseif mtype == MultiplayerErrorTypes.BadCDKey then
 		Game:NewLevel('NoName','','',0.3); WORLD.Release()
 		Game.LevelStarted = false

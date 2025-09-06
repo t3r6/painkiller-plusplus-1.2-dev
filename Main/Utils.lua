@@ -1,6 +1,21 @@
 --============================================================================
 -- Utilities library
 --============================================================================
+function TableMerge(t1, t2)
+    for k,v in pairs(t2) do
+        if type(v) == "table" then
+                if type(t1[k] or false) == "table" then
+                        TableMerge(t1[k] or {}, t2[k] or {})
+                else
+                        t1[k] = v
+                end
+        else
+                t1[k] = v
+        end
+    end
+    return t1
+end
+--============================================================================
 function Clone(t)
     if not t then return nil end   
     local new = {}
@@ -493,7 +508,7 @@ function DeathEffect(entity,model)
 end
 --============================================================================
 function FindObj(name)
-    -- szukam wsrod templatow
+    -- szukam wsrod templatow   ENGLISH: looking through templates
     if not name or name == "" then return end
 
     o = _G[name]
@@ -502,7 +517,7 @@ function FindObj(name)
     return o
 end
 --============================================================================
-function CloneObj(obj,inherit) -- nazwa lub referencja, czy dziedziczy po nim czy tylko kopiuje 
+function CloneObj(obj,inherit) -- nazwa lub referencja, czy dziedziczy po nim czy tylko kopiuje   ENGLISH: name or reference, whether inherited or just copy it
     
     local baseobj
     local objname
@@ -554,12 +569,14 @@ function SaveFullObj(filename,obj)
     local f = FS.File_Open(filename)
     if not f then 
         Game:Print("- Cannot save file: "..filename.." - read only?")
+		CONSOLE_AddMessage("- Cannot save file: "..filename.." - read only?")
         return 
     end
     
     SaveFullTable(f,obj,"o")  
     if obj._Name then
         Game:Print("+ Object :'"..obj._Name.."' saved as: '"..filename.."'")    
+		CONSOLE_AddMessage("+ Object :'"..obj._Name.."' saved as: '"..filename.."'")    
     end
     FS.File_Close(f)
 end
@@ -867,10 +884,10 @@ end
 --============================================================================
 function Explosion(x,y,z,explosionStrength,explosionRange,clientID,attackType,damage,factorY)
     PlayLogicSound("EXPLOSION",x,y,z,15,30)
-    if Game.GMode == GModes.SingleGame then 
-        WORLD.Explosion2(x,y,z,explosionStrength,explosionRange,clientID,attackType,damage)    
-    else        
-        WORLD.MultiplayerExplosion(x,y,z,explosionStrength,explosionRange,clientID,attackType,damage,factorY)
+    if Game.GMode == GModes.SingleGame then
+        WORLD.Explosion2(x,y,z,explosionStrength,explosionRange,clientID,attackType,damage)
+    else
+		WORLD.MultiplayerExplosion(x,y,z,explosionStrength,explosionRange,clientID,attackType,damage,factorY)
     	--ENTITY.GetVelocity(Game.PlayerStats[666]._Entity
     	--local x,y,z = ENTITY.GetPosition(Game.PlayerStats[666]._Entity)
     	--ENTITY.SetPosition(Game.PlayerStats[666]._Entity,x,y+0.1,z)
@@ -914,3 +931,51 @@ function IsBooH()
     return __IsBooH
 end
 --============================================================================
+function RaceTimeString( playerTime )
+
+	local capM, capS, capMS
+						
+		capS = math.floor( playerTime ) -- get a nice round number
+			if( capS > 59 ) then -- not sure if I need these here or not, will test later
+					capS = capS - (60 * math.floor( capS / 60 ) ) -- OMG how did I not figure this out before? Prevents timer for showing more than 60 in seconds spot
+			end
+		
+		capMS = playerTime - math.floor( playerTime )
+			capMS = tostring( capMS )
+			capMS = f2( capMS ) -- trims the string down to the last two decimal places utils.lua
+			capMS = string.gsub( capMS, "%p", "")
+			capMS = tonumber( capMS )
+		capM = math.floor( math.floor( playerTime ) / 60 )
+		
+		if( capM < 10 or capM == nil ) then 
+			if( capM < 1 or capM == nil ) then
+				capM = "00"
+			else
+				capM = "0"..tostring(capM)
+			end
+		end
+		
+		if( capS < 10 or capS == nil or capS == 0) then 
+			if( capS < 1 or capS == nil ) then
+				capS= "00"
+			else
+				capS = "0"..tostring(capS)
+			end
+		end
+		if( capMS < 10 or capMS == nil ) then 
+			if( capMS < 1 or capMS == nil ) then
+				capMS= "00"
+			else
+				capMS = "0"..tostring(capMS)
+			end
+		end
+		if( capMS == 100 ) then capMS = "10" end -- obscure bugfix
+		
+	return tostring(capM) .. ":" .. tostring(capS) .. ":" .. tostring(capMS)
+end
+--============================================================================
+function math.clamp(val, lower, upper)
+    assert(val and lower and upper, "not very useful error message here")
+    if lower > upper then lower, upper = upper, lower end -- swap if boundaries supplied the wrong way
+    return math.max(lower, math.min(upper, val))
+end

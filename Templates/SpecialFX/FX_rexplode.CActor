@@ -15,7 +15,6 @@ function FX_rexplode:OnPrecache()
 end
 
 function FX_rexplode:OnCreateEntity()
-	
     self:BindFX("FX_rexplode1",0.2,"e0")
     self:BindFX("FX_rexplodea",0.2,"e1")
     self:BindFX("FX_rexplodea",0.2,"e2")

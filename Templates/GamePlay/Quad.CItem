@@ -4,7 +4,7 @@ o.Scale = 1.5
 o.LightB = false
 o.DisabledInVoosh = false
 o.LightBearerOnly = false
-o.RespawnTime = 120
+o.RespawnTime = 30
 o.WorkTime = 30
 o.s_SubClass = {
     Animations = {
@@ -97,10 +97,9 @@ function Quad:Tick(delta)
                 self.OnReturnFX()
             elseif Cfg.PowerupDrop then
                 -- wraca na miejsce ale niewidoczny czeka na respawn
-                CItem.Show(self._Entity,0)
+                CItem.Show(self._Entity,false)
                 self.Place = 1             
                 self._Rst = self.RespawnTime * 30 
-                if Cfg.ItemRespawnFix then self._Rst = INP.GetTime() + self.RespawnTime end
             end
         end
     end
@@ -157,7 +156,7 @@ function Quad:TakeFX(pe,sound)
         local ps = Game:FindPlayerStatsByEntity(pe)
         if ps then 
             local txt = string.gsub(Languages.Texts[702],"$PLAYER",ps.Name)
-            CONSOLE_AddMessage(txt)
+            CONSOLE.AddMessage(txt)
         end
     end    
 
@@ -195,7 +194,7 @@ function Quad:OnFinishFX(pe)
             local ps = Game:FindPlayerStatsByEntity(pe)
             if ps then 
                 local txt = string.gsub(Languages.Texts[703],"$PLAYER",ps.Name)
-                CONSOLE_AddMessage(txt)
+                CONSOLE.AddMessage(txt)
             end
         end
     end
@@ -205,7 +204,7 @@ Network:RegisterMethod("Quad.OnFinishFX", NCallOn.ServerAndAllClients, NMode.Rel
 --============================================================================
 -- [NET - SERVER & ALL CLIENTS]
 function Quad:OnReturnFX()
-    CONSOLE_AddMessage(Languages.Texts[704])
+    CONSOLE.AddMessage(Languages.Texts[704])
 end            
 Network:RegisterMethod("Quad.OnReturnFX", NCallOn.ServerAndAllClients, NMode.Reliable, "") 
 --============================================================================

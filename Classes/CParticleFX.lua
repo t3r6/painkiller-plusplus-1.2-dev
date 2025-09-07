@@ -57,10 +57,7 @@ ParticleFXArray = {
     
 }
 --============================================================================
-function LoadParticleFX(entity,name)   
-
-    if(IsBlockedPFX(name)) then name = "EvilMonkEye" end
-
+function LoadParticleFX(entity,name)    
     local fx = nil
     ParticleFX = nil
     if not ParticleFXArray[name] then 
@@ -88,7 +85,7 @@ function LoadParticleFX(entity,name)
     
 end
 --============================================================================
-function AddParticleFX(x,y,z,name) 
+function AddParticleFX(x,y,z,name)    
     if true then return end
     local e = ENTITY.Create(ETypes.ParticleFX,ParticlesFX[name][2],name)  
     ENTITY.SetScale(e,ParticlesFX[name][1])      
@@ -97,10 +94,7 @@ function AddParticleFX(x,y,z,name)
     return e
 end 
 --============================================================================
-function AddPFX(effect,scale,pos,rot) 
-
-    if(IsBlockedPFX(effect)) then effect = "EvilMonkEye" end
-   			
+function AddPFX(effect,scale,pos,rot)    
     local e = ENTITY.Create(ETypes.ParticleFX,"",effect)
     LoadParticleFX(e,effect)    
     if pos then ENTITY.SetPosition(e,pos.X,pos.Y,pos.Z) end
@@ -110,45 +104,3 @@ function AddPFX(effect,scale,pos,rot)
     return e
 end
 --============================================================================
-function IsBlockedPFX(effect)
-
-	--if true then return false end
-
-    --if(effect == "BodyBlood" and Cfg.NoBlood) then return true end
-    --if(effect == "FX_gib_blood" and Cfg.NoBlood) then return true end
-     
-    --if(effect == "FX_rexplode1" and Cfg.NoExplosions) then return true end
-    --if(effect == "FX_rexplodea" and Cfg.NoExplosions) then return true end
-    --if(effect == "GrenadeSmoke" and Cfg.NoExplosions) then return true end
-    --if(effect == "Grenade" and Cfg.NoExplosions) then return true end
-    --if(effect == "stakeHitWall" and Cfg.NoExplosions) then return true end
-    --if(effect == "molotowexplo" and Cfg.NoExplosions) then return true end
-    
-    --if(effect == "gibExplosion" and Cfg.NoGibs) then return true end
-    --if(effect == "BodyExplosion" and Cfg.NoGibs) then return true end
-   
-    --if(effect == "but" and Cfg.NoSmoke) then return true end
-    --if(effect == "butbig" and Cfg.NoSmoke) then return true end
-    --if(effect == "butk" and Cfg.NoSmoke) then return true end
-    --if(effect == "FX_shotgunmp" and Cfg.NoSmoke) then return true end
-    --if(effect == "shotgunHitWall" and Cfg.NoSmoke) then return true end
-    --if(effect == "shotgunHitWater" and Cfg.NoSmoke) then return true end
-    --if(effect == "sgKamykFX" and Cfg.NoSmoke) then return true end
-    --if(effect == "RocketSmoke" and Cfg.NoSmoke) then return true end
-    if(effect == "dymm" and Cfg.NoSmoke) then return true end
-    if(effect == "acidsmoke" and Cfg.NoSmoke) then return true end
-     
-    --if(effect == "spawn_effect" and Cfg.NoSpawnEffects) then return true end
-    --if(effect == "spawn_smoke" and Cfg.NoSpawnEffects) then return true end
-    
-    --if(effect == "stakeflame" and Cfg.NoFlames) then return true end
-    --if(effect == "RFT_smallflame" and Cfg.NoFlames) then return true end
-    --if(effect == "RFT_flame" and Cfg.NoFlames) then return true end
-    --if(effect == "RFT_flameWarp" and Cfg.NoFlames) then return true end
-    --if(effect == "barrel_flame_FX" and Cfg.NoFlames) then return true end
-    if(effect == "demonflame" and Cfg.NoFlames) then return true end
-    if(effect == "Pochodnia_flame" and Cfg.NoFlames) then return true end
-    if(effect == "Pochodnia_flame_re" and Cfg.NoFlames) then return true end
-  
-    return false
-end

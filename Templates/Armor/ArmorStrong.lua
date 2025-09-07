@@ -23,19 +23,10 @@ function ArmorStrong:Client_OnCreateEntity(entity)
 	end
 end
 --============================================================================
-function ArmorStrong:OnTake(player) 
-    if(MPCfg.ProPlus and self.RescueFactor == 0.33)then
-    	self.RescueFactor = 0.5
-    end   
+function ArmorStrong:OnTake(player)    
     if player.Armor * player.ArmorRescueFactor >= self.ArmorAdd * self.RescueFactor then return true end
     self.TakeFX(player._Entity,self.ArmorType)
     player.ArmorFound = player.ArmorFound + 1
-    -- PiTaBOT server mod
-    if(Cfg.PitabotEnabled)then
-	    local ps = Game.PlayerStats[player.ClientID]
-	    PBLogEvent(ps.Name, "TakeArmor", { player.Health, player.Armor, player.ArmorType })
-    end
-    -- end
 end
 --============================================================================
 function ArmorStrong:TakeFX(pe,atype)
@@ -48,10 +39,7 @@ function ArmorStrong:TakeFX(pe,atype)
     if player then        
         player.ArmorType = atype
         player.Armor = t.ArmorAdd
-        if(MPCfg.ProPlus and t.RescueFactor == 0.33)then
-        	t.RescueFactor = 0.5
-        end
-        player.ArmorRescueFactor = t.RescueFactor  
+        player.ArmorRescueFactor = t.RescueFactor   
         if player == Player then player:PickupFX() end
     end
 

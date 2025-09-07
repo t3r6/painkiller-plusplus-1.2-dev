@@ -82,9 +82,7 @@ Network.mt.__call = function(tbl,...)
             cID = arg[1]
             table.remove(arg,1)            
         end
-	
         SendNetMethod(tbl,cID,false,reliable,unpack(arg))
-
         if Game.GMode == GModes.MultiplayerServer or Game.GMode == GModes.DedicatedServer then
             tbl[6](nil,unpack(arg))
         end
@@ -118,7 +116,7 @@ Network.mt.__call = function(tbl,...)
 
 end  
 ------------------------------------------------------------------------------
-function RawCallMethod(tbl,...)   
+function RawCallMethod(tbl,...)
     tbl[6](nil,unpack(arg))
 end
 ------------------------------------------------------------------------------
@@ -211,7 +209,7 @@ function SendNetMethod(event,clientID,singleClient,reliable,...)
     msgnr = msgnr +1
 end
 ------------------------------------------------------------------------------
-function GetNetEvent(msg,clientID)  
+function GetNetEvent(msg,clientID)      
     local euin = NET.MsgReadVar(msg,"b")
     local event = Network.SortedMethods[euin]
     if not event then 

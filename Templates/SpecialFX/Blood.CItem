@@ -27,14 +27,13 @@ function Blood:OnCreateEntity()
     --local pfx
     --ENTITY.RegisterChild(self._Entity,pfx)    
     self.TimeToLive = 3 * 30 -- na wszelki wypadek gdy nie zadziala kolizja
-    --end
 end
 
 function Blood:OnDamage()
 end
 
 function Blood:OnCollision(x,y,z,nx,ny,nz,e)
-    local size = FRand(1,2)
+	local size = FRand(1,2)
     local b
     if Tweak.GlobalData.GermanVersion then
         b = {'bloodSmall_German','bloodSmall2_German','bloodSmall3_German'}
@@ -50,7 +49,6 @@ function Blood:OnCollision(x,y,z,nx,ny,nz,e)
 		end
 	end
     GObjects:ToKill(self)
-    
 end
 
 Blood.Client_OnCollision = Blood.OnCollision

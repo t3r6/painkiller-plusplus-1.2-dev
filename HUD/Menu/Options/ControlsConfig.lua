@@ -9,8 +9,6 @@ ControlsConfig =
 
 	menuWidth   = 880,
 	fontBigSize = 26,
-	fontBig		= "timesbd",
-	fontSmall	= "timesbd",
 
 	items =
 	{
@@ -93,7 +91,7 @@ ControlsConfig =
 					option = "MouseSensitivity",
 					minValue = 1,
 					maxValue = 100,
-					isFloat = true,
+					isFloat = false,
 					x	 = 380,
 					y	 = 544,
 					action = "",

@@ -3080,7 +3080,7 @@ function CActor:ExplodeBody()
 				end
 				obj:Synchronize()
 			else
-				if not Cfg.NoGibs then self:AddPFX("BodyExplosion", size ,Vector:New(x,y,z)) end
+				self:AddPFX("BodyExplosion", size ,Vector:New(x,y,z))
 			end
         end
         if self.AiParams.madonnaFX then
@@ -3286,14 +3286,12 @@ function CActor:BloodFX(x,y,z,nx,ny,nz)
         local vz = FRand(-3,3) -- velocity z
         ENTITY.SetVelocity(ke,vx,vy,vz)
     end
-    if not Cfg.NoBlood then 
     if nx then
         if Tweak.GlobalData.GermanVersion then
 			self:AddPFX("BodyBlood_german",0.3,Vector:New(x,y,z),Quaternion:New_FromNormal(nx,ny,nz))
         else
 			self:AddPFX("BodyBlood",0.3,Vector:New(x,y,z),Quaternion:New_FromNormal(nx,ny,nz))
 		end
-    end
     end
 end
 --============================================================================

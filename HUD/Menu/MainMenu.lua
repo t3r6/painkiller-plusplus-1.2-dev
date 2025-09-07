@@ -5,38 +5,46 @@ MainMenu =
 	bgStartFrame = { 120, 243, 267 },
 	bgEndFrame   = { 180, 266, 291 },
 
-	textColor	= R3D.RGBA( 255, 255, 255, 255 ),
+	textColor	= R3D.RGBA( 100, 100, 100, 255 ),
 	disabledColor = R3D.RGBA( 155, 155, 155, 255 ),
 	
-	fontBigTex  = "../PKPlusData/font_texturka_alpha",
-	fontSmallTex  = "../PKPlusData/font_texturka_alpha",
+	fontBigTex  = "HUD/font_texturka_alpha",
+	fontSmallTex  = "HUD/font_texturka_alpha",
 	descColor	= R3D.RGB( 255, 255, 255 ),
 
-	useItemBG = false,
+	useItemBG = true,
 
 	items		=
 	{
-
-		
-		modcredits =
+		SignAPact =
 		{
-			text = "PK++ Mod Credits",
-			desc = "PK++ Developers and Contributions",
-			x	 = 500,
-			y	 = 750,
-			action = "PainMenu:ActivateScreen(PKpluscredits)",
-			align = MenuAlign.Center,
-			sndLightOn = "menu/menu/option-light-on_main4",
-			textColor	= R3D.RGBA( 255, 255, 255, 255 ),
-			fontBigSize = 26,
+			text = TXT.Menu.SignAPact,
+			desc = TXT.MenuDesc.SignAPact,
+			x	 = -1,
+			y	 = 210,
+			action = "if not IsPKInstalled() then PainMenu:SignAPactBooHOnly(1,true) elseif not IsBooHInstalled() then PainMenu:SignAPactPKOnly(1,false) else PainMenu:ActivateScreen(GameMenu) end",
+--			action = "PMENU:SwitchToMap()",
+			sndLightOn = "menu/menu/option-light-on_main",
+--			disabled = 1,
+		},
+		
+		LoadGame =
+		{
+			text = TXT.Menu.LoadGame,
+			desc = TXT.MenuDesc.LoadGame,
+			x	 = -1,
+			y	 = 290,
+			action = "PainMenu:ActivateScreen(LoadSaveMenu)",
+--			disabled = 1,
+			sndLightOn = "menu/menu/option-light-on_main2",
 		},
 
 		Multiplayer =
 		{
-			text = "Multiplayer",
+			text = TXT.Menu.Multiplayer,
 			desc = TXT.MenuDesc.Multiplayer,
-			x	 = 15,
-			y	 = 550,
+			x	 = -1,
+			y	 = 370,
 			action = "PainMenu:ActivateScreen(MultiplayerMenu)",
 			sndLightOn = "menu/menu/option-light-on_main3",
 --			disabled = 1,
@@ -46,8 +54,8 @@ MainMenu =
 		{
 			text = TXT.Menu.Options,
 			desc = TXT.MenuDesc.Options,
-			x	 = 15,
-			y	 = 630,
+			x	 = -1,
+			y	 = 450,
 			action = "PainMenu:ActivateScreen(OptionsMenu)",
 			sndLightOn = "menu/menu/option-light-on_main4",
 		},
@@ -56,8 +64,8 @@ MainMenu =
 		{
 			text = TXT.Menu.Quit,
 			desc = TXT.MenuDesc.Quit,
-			x	 = 15,
-			y	 = 710,
+			x	 = -1,
+			y	 = 530,
 			action = "PainMenu:AskYesNo( Languages.Texts[469], 'Exit()', 'PainMenu:ActivateScreen(MainMenu)' )",
 --			action = "PainMenu:AskYesNo( Languages.Texts[469], 'PainMenu:ActivateScreen(DemoEnd)', 'PainMenu:ActivateScreen(MainMenu)' )",
 			sndLightOn = "menu/menu/option-light-on_main5",
@@ -68,9 +76,10 @@ MainMenu =
 			text = TXT.Menu.Return,
 			desc = TXT.MenuDesc.Return,
 			textColor	= R3D.RGBA( 255, 255, 255, 255 ),
-			x	 = 800,
-			y	 = 50,
+			x	 = 72,
+			y	 = 660,
 			fontBigSize = 36,
+			align = MenuAlign.Left,
 			inGameOnly = 1,
 			action = "PMENU.ResumeSounds(); PMENU.ReturnToGame(); PainMenu:ReloadBrightskins()",
 			useItemBG = false,
@@ -95,14 +104,26 @@ MainMenu =
 			text = TXT.Menu.Disconnect,
 			desc = TXT.MenuDesc.Disconnect,
 			textColor = R3D.RGBA( 255, 255, 255, 255 ),
-			x	 = 50,
-			y	 = 50,
+			x	 = 952,
+			y	 = 660,
 			fontBigSize = 36,
+			align = MenuAlign.Right,
 			inGameOnly = 1,
 			action = "PainMenu:Disconnect()",
 			useItemBG = false,
 		},
 
+		Credits =
+		{
+			text = TXT.Menu.Credits,
+			desc = TXT.MenuDesc.Credits,
+			textColor	= R3D.RGBA( 255, 255, 255, 255 ),
+			x	 = -1,
+			y	 = 660,
+			fontBigSize = 36,
+			action = "if not IsPKInstalled() then PainMenu:Disconnect(); PMENU.ShowCredits(true) elseif not IsBooHInstalled() then PainMenu:Disconnect(); PMENU.ShowCredits(false) else PainMenu:ActivateScreen(CreditsMenu) end",
+			useItemBG = false,
+		},
 --[[
 		Quit =
 		{
@@ -149,8 +170,8 @@ MainMenu =
 			descColor	= R3D.RGB( 255, 255, 255 ),
 			sndAccept   = "menu/menu/apply-accept",
 			sndLightOn  = "menu/menu/back-light-on",
-			fontBigTex  = "../PKPlusData/font_texturka_alpha",
-			fontSmallTex= "../PKPlusData/font_texturka_alpha",
+			fontBigTex  = "HUD/font_texturka_alpha",
+			fontSmallTex= "HUD/font_texturka_alpha",
 		}
 ]]--
 	}

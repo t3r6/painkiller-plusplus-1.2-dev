@@ -8,16 +8,17 @@ BackButton =
 {
 	text		= TXT.Menu.Back,
 	desc		= TXT.MenuDesc.Back,
-	x			= 25,
-	y			= 20,
+	x			= 72,
+	y			= 660,
 	fontBigSize = 36,
+	align		= MenuAlign.Left,
 	useItemBG	= false,
 	textColor	= R3D.RGBA( 255, 255, 255, 255 ),
 	descColor	= R3D.RGB( 255, 255, 255 ),
 	sndAccept   = "menu/menu/back-accept",
 	sndLightOn  = "menu/menu/back-light-on",
-	fontBigTex  = "../PKPlusData/font_texturka_alpha",
-	fontSmallTex= "../PKPlusData/font_texturka_alpha",
+	fontBigTex  = "HUD/font_texturka_alpha",
+	fontSmallTex= "HUD/font_texturka_alpha",
 }
 
 ApplyButton =
@@ -33,25 +34,20 @@ ApplyButton =
 	descColor	= R3D.RGB( 255, 255, 255 ),
 	sndAccept   = "menu/menu/apply-accept",
 	sndLightOn  = "menu/menu/back-light-on",
-	fontBigTex  = "../PKPlusData/font_texturka_alpha",
-	fontSmallTex= "../PKPlusData/font_texturka_alpha",
+	fontBigTex  = "HUD/font_texturka_alpha",
+	fontSmallTex= "HUD/font_texturka_alpha",
 }
 
 -- Menu screens
 
-
-
-
-
-
-if Cfg.TournamentSettings == false then 
-	
-	DoFile(path.."HUD/Menu/Multiplayer/PlayerOptions.lua")	
+DoFile(path.."HUD/Menu/Dialogs.lua")
+if not IsBlackEdition() then
+	DoFile(path.."HUD/Menu/MainMenu.lua")
+	DoFile(path.."HUD/Menu/Options/OptionsMenu.lua")
 else
-	DoFile(path.."HUD/Menu/Multiplayer/Tournament/PlayerOptions.lua")
+	DoFile(path.."HUD/Menu/MainMenuBlack.lua")
+	DoFile(path.."HUD/Menu/Options/OptionsMenuBlack.lua")
 end
-
-DoFile(path.."HUD/Menu/PKpluscredits.lua")
 DoFile(path.."HUD/Menu/NewGameMenu.lua")
 DoFile(path.."HUD/Menu/GameMenu.lua")
 DoFile(path.."HUD/Menu/DemoEnd.lua")
@@ -63,7 +59,6 @@ DoFile(path.."HUD/Menu/Multiplayer/LANGameMenu.lua")
 DoFile(path.."HUD/Menu/Multiplayer/FavoritesGameMenu.lua")
 DoFile(path.."HUD/Menu/Multiplayer/StartGameMenu.lua")
 DoFile(path.."HUD/Menu/Multiplayer/CreateServerMenu.lua")
-DoFile(path.."HUD/Menu/Options/OptionsMenu.lua")
 DoFile(path.."HUD/Menu/Options/VideoOptions.lua")
 DoFile(path.."HUD/Menu/Options/AdvancedVideoOptions.lua")
 DoFile(path.."HUD/Menu/Options/SoundOptions.lua")
@@ -71,10 +66,8 @@ DoFile(path.."HUD/Menu/Options/HUDConfig.lua")
 DoFile(path.."HUD/Menu/Options/ControlsConfig.lua")
 DoFile(path.."HUD/Menu/Options/WeaponsConfig.lua")
 DoFile(path.."HUD/Menu/Options/MessagesConfig.lua")
+DoFile(path.."HUD/Menu/Multiplayer/PlayerOptions.lua")
 DoFile(path.."HUD/Menu/SaveGame/LoadSaveMenu.lua")
-DoFile(path.."HUD/Menu/MainMenu.lua")
-DoFile(path.."HUD/Menu/Dialogs.lua")
-DoFile(path.."HUD/Menu/Options/Pkgui.lua")
 
 --============================================================================
 
@@ -105,17 +98,17 @@ PainMenu =
 
 	-- Colors
 --	textColor	= R3D.RGBA( 66, 3, 3, 200 ),
-	textColor	= R3D.RGBA( 255, 255, 255, 255 ),
+	textColor	= R3D.RGBA( 255, 186, 122, 255 ),
 	disabledColor = R3D.RGBA( 155, 86, 22, 255 ),
 	underMouseColor = R3D.RGBA( 166, 3, 3, 255 ),
-	descColor	= R3D.RGB( 255, 255, 255 ),
+	descColor	= R3D.RGB( 255, 186, 122 ),
 
 	itemsFadeLength = 15,
 	itemsDrawShadow = true,
 
 --	background	= "../Data/Movies/menu.avi",
 --	bgType		= MenuBackgroundTypes.Movie,
-	background	= "../PKPlusData/Menu",
+	background	= "HUD/Menu",
 	bgType		= MenuBackgroundTypes.Image,
 
 	sndAccept   = "menu/menu/option-accept",
@@ -369,14 +362,12 @@ end
 function PainMenu:Draw()
 	if self.showStartMovies then
 		if IsFinalBuild() then
-			--PMENU.PlayMovie('../Data/Movies/logo-dreamcatcher.bik');
-			--PMENU.PlayMovie('../Data/Movies/logo-pcf.bik');
-			--PMENU.PlayMovie('../Data/Movies/logo-nvidia.bik');
-			PMENU.PlayMovie('../Data/PKPlusData/startup_logo.dds');
+			PMENU.PlayMovie('../Data/Movies/logo-dreamcatcher.bik');
+			PMENU.PlayMovie('../Data/Movies/logo-pcf.bik');
+			PMENU.PlayMovie('../Data/Movies/logo-nvidia.bik');
 		end
 		self.showStartMovies = false
 	end
-	
 end
 
 function PainMenu:ActivateScreen( screen )
@@ -390,9 +381,9 @@ function PainMenu:ActivateScreen( screen )
 	PMENU.ClearScreen()
 	PainMenu:SetupScreen( screen )
 	
-	--if Cfg.BlackEdition then
-		--screen.background = "HUD/Menu_black"
-	--end
+	if Cfg.BlackEdition then
+		screen.background = "HUD/Menu_black"
+	end
 	
 	PMENU.SetBackground( screen.background, screen.bgType )
 	PMENU.SetMenuWidth( screen.menuWidth )
@@ -498,16 +489,6 @@ function PainMenu:ActivateScreen( screen )
 		item = self.currScreen.items.GeneralTab.items.PublicServer
 		if not IsPKInstalled() then PMENU.DisableItem( "PublicServer" ) end
 	end
-	
-	if(Cfg and Cfg.DirectInput) then
-	INP.SetUseDInput(Cfg.DirectInput)
-	else
-	INP.SetUseDInput(true)
-	end
-	INP.Reset()
-	Game.WaitForServer = nil        
-	Game.Active = true
-	--MOUSE.Lock()
 end
 
 function PainMenu:AddItem( i, o )
@@ -1122,7 +1103,7 @@ function PainMenu:OpenMenu()
 	PainMenu:ReadFavoriteServers()
 	
 	if IsCDCheckEnabled() then
-		--PainMenu:ShowNoCDWarning()
+		PainMenu:ShowNoCDWarning()
 	end
 end
 
@@ -1551,11 +1532,6 @@ function PainMenu:AddMapTable( name, item )
 	self.mapsOnServerDUE = {}
 	for i=1,table.getn(Cfg.ServerMapsDUE) do
 		self.mapsOnServerDUE[i] = Cfg.ServerMapsDUE[i]
-	end
-	
-	self.mapsOnServerCLA = {}
-	for i=1,table.getn(Cfg.ServerMapsCLA) do
-		self.mapsOnServerCLA[i] = Cfg.ServerMapsCLA[i]
 	end
 	
 	self.mapsOnServerLMS = {}
@@ -2082,7 +2058,7 @@ end
 
 function PainMenu:ApplyVideoSettings()
 	WORLD.SetDrawDynLights( Cfg.DynamicLights )
-	R3D.ApplyVideoSettings( Cfg.Resolution, Cfg.Fullscreen , Cfg.Gamma, Cfg.Brightness, Cfg.Contrast, Cfg.Shadows, Cfg.TextureQuality, Cfg.WeatherEffects, Cfg.ViewWeaponModel, Cfg.TextureFiltering, Cfg.DynamicLights, Cfg.Projectors, Cfg.Coronas, Cfg.Decals, Cfg.DecalsStay )
+	R3D.ApplyVideoSettings( Cfg.Resolution, Cfg.Fullscreen, Cfg.Gamma, Cfg.Brightness, Cfg.Contrast, Cfg.Shadows, Cfg.TextureQuality, Cfg.WeatherEffects, Cfg.ViewWeaponModel, Cfg.TextureFiltering, Cfg.DynamicLights, Cfg.Projectors, Cfg.Coronas, Cfg.Decals, Cfg.DecalsStay )
 	if Lev ~= nil then
 		Lev:ReloadSky(nil)
 		Lev:ReloadDetailMaps()
@@ -2540,9 +2516,6 @@ function PainMenu:UpdateMapTable(name,mode)
 	elseif self.lastMPMode == "Duel" then
 		self.mapsOnServerDUE = {}
 		Cfg.ServerMapsDUE = {}
-	elseif self.lastMPMode == "Clan Arena" then
-		self.mapsOnServerCLA = {}
-		Cfg.ServerMapsCLA = {}
 	elseif self.lastMPMode == "Last Man Standing" then
 		self.mapsOnServerLMS = {}
 		Cfg.ServerMapsLMS = {}
@@ -2566,9 +2539,6 @@ function PainMenu:UpdateMapTable(name,mode)
 		elseif self.lastMPMode == "Capture The Flag" then
 			self.mapsOnServerCTF[i] = val
 			Cfg.ServerMapsCTF[i] = val
-		elseif self.lastMPMode == "Clan Arena" then
-			self.mapsOnServerCLA[i] = val
-			Cfg.ServerMapsCLA[i] = val
 		elseif self.lastMPMode == "People Can Fly" then
 			self.mapsOnServerPCF[i] = val
 			Cfg.ServerMapsPCF[i] = val
@@ -2604,22 +2574,17 @@ function PainMenu:UpdateMapTable(name,mode)
 		tmp_tab = self.mapsOnServerDUE
 	elseif mode == "Last Man Standing" then
 		tmp_tab = self.mapsOnServerLMS
-	elseif mode == "Clan Arena" then
-		tmp_tab = self.mapsOnServerCLA
 	end
 
 	self.mapsOnServer = {}
 	Cfg.ServerMaps = {}
 
 	PMENU.RemoveAllMapsFromServer( name )
-	
-	if(tmp_tab~=nil) then
-		for i=1,table.getn(tmp_tab) do
-			PMENU.AddMapToServer( name, tmp_tab[i] )
-			self.mapsOnServer[i] = tmp_tab[i]
-			Cfg.ServerMaps[i] = tmp_tab[i]
-	    	end
-    	end
+	for i=1,table.getn(tmp_tab) do
+		PMENU.AddMapToServer( name, tmp_tab[i] )
+		self.mapsOnServer[i] = tmp_tab[i]
+		Cfg.ServerMaps[i] = tmp_tab[i]
+    end
 
 	self.lastMPMode = mode
 	Cfg.GameMode = mode
@@ -2729,11 +2694,6 @@ function PainMenu:ReleasePlayerModel( name )
 
 	WORLD.DeleteDelayedEntities()
 
-end
-
-function PainMenu:ReloadFOV()
-    PainMenu.cameraFOV = Cfg.FOV    
-    R3D.SetCameraFOV(Cfg.FOV)
 end
 
 function PainMenu:ReloadBrightskins()
@@ -2851,8 +2811,8 @@ function PainMenu_PrintGameVersion()
 		ver = "Version: "..PK_VERSION.." MP Demo"
     end
     local tw = HUD.GetTextWidth(ver)
-   --HUD.PrintXY(w-tw-54*w/1024,54*h/768,ver,"timesbd",0,0,0,16)
-    --HUD.PrintXY(w-tw-53*w/1024,53*h/768,ver,"timesbd",255,186,122,16)
+    HUD.PrintXY(w-tw-54*w/1024,54*h/768,ver,"timesbd",0,0,0,16)
+    HUD.PrintXY(w-tw-53*w/1024,53*h/768,ver,"timesbd",255,186,122,16)
 end
 
 function PainMenu:SignAPact(mode,addon)
@@ -3057,6 +3017,7 @@ function PainMenu:CheckCDInDrive()
 
 	if path then
 		local file = FS.FindFiles(path.."painkiller.ico",1,0)
+		if not file[1] then file = FS.FindFiles(path.."autorun.inf",1,0) end
 		if not file[1] then file = FS.FindFiles(path.."painkiller.003",1,0) end
 		if not file[1] then file = FS.FindFiles(path.."PainkillerSetup.003",1,0) end
 		if file[1] then

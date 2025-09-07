@@ -269,88 +269,9 @@ function Levels_GetSketchByDir(dir)
 		return "HUD/Map/sketch_mp"
 	end
 
-	local ldir = string.lower(dir)
-	if string.find(ldir,string.lower("DM_")) or string.find(dir,"DMPCF_") or string.find(dir,"CTF_") then
-	if(string.find(ldir,string.lower("ctf_chaos-a")))then return "../PKPlusData/Maps/ctf_chaos-a" end
-	if(string.find(ldir,string.lower("ctf_chaos-b")))then return "../PKPlusData/Maps/ctf_chaos-b" end
-	if(string.find(ldir,string.lower("ctf_chaos-c")))then return "../PKPlusData/Maps/ctf_chaos-c" end
-	if(string.find(ldir,string.lower("ctf_chaos")))then return "../PKPlusData/Maps/ctf_chaos" end
-	if(string.find(ldir,string.lower("ctf_forbidden-a")))then return "../PKPlusData/Maps/ctf_forbidden-a" end
-	if(string.find(ldir,string.lower("ctf_forbidden-b")))then return "../PKPlusData/Maps/ctf_forbidden-b" end
-	if(string.find(ldir,string.lower("ctf_forbidden-c")))then return "../PKPlusData/Maps/ctf_forbidden-c" end
-	if(string.find(ldir,string.lower("ctf_forbidden")))then return "../PKPlusData/Maps/ctf_forbidden" end
-	if(string.find(ldir,string.lower("ctf_trainstation-a")))then return "../PKPlusData/Maps/ctf_trainstation-a" end
-	if(string.find(ldir,string.lower("ctf_trainstation-b")))then return "../PKPlusData/Maps/ctf_trainstation-b" end
-	if(string.find(ldir,string.lower("ctf_trainstation-c")))then return "../PKPlusData/Maps/ctf_trainstation-c" end
-	if(string.find(ldir,string.lower("ctf_trainstation")))then return "../PKPlusData/Maps/ctf_trainstation" end
-	if(string.find(ldir,string.lower("dmpcf_tower")))then return "../PKPlusData/Maps/dmpcf_tower" end
-	if(string.find(ldir,string.lower("dmpcf_warehouse")))then return "../PKPlusData/Maps/dmpcf_warehouse" end
-	if(string.find(ldir,string.lower("dm_5quid01-a")))then return "../PKPlusData/Maps/dm_5quid01-a" end
-	if(string.find(ldir,string.lower("dm_5quid01-b")))then return "../PKPlusData/Maps/dm_5quid01-b" end
-	if(string.find(ldir,string.lower("dm_5quid01-c")))then return "../PKPlusData/Maps/dm_5quid01-c" end
-	if(string.find(ldir,string.lower("dm_5quid01")))then return "../PKPlusData/Maps/dm_5quid01" end
-	if(string.find(ldir,string.lower("dm_absinthe-a")))then return "../PKPlusData/Maps/dm_absinthe-a" end
-	if(string.find(ldir,string.lower("dm_absinthe-b")))then return "../PKPlusData/Maps/dm_absinthe-b" end
-	if(string.find(ldir,string.lower("dm_absinthe-c")))then return "../PKPlusData/Maps/dm_absinthe-c" end
-	if(string.find(ldir,string.lower("dm_absinthe")))then return "../PKPlusData/Maps/dm_absinthe" end
-	if(string.find(ldir,string.lower("dm_ballistic-a")))then return "../PKPlusData/Maps/dm_ballistic-a" end
-	if(string.find(ldir,string.lower("dm_ballistic-b")))then return "../PKPlusData/Maps/dm_ballistic-b" end
-	if(string.find(ldir,string.lower("dm_ballistic-c")))then return "../PKPlusData/Maps/dm_ballistic-c" end
-	if(string.find(ldir,string.lower("dm_ballistic")))then return "../PKPlusData/Maps/dm_ballistic" end
-	if(string.find(ldir,string.lower("dm_cursed-a")))then return "../PKPlusData/Maps/dm_cursed-a" end
-	if(string.find(ldir,string.lower("dm_cursed-b")))then return "../PKPlusData/Maps/dm_cursed-b" end
-	if(string.find(ldir,string.lower("dm_cursed-c")))then return "../PKPlusData/Maps/dm_cursed-c" end
-	if(string.find(ldir,string.lower("dm_cursed")))then return "../PKPlusData/Maps/dm_cursed" end
-	if(string.find(ldir,string.lower("dm_exmortis-a")))then return "../PKPlusData/Maps/dm_exmortis-a" end
-	if(string.find(ldir,string.lower("dm_exmortis-b")))then return "../PKPlusData/Maps/dm_exmortis-b" end
-	if(string.find(ldir,string.lower("dm_exmortis-c")))then return "../PKPlusData/Maps/dm_exmortis-c" end
-	if(string.find(ldir,string.lower("dm_exmortis")))then return "../PKPlusData/Maps/dm_exmortis" end
-	if(string.find(ldir,string.lower("dm_factory-a")))then return "../PKPlusData/Maps/dm_factory-a" end
-	if(string.find(ldir,string.lower("dm_factory-b")))then return "../PKPlusData/Maps/dm_factory-b" end
-	if(string.find(ldir,string.lower("dm_factory-c")))then return "../PKPlusData/Maps/dm_factory-c" end
-	if(string.find(ldir,string.lower("dm_factory")))then return "../PKPlusData/Maps/dm_factory" end
-	if(string.find(ldir,string.lower("dm_fallen1-a")))then return "../PKPlusData/Maps/dm_fallen1-a" end
-	if(string.find(ldir,string.lower("dm_fallen1-b")))then return "../PKPlusData/Maps/dm_fallen1-b" end
-	if(string.find(ldir,string.lower("dm_fallen1-c")))then return "../PKPlusData/Maps/dm_fallen1-c" end
-	if(string.find(ldir,string.lower("dm_fallen1")))then return "../PKPlusData/Maps/dm_fallen1" end
-	if(string.find(ldir,string.lower("dm_fallen2-a")))then return "../PKPlusData/Maps/dm_fallen2-a" end
-	if(string.find(ldir,string.lower("dm_fallen2-b")))then return "../PKPlusData/Maps/dm_fallen2-b" end
-	if(string.find(ldir,string.lower("dm_fallen2-c")))then return "../PKPlusData/Maps/dm_fallen2-c" end
-	if(string.find(ldir,string.lower("dm_fallen2")))then return "../PKPlusData/Maps/dm_fallen2" end
-	if(string.find(ldir,string.lower("dm_fallen2te-a")))then return "../PKPlusData/Maps/dm_fallen2te-a" end
-	if(string.find(ldir,string.lower("dm_fallen2te-b")))then return "../PKPlusData/Maps/dm_fallen2te-b" end
-	if(string.find(ldir,string.lower("dm_fallen2te-c")))then return "../PKPlusData/Maps/dm_fallen2te-c" end
-	if(string.find(ldir,string.lower("dm_fallen2te")))then return "../PKPlusData/Maps/dm_fallen2te" end
-	if(string.find(ldir,string.lower("dm_fragenstein-a")))then return "../PKPlusData/Maps/dm_fragenstein-a" end
-	if(string.find(ldir,string.lower("dm_fragenstein-b")))then return "../PKPlusData/Maps/dm_fragenstein-b" end
-	if(string.find(ldir,string.lower("dm_fragenstein-c")))then return "../PKPlusData/Maps/dm_fragenstein-c" end
-	if(string.find(ldir,string.lower("dm_fragenstein")))then return "../PKPlusData/Maps/dm_fragenstein" end
-	if(string.find(ldir,string.lower("dm_illuminati-a")))then return "../PKPlusData/Maps/dm_illuminati-a" end
-	if(string.find(ldir,string.lower("dm_illuminati-b")))then return "../PKPlusData/Maps/dm_illuminati-b" end
-	if(string.find(ldir,string.lower("dm_illuminati-c")))then return "../PKPlusData/Maps/dm_illuminati-c" end
-	if(string.find(ldir,string.lower("dm_illuminati")))then return "../PKPlusData/Maps/dm_illuminati" end
-	if(string.find(ldir,string.lower("dm_mine-a")))then return "../PKPlusData/Maps/dm_mine-a" end
-	if(string.find(ldir,string.lower("dm_mine-b")))then return "../PKPlusData/Maps/dm_mine-b" end
-	if(string.find(ldir,string.lower("dm_mine-c")))then return "../PKPlusData/Maps/dm_mine-c" end
-	if(string.find(ldir,string.lower("dm_mine")))then return "../PKPlusData/Maps/dm_mine" end
-	if(string.find(ldir,string.lower("dm_psycho-a")))then return "../PKPlusData/Maps/dm_psycho-a" end
-	if(string.find(ldir,string.lower("dm_psycho-b")))then return "../PKPlusData/Maps/dm_psycho-b" end
-	if(string.find(ldir,string.lower("dm_psycho-c")))then return "../PKPlusData/Maps/dm_psycho-c" end
-	if(string.find(ldir,string.lower("dm_psycho")))then return "../PKPlusData/Maps/dm_psycho" end
-	if(string.find(ldir,string.lower("dm_sacred-a")))then return "../PKPlusData/Maps/dm_sacred-a" end
-	if(string.find(ldir,string.lower("dm_sacred-b")))then return "../PKPlusData/Maps/dm_sacred-b" end
-	if(string.find(ldir,string.lower("dm_sacred-c")))then return "../PKPlusData/Maps/dm_sacred-c" end
-	if(string.find(ldir,string.lower("dm_sacred")))then return "../PKPlusData/Maps/dm_sacred" end
-	if(string.find(ldir,string.lower("dm_trainstation-a")))then return "../PKPlusData/Maps/dm_trainstation-a" end
-	if(string.find(ldir,string.lower("dm_trainstation-b")))then return "../PKPlusData/Maps/dm_trainstation-b" end
-	if(string.find(ldir,string.lower("dm_trainstation-c")))then return "../PKPlusData/Maps/dm_trainstation-c" end
-	if(string.find(ldir,string.lower("dm_trainstation")))then return "../PKPlusData/Maps/dm_trainstation" end
-	if(string.find(ldir,string.lower("dm_unseen-a")))then return "../PKPlusData/Maps/dm_unseen-a" end
-	if(string.find(ldir,string.lower("dm_unseen-b")))then return "../PKPlusData/Maps/dm_unseen-b" end
-	if(string.find(ldir,string.lower("dm_unseen-c")))then return "../PKPlusData/Maps/dm_unseen-c" end
+	if string.find(dir,"DM_") or string.find(dir,"DMPCF_") or string.find(dir,"CTF_") then
 		return "HUD/Map/sketch_mp"
 	end
-	return "HUD/Map/sketch_mp"
 end
 
 

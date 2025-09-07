@@ -62,7 +62,7 @@ function CheckPoint:OnTake(player)
 	if player.Health < Game.HealthCapacity then
 		if Game.Difficulty < 2 then
 			player.Health = Game.HealthCapacity
-			CONSOLE_AddMessage(Languages.Texts[685])
+			CONSOLE.AddMessage(Languages.Texts[685])
 		end
 	end
 

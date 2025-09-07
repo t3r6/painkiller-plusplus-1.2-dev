@@ -4,134 +4,7 @@ CfgFile = "config.ini"
 --============================================================================
 Cfg = 
 {
-	
-	NoExplosions = false,
-	NoBlood = false,
-	NoGibs = false,
-	NoSmoke = false,
-	NoSpawnEffects = false,
-	NoFlames = false,
-	DirectInput = true,
-	
-	TeamScoresShadowLevel = 2,
-	ShowFPSShadowLevel = 2,
-	ShowPingShadowLevel = 2,
-	ShowTimerShadowLevel = 2,
-	
-	HitSounds = true,
-	NoGong = false,
-	NoMPComments = false,
-	BrightSkins = true,
-	
-	
-	ImpureClientWarning = false,
-	
-	PitabotEnabled = false,
-	
-	ShowTimerShadow = true,
-	ShowFPSShadow = true,
-	ShowPingShadow = true,
-	ShowPingX = 0.8789,
-	ShowPingY = 0.1412,
-	
-	DisableHud = false,
-	
-	AutoScreenshot = false,
-	
-	RocketFix = true,
-	--DeadBodyFix = false,
-	--FreezerFix = false,
-	FallingDamage = true,
-	
-	WeaponPrediction = true,
-	
- 	RestartMaps = true,			
-	--RocketExplosionStrength = 3150,
-	--RocketFactor = 0.6,
-	--RocketFactorOrder = 1,
-	RocketLogging = false,
-	
-	TournamentSettings = false,
-	
-	DisableMOTDRendering = false,
-
-	TeamOverlay = true,
-	CrosshairNames = true,
-	CrosshairNamesTeamOnly = false,
-	CrosshairNamesDisableInDuel = true,
-	TeamScores = true,
-	TeamScoresShadow = true,
-	ConfigMapView = false,
-	MapView = true,
-	MapViewShowRespawns = false,
-
-	MOTD = " ;Enjoy your stay;Have fun!; ",
-
-	AutoTeamLock = false,
-	AutoStatsDump = true,
-	DuelQueue = true,
-
-	WarmupDamage = true,
-	ItemRespawnFix = true,
-	
-	BotMinPlayers = 2,
-	ForceModel = true,
-	ForceSpec = false,
-	RocketsFromGun = true,
-	ProPlus = false,
-	BotAttack = true,
-	BotFindItems = true,
-	BotFakePing = true,
-	BotCheckStubNose = true,
-	ShowPing = false,
-	AmmolistHideWeapons = false,
-	ColouredIcons = false,
-
-	LogfileDaily = true,
-	Logging = true,
-	Logfile = "GameLog",
-	BotSkill = 5,
-	BotNames = {"#4Robotn#4i#1k","Pie#3","#1S#2c#3u#4b#5a#6d#7i#8v#9e#0r","#5B#3lue#4m#5int","#0Unnewerr","C#3o#2smo","#C#4o#5W#4P#3i#2E","E#2liza","#6O#3m#ego","#7F#5rog","#3L#1ippman","C#4H#3#m'1#4astry","#3P#3etronius","#P#3O#2J","#3BlueLizard","#3W#4orrie","#2W#4estbrook","#3D#1HMEJA","#4Sud#1a#4fed","#4Heath#4Moore","P#3oo#0H","O#4ri#2on","#6K#4um#2quat","#6R#4i#6ngo","#4Laur#5ence","#3Sword#2king","klaus", "seb", "#3Gozo#423","#3M#4arvin","Luxor","#4G#3unkel","Will£4456","H#34x#40#2r","#3Billy","#3S#2cott","C#2hewy","#3Bikini#3Girl","#3Pr#4o#1wl","#4Ob#6seq#6ious","Numin","#1Aftershock","MaidMarian","#3Rumbraugh","#4I#1den","#4S#2wiss#5T#6ony","Gabba","#4Grrr","#4O","Aj","#2flump","Powerbladder5.3","S#4tropp","Yurrie"},
-    	BotTaunts = {"are you trying?","lag","do you know who vo0 is?","erm?","...?","I'm not even trying, can you tell?","hmm?","are you aliasing?","damn netcode","u sux","i dont know this map that well","pie","I'm only using keys","Try harder? :)",":o)","hahahahehehe :-)","All hail the king!","leave the armour for me please","I own Maniax, do you know him?",":DDDD","blah","hmmm","stop using the rl please","can we play fallen2 after this?","my mouse feels odd","my monitor just went off","hmm","erm","hm","nm","give me a sec while I clean my mouse","hi","k?","wtf?","cpl what?","err","do you have lag too?","are you in a clan?","how?","ok","sure","yes","erm","good",":)","fu",":/",":p",":d",":))",":o","B)",">:(","<:)","hah","dumdeedum","hmmm..","try aiming?","heh","where is the RL?","dont shoot for a sec","wanna join my clan?","*yawn*","haha","hehe","hoho","mm :)","pow!","I beat vo0 once","damn","zut alors","oh","er"},    
- 	BotEliza = true,
- 	BotChat = true,
- 	BotQuickRespawn = true,
- 	OldScoreboard = false,
- 	AltScoreboard = false,
- 	ScoreboardShowPacketLoss = false,
- 	
- 	CustomCrosshairLocation = false,
- 	CustomCrosshairLocationX = 0.5,
- 	CustomCrosshairLocationY = 0.5,
- 	
- 	TeamScoresX = 0.86,
- 	TeamScoresY = 0.75,
- 	TeamOverlayX = 0.7,
- 	TeamOverlayY = 0.6,
- 	ShowTimerX = 0.8789,
- 	ShowTimerY = 0.0651,
- 	TeamOverlayW = 0.3,
- 	
- 	TeamScoresFontSize = 32,
- 	TeamOverlayFontSize = 16,
- 	ScoreboardFontSize = 20,
- 	ShowTimerFontSize = 45,
- 	CameraInterpolatePosition = false,
- 	CameraInterpolateAngle = false,
-
-	Newhitsound = false,
-	Simplehud = false,
-	SimplehudShadow = true,
-	Autorecord = true,
-	Overtime = 2,
-	SafeRespawn = false,
-	
-	
-	RefPass = "",
-	RconPass = "",
-	
-	
-    AllowBrightskins = true,  
+    AllowBrightskins = true,
     AllowBunnyhopping = true,
     AllowForwardRJ = true,
     AmbientSounds = true,
@@ -268,7 +141,7 @@ Cfg =
     MasterVolume = 100,
     MaxPlayers = 16,
     MaxSpectators = 8,
-       MessagesKeys = {"None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None",},
+    MessagesKeys = {"None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None",},
     MessagesSayAll = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     MouseSensitivity = 40,
     Multisample = "x0",
@@ -294,7 +167,6 @@ Cfg =
     ServerMapsCTF = {"CTF_Forbidden","CTF_Chaos","CTF_Trainstation"},
     ServerMapsDUE = {"DM_Sacred","DM_Psycho","DM_Fragenstein","DM_Unseen","DM_Fallen2"},
     ServerMapsLMS = {"DM_Factory","DM_Trainstation","DM_Cursed","DM_Illuminati"},
-    ServerMapsCLA = {"DM_Factory","DM_Trainstation","DM_Cursed","DM_Illuminati"},
     ServerName = "Painkiller",
     ServerPassword = "",
     ServerPort = 3455,
@@ -317,7 +189,7 @@ Cfg =
     TextureQualityCharacters = 0,
     TextureQualitySkies = 0,
     TextureQualityWeapons = 0,
-    TimeLimit = 15,
+    TimeLimit = 20,
     LimitServerFPS = false,
     ServerFPS = 30,
     UserCaptureLimit = true,
@@ -352,10 +224,10 @@ Cfg =
     WarpEffects = true,
     WaterFX = 1,
     WeatherEffects = true,
-    WheelSensitivity = 3,
-    WarmUpTime = 10,
+    WheelSensitivity = 2,
+    WarmUpTime = 14.99,
     CameraInterpolation = true, -- only for MP client
-    MaxFpsMP = 125,
+    MaxFpsMP = 120,
     NetcodeStatsUpdateDelay = 1000,
     NetcodeStatsNumberToAverageFrom = 1,
     NetcodeServerFramerate = 25,
@@ -374,15 +246,7 @@ Cfg =
     PKTV = false,
     PKTVFps = 20,
     PKTVDelay = 30000, --ms
-HUD_FragMessage = true,
-HUD_AmmoList = 1,
-HUD_CurrentWeapon_Icon = true,
---HUD_TimerPos = 900,
-    --overtime = 2,
-    FPS = true,
     PKTVPassword = "",
-	
-
 --    MBStats = {0,0,0,0,0,12495}, -- (fury,endurance,double haste,blessing,forgiveness)
 
 	-- Admin info (for ASE)
@@ -390,9 +254,8 @@ HUD_CurrentWeapon_Icon = true,
     Email = "",
     URL = "",
     Location = "",
-    ModName = "PK++",
+    ModName = "",
     ClientConsoleLockdown = false,
-    PiTaBOT = 1,
 }
 --============================================================================
 function Cfg:Save()    
@@ -448,26 +311,24 @@ end
 function Cfg:Load()
 	local label = GetCDLabel()
 	local lang = Cfg.Language
-
-
-		if label then label = string.lower(label) end
-		if label == "pk_fr_1" then
-			lang = "french"
-		elseif label == "pk_de_1" then
-			lang = "german"
-		elseif label == "pk_it_1" then
-			lang = "italian"
-		elseif label == "pk_sp_1" then
-			lang = "spanish"
-		elseif label == "pk_pl_1" then
-			lang = "polish"
-		elseif label == "pk_ru_1" then
-			lang = "russian"
-		elseif label == "pk_cz_1" then
-			lang = "czech"
-		elseif label == "pk_1" then
-			lang = "english"
-		end
+	if label then label = string.lower(label) end
+	if label == "pk_fr_1" then
+		lang = "french"
+	elseif label == "pk_de_1" then
+		lang = "german"
+	elseif label == "pk_it_1" then
+		lang = "italian"
+	elseif label == "pk_sp_1" then
+		lang = "spanish"
+	elseif label == "pk_pl_1" then
+		lang = "polish"
+	elseif label == "pk_ru_1" then
+		lang = "russian"
+	elseif label == "pk_cz_1" then
+		lang = "czech"
+	elseif label == "pk_1" then
+		lang = "english"
+	end
 
 	if lang == "french" then
 		Cfg.KeyPrimaryStrafeLeft = "Q"
@@ -487,7 +348,6 @@ function Cfg:Load()
 		Cfg.ServerMapsCTF = {"CTF_Forbidden","CTF_Chaos","CTF_Trainstation"}
 		Cfg.ServerMapsDUE = {"DM_Fragenstein","DM_Fallen2"}
 		Cfg.ServerMapsLMS = {"DM_Factory","DM_Trainstation"}
-		Cfg.ServerMapsCLA = {"DM_Sacred","DM_Cursed","DM_Factory","DM_Trainstation","DM_Fallen1"}
 	end
 
     DoFile(CfgFile,false)
@@ -515,7 +375,7 @@ function Cfg:Load()
         Cfg.PlayerModel = 1
     end
 
-    if Cfg.MaxFpsMP == 0 or Cfg.MaxFpsMP > 150 then
+    if Cfg.MaxFpsMP == 0 or Cfg.MaxFpsMP > 125 then
         Cfg.MaxFpsMP = 125
     end
 
@@ -548,7 +408,7 @@ function Cfg:Load()
 
 	if Cfg.MouseSensitivity < 1 then Cfg.MouseSensitivity = Cfg.MouseSensitivity * 400 end
 	
-	--if Cfg.DecalsStayTime > 1 then Cfg.DecalsStayTime = 2 end
+	if Cfg.DecalsStayTime > 1 then Cfg.DecalsStayTime = 2 end
 	
 	if type(Cfg.RenderSky) == "boolean" then
 		Cfg.RenderSky = 2

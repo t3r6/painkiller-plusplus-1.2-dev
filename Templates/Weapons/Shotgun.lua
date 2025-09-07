@@ -70,10 +70,7 @@ end
 -- FIRE - BULLET (Server Side)
 --============================================================================
 function Shotgun:Fire()
-Game:AddToStats(self.ObjOwner.ClientID, AttackTypes.Shotgun, 0, 1, 0)
-    
     local s = self:GetSubClass()
-    
     if self.ObjOwner.Ammo.Shotgun > 0 then           
         PlayLogicSound("FIRE",self.ObjOwner.Pos.X,self.ObjOwner.Pos.Y,self.ObjOwner.Pos.Z,15,35,self.ObjOwner)               
         
@@ -223,9 +220,6 @@ end
 function Shotgun:FireSFX(pe,range)
     local player = EntityToObject[pe]       
     
-	  --if player and player._Class ~= "CPlayer" then MsgBox("Bad player object: "..player._Class) end
-
-    
     local t = Templates["Shotgun.CWeapon"]
     local s = t:GetSubClass()
     local x,y,z = ENTITY.GetPosition(pe)
@@ -234,8 +228,6 @@ function Shotgun:FireSFX(pe,range)
         -- update ammo on proper client
         local w = player:GetCurWeapon()
         if not Game.NoAmmoLoss then player.Ammo.Shotgun = player.Ammo.Shotgun - 1 end
-        if player.Ammo.Shotgun < 0 then player.Ammo.Shotgun = 0 end
-        
         w.ShotTimeOut =  s.FireTimeout
         w._ActionState = "Idle"
         w:ForceAnim("shot",false)
@@ -262,7 +254,6 @@ function Shotgun:FireSFX(pe,range)
         local px,py,pz = BindPoint(pe,0,2.3,1) 
         AddAction({{"Light:a[1],a[2],a[3],255,255,185, 3, 4 , 2, 0, 0, 0.1"}},nil,nil,px,py,pz)
         -- pfx
-        if not Cfg.NoSmoke then
         local pfx1 = AddPFX("FX_shotgunmp",0.02)            
         local pfx2 = AddPFX("FX_shotgunmp",0.02)            
         ENTITY.RegisterChild(pe,pfx1)
@@ -270,7 +261,6 @@ function Shotgun:FireSFX(pe,range)
         local j = MDL.GetJointIndex(pe,"joint1")
         PARTICLE.SetParentOffset(pfx1, 0.08,0.07,0.9, j, nil,nil,nil, -1.57, 0, 0)
         PARTICLE.SetParentOffset(pfx2, -0.08,0.07,0.9, j, nil,nil,nil, -1.57, 0, 0)
-        end
     end
     
     -- pellets fx
@@ -306,7 +296,6 @@ function Shotgun:AltFireSFX(pe)
     if player then
         if not Game.NoAmmoLoss then player.Ammo.IceBullets = player.Ammo.IceBullets - 1 end
         if player.Ammo.IceBullets < 0 then player.Ammo.IceBullets = 0 end
-        
         -- set next shot timeout
         local cw = player:GetCurWeapon()
         cw.ShotTimeOut =  s.AltFireTimeout
@@ -328,7 +317,7 @@ function Shotgun:HitWallSFX(entity,x,y,z,nx,ny,nz,fx,fy,fz)
     if ENTITY.IsWater(entity) then
         if math.random(1,5) == 1 then             
 --            ENTITY.SpawnDecal(entity,'splash',x,y,z,nx,ny,nz)
-            if not Cfg.NoSmoke then AddPFX("shotgunHitWater",0.3,Vector:New(px,py,pz),Quaternion:New_FromNormal(nx,ny,nz)) end       
+            AddPFX("shotgunHitWater",0.3,Vector:New(px,py,pz),Quaternion:New_FromNormal(nx,ny,nz))        
             t:Snd3D("hit_water",x,y,z)
         end
         return
@@ -338,7 +327,7 @@ function Shotgun:HitWallSFX(entity,x,y,z,nx,ny,nz,fx,fy,fz)
     local t = Templates["Shotgun.CWeapon"]
     local r = Quaternion:New_FromNormal(nx,ny,nz)
     
-    if not Cfg.NoSmoke then AddPFX("shotgunHitWall",0.25,Vector:New(px,py,pz),r) end      
+    AddPFX("shotgunHitWall",0.25,Vector:New(px,py,pz),r)        
     
     if Game.GMode == GModes.SingleGame then 
         if math.random(0,1) == 0 then

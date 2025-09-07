@@ -180,23 +180,9 @@ CPlayer =
             Bolt         = 500,
             HeaterBomb   = 250,
         },
-        CAAmmo = 
-        {
-            Shotgun      = 666,
-            MiniGun      = 666,
-            Grenades     = 666,
-            Stakes       = 666,
-            IceBullets   = 666,
-            Shurikens    = 666,
-            Electro      = 666,
-            Rifle        = 666,
-            FlameThrower = 666,
-            Bolt         = 666,
-            HeaterBomb   = 666,
-        },
         _666Ammo =
         {
-	    Shotgun      = 666,
+			Shotgun      = 666,
             MiniGun      = 666,
             Grenades     = 666,
             Stakes       = 666,
@@ -534,6 +520,7 @@ function CPlayer:ClientTick(delta)
         action = ReplaceBitFlag(action,Actions.Fire,0)
         action = ReplaceBitFlag(action,Actions.AltFire,0)
     end
+    
     if cw then        
         if (not IsFinalBuild() and INP.Key(Keys.G)==2) or Game.TPP or Cfg.ViewWeaponModel == false or (cw._zoom and cw._zoom>0)then
             ENTITY.EnableDraw(self:GetCurWeapon()._Entity,false,true)
@@ -570,21 +557,18 @@ function CPlayer:ClientTick(delta)
         if Game.Active and Game.GMode == GModes.MultiplayerClient then
             if nextSlot == -1 or nextSlot == self._CurWeaponIndex and cw._ActionState == "Idle" then
                 --Game:Print("CurWeaponIndex: "..self._CurWeaponIndex..", nextSlot:".. nextSlot)
-            WEAPON_PREDICTION = true
-            --if Cfg.WeaponPrediction then WEAPON_PREDICTION = true end
-            cw:InterpretAction()
-            WEAPON_PREDICTION = nil
+                WEAPON_PREDICTION = true
+                cw:InterpretAction()
+                WEAPON_PREDICTION = nil
+            end
         end
-        end
-        cw:ClientTick(delta)        
+        cw:ClientTick(delta)
     end
 end
 
 --============================================================================
 -- [ SERVER ]
 function CPlayer:ServerTick(delta)
-
-   
 
     if self._sendRagdollImpulse then
         local a = self._sendRagdollImpulse
@@ -594,15 +578,9 @@ function CPlayer:ServerTick(delta)
         self._OldEntity = nil
         self._sendRagdollImpulse = nil
     end
- 
- 
     
     if self._died then
         if Game.GMode ~= GModes.SingleGame then 
-        
-           --if Cfg.DeadBodyFix and self._Entity then ENTITY.PO_SetMovedByExplosions(self._Entity, false) 
-           --elseif self._Entity then ENTITY.PO_SetMovedByExplosions(self._Entity, true) end
-        
             -- autorespawn or waiting for free respawn point
             if self._timeToRespawn then
                 self._timeToRespawn = self._timeToRespawn -  delta
@@ -612,8 +590,6 @@ function CPlayer:ServerTick(delta)
             end
         end
         return 
-    --else
-            --if Cfg.DeadBodyFix then ENTITY.PO_SetMovedByExplosions(self._Entity, true) end   	
     end   
     
     if not self._Entity then return end
@@ -659,14 +635,12 @@ function CPlayer:ServerTick(delta)
     
     --if Tweak.PlayerMove.QWPhysics then
     if Game.GMode ~= GModes.SingleGame then
-        PLAYER.ExecMultiPlayerAction(self._Entity,0,fv.X,fv.Y,fv.Z,rv.X,rv.Y,rv.Z)  
+        PLAYER.ExecMultiPlayerAction(self._Entity,0,fv.X,fv.Y,fv.Z,rv.X,rv.Y,rv.Z)    
     else
-        PLAYER.ExecAction(self._Entity,0,fv.X,fv.Y,fv.Z,rv.X,rv.Y,rv.Z)     
+        PLAYER.ExecAction(self._Entity,0,fv.X,fv.Y,fv.Z,rv.X,rv.Y,rv.Z)    
     end
     
-
-        self:InterpretAction(delta)
-
+    self:InterpretAction(delta)
 
     --Game:Print("SetMPByte: "..self.State)
     PLAYER.SetMPByte(self._Entity,self.State)    
@@ -699,11 +673,7 @@ function CPlayer:TryToChangeWeapon(slot)
             self.WeaponChangeConfirmation(self.ClientID,self._Entity,slot)
             -- po best fire wracamy do poprzedniej broni
             if specialFire and slot ~= prev then
-	
-
-
-
-				self._SwitchToWeapon = prev
+                self._SwitchToWeapon = prev
                 Game:Print("1 Pozniej przelaczyc na: "..self._SwitchToWeapon)
             end            
         else -- zakolejkowalem
@@ -722,8 +692,9 @@ end
 function CPlayer:InterpretAction(delta)
 
     if not Game.Active then return end
-       
+    
     local prevWeap = self._CurWeaponIndex
+    
     -- weapons 1-5
     if ENTITY.PO_IsActionState(self._Entity,Actions.ForwardRocketJump) then
         self:TryToChangeWeapon(4)
@@ -751,7 +722,7 @@ function CPlayer:InterpretAction(delta)
     then -- queued weapon switch
         --Game:Print("self:TryToChangeWeapon(self._SwitchToWeapon)")
         self:TryToChangeWeapon(self._SwitchToWeapon)
-    end
+    end    
        
     local cw = self:GetCurWeapon()
     if cw then                    
@@ -1088,8 +1059,7 @@ function CPlayer:FreeBlockedObjects()
 end
 --============================================================================
 function CPlayer:OnDamage(damage,killer,attack_type,x,y,z,nx,ny,nz)
-
-    if MPCfg.GameState ~= GameStates.Playing and MPCfg.GameState ~= GameStates.WarmUp then        
+    if MPCfg.GameState ~= GameStates.Playing then        
         if attack_type == AttackTypes.OutOfLevel and MPCfg.GameState ~= GameStates.Finished then
             local exist,x,y,z,a,pt = self:FindFreeRespawnPoint(self._lastRespawnPoint,true)
             self._lastRespawnPoint = pt
@@ -1099,16 +1069,13 @@ function CPlayer:OnDamage(damage,killer,attack_type,x,y,z,nx,ny,nz)
             self:Respawn(x,y,z,a)
         end
         return
-    end  
-    if((MPCfg.ProPlus or not Cfg.FallingDamage) and MPCfg.GameState == GameStates.Playing and attack_type == AttackTypes.HitGround) then return end  
-    if not Cfg.WarmupDamage and MPCfg.GameState ~= GameStates.Playing and attack_type ~= AttackTypes.ConsoleKill then return end
-    if MPCfg.GameState == GameStates.WarmUp and MPCfg.GameMode == "Clan Arena" and attack_type ~= AttackTypes.ConsoleKill then return end
-    if(killer~=nil)then if(self.ClientID~=killer.ClientID)then Game:AddToStats(killer.ClientID, attack_type, 1, 0, damage) end end
+    end
+    
+    if MPCfg.GameState ~= GameStates.Playing and attack_type ~= AttackTypes.ConsoleKill then return end
 
     local kID = 250 -- not exist
     if killer and killer.ClientID then kID = killer.ClientID  end
     
-        
     if self.HasPentagram and attack_type ~= AttackTypes.OutOfLevel and attack_type ~= AttackTypes.ConsoleKill then
         self._score = nil
         if Game.GMode ~= GModes.SingleGame then
@@ -1117,16 +1084,13 @@ function CPlayer:OnDamage(damage,killer,attack_type,x,y,z,nx,ny,nz)
         return 
     end
     
-    if ( GOD and not (IsFinalBuild() and attack_type==AttackTypes.OutOfLevel) ) or (Game.IsDemon and not Lucifer_001 and attack_type ~= AttackTypes.OutOfLevel) or (Game.PlayerNoDamage == true and attack_type ~= AttackTypes.OutOfLevel) then 
+	if ( GOD and not (IsFinalBuild() and attack_type==AttackTypes.OutOfLevel) ) or (Game.IsDemon and not Lucifer_001 and attack_type ~= AttackTypes.OutOfLevel) or (Game.PlayerNoDamage == true and attack_type ~= AttackTypes.OutOfLevel) then 
         self._score = nil
         return         
     end
 
-    if damage > 0 then self.WasHurt = true end
+	if damage > 0 then self.WasHurt = true end
         
- 
-	
-		        
     if Game.GMode == GModes.SingleGame then
 		if Game.Difficulty == 0 and damage > 1 then
 			damage = 1
@@ -1160,18 +1124,14 @@ function CPlayer:OnDamage(damage,killer,attack_type,x,y,z,nx,ny,nz)
             end                
         end
     end
-    
-  
+            
     if not self._died then
         --if killer and killer.HasQuad then 
             --MsgBox("damage = ".. damage)
         --   damage = damage * 4 
             --MsgBox("quad damage = ".. damage)
         --end
-		
-		
-		
-	if self == killer then            
+		if self == killer then            
             if MPCfg.GameMode == "People Can Fly" then 
                 self._score = nil
                 return 
@@ -1201,19 +1161,12 @@ function CPlayer:OnDamage(damage,killer,attack_type,x,y,z,nx,ny,nz)
             else
                 damage = math.ceil(damage-save)
             end
-        --else
-        	--if self.FrozenArmorTime and self.FrozenArmorTime < INP.GetTime() or math.abs(self.FrozenArmorTime - INP.GetTime()) > 6 then
-        		--self.FrozenArmor = false
-        		--self.FrozenArmorTime = nil
-        	end
-        --end
+        end
         
         --MsgBox("damage after save = ".. damage)
 
         local gib = 0
-	self.Health = self.Health - damage
-
-
+		self.Health = self.Health - damage
         
         --MsgBox("health after damage = ".. self.Health)
         
@@ -1244,7 +1197,6 @@ function CPlayer:OnDamage(damage,killer,attack_type,x,y,z,nx,ny,nz)
 
         if self.Health > 0 then
             self.Client_OnDamage( self.ClientID, self._Entity, self.Health, self.Armor, attack_type, damage, kID) 
-            if Game:IsServer() and self.ClientID ~= kID then Game:SendHitSound(kID) end         
         else                                        
             self._timeToRespawn = Tweak.Multiplayer.PlayerAutorespawnTime
             --Log("Server: Player Death:"..self._Name.."\n")
@@ -1289,7 +1241,7 @@ function CPlayer:OnDamage(damage,killer,attack_type,x,y,z,nx,ny,nz)
             self:FreeBlockedObjects()    
             local oe = self._Entity -- poniewaz nulluje w Client_OnDeath            
             CPlayer.Client_OnDeath(self.ClientID,kID,attack_type,gib,score,damage)                        
-            if Game:IsServer() and self.ClientID ~= kID then Game:SendDeathSound(kID) end 
+            
             if gib == 1 then 
                 ENTITY.Release(oe) 
             else
@@ -1358,18 +1310,7 @@ function CPlayer:FindFreeRespawnPoint(last,always)
                 area._busyTime = Tweak.Multiplayer.RespawnPointBusyTime
                 local p = area.Points[1]
                 Game:Print(area._Name)
-                local toclose = false
-                for k, ps in Game.PlayerStats do
-                	if(Cfg.SafeRespawn and ps and ps._Entity and ps.Spectator==0)then
-                		local psx,psy,psz = ENTITY.PO_GetPawnHeadPos(ps._Entity)
-                		if(Dist3D(psx,psy,psz,p.X,p.Y,p.Z) < 4.0)then
-                			toclose = true
-                		end
-                	end
-                end
-                if not toclose then
                 return true,p.X,p.Y,p.Z,p.A,i
-                end
             end
         end
         for i=1,a-1 do            
@@ -1378,18 +1319,7 @@ function CPlayer:FindFreeRespawnPoint(last,always)
                 area._busyTime = Tweak.Multiplayer.RespawnPointBusyTime
                 local p = area.Points[1]
                 Game:Print(area._Name)
-                local toclose = false
-                for k, ps in Game.PlayerStats do
-                	if(Cfg.SafeRespawn and ps and ps._Entity and ps.Spectator==0)then
-                		local psx,psy,psz = ENTITY.PO_GetPawnHeadPos(ps._Entity)
-                		if(Dist3D(psx,psy,psz,p.X,p.Y,p.Z) < 4.0)then
-                			toclose = true
-                		end
-                	end
-                end
-                if not toclose then             
-                	return true,p.X,p.Y,p.Z,p.A,i
-                end
+                return true,p.X,p.Y,p.Z,p.A,i
             end
         end        
     end
@@ -1444,11 +1374,8 @@ function CPlayer:ResetStatus(weapon)
     Log("ResetStatus")
     self:ResetStatusAfterDeath()
     
-    self._died = false   
-    
+    self._died = false
     self.Health = 100
-     
-     
     self._diedInDeathZone = nil
     
     self.Ammo = Clone(CPlayer.s_SubClass.MPAmmo)
@@ -1465,21 +1392,14 @@ function CPlayer:ResetStatus(weapon)
     for i=1,6 do
         if self.Weapons[i] then WORLD.RemoveEntity(self.Weapons[i]._Entity) end
     end
-              
-
+    
+        
     if MPCfg.GameMode == "Voosh" then        
         self.Ammo = Clone(CPlayer.s_SubClass.Ammo)
         self.EnabledWeapons = {"PainKiller","Shotgun","StakeGunGL","MiniGunRL","DriverElectro","RifleFlameThrower","BoltGunHeater"}    
     elseif MPCfg.GameMode == "People Can Fly" then    
         self.Ammo = Clone(CPlayer.s_SubClass.Ammo)
         self.EnabledWeapons = {nil,nil,nil,"MiniGunRL",nil}    
-        local a = Templates["ArmorStrong.CItem"]
-        self.Armor             = a.ArmorAdd
-        self.ArmorType         = a.ArmorType
-        self.ArmorRescueFactor = a.RescueFactor
-    elseif MPCfg.GameMode == "Clan Arena" then 
-        self.Ammo = Clone(CPlayer.s_SubClass.CAAmmo)
-        self.EnabledWeapons = {"PainKiller","Shotgun","StakeGunGL","MiniGunRL","DriverElectro","RifleFlameThrower","BoltGunHeater"}      
         local a = Templates["ArmorStrong.CItem"]
         self.Armor             = a.ArmorAdd
         self.ArmorType         = a.ArmorType
@@ -1531,18 +1451,7 @@ function CPlayer:ResetStatus(weapon)
         self._waitingForFirstFire = true
     end
     self._frjump = nil
-    self.State = 3  
-    
-        
-    if MPCfg.GameState == GameStates.WarmUp then  -- and Game:IsServer() 
-    	self.Health = 100
-        local a = Templates["ArmorStrong.CItem"]
-        self.Armor             = a.ArmorAdd
-        self.ArmorType         = a.ArmorType
-        self.ArmorRescueFactor = a.RescueFactor
-    end 
-    
-    if(Game:IsServer() and MPCfg.GameState == GameStates.WarmUp) then self:OnDamage(0,nil,20) end 
+    self.State = 3
 end
 --============================================================================
 function CPlayer:InDeathZone(x,y,z,zone)    
@@ -1556,14 +1465,14 @@ function CPlayer:InDeathZone(x,y,z,zone)
         self.Health = 0        
         self:OnDamage(999,nil,AttackTypes.OutOfLevel)
     end    
-    --CONSOLE_AddMessage("player in death zone") 
+    --CONSOLE.AddMessage("player in death zone") 
 end
 --============================================================================
 function CPlayer:CheckTeleFrag(x,y,z)    
     if not x then x,y,z = ENTITY.GetPosition(self._Entity) end
     for i,o in Game.Players do                        
         local px,py,pz = ENTITY.GetPosition(o._Entity)
-        if ENTITY.PO_IsEnabled(o._Entity)and self ~= o and Dist3D(x,y,z,px,py,pz) < 1.2 then -- 1.61 default is 1.8
+        if ENTITY.PO_IsEnabled(o._Entity)and self ~= o and Dist3D(x,y,z,px,py,pz) < 1.8 then 
             o:OnDamage(o.Health*3,self,AttackTypes.TeleFrag)
         end
     end 
@@ -1762,8 +1671,6 @@ end
 -- [[ NET - SERVER ]] --
 function CPlayer:SetupAction(clientID,action,pitch,yaw)    
     
-
-    
     pitch = pitch / (65535/(math.pi*2))
     yaw = yaw / (65535/math.pi) - math.pi/2
     
@@ -1778,7 +1685,7 @@ function CPlayer:SetupAction(clientID,action,pitch,yaw)
     local rx,ry,rz = q:TransformVector(1,0,0)
 
     if not Cfg.AllowForwardRJ then action = RemoveBitFlag(action,Actions.ForwardRocketJump) end
-
+    
     if player then        
         player.CurAction = action
         player.ForwardVector:Set(fx,fy,fz)
@@ -1790,8 +1697,6 @@ end
 --============================================================================
 -- sets client action on server
 function CPlayer_SetupAction(clientID,action,pitch,yaw)    
-    
-
     
     pitch = pitch / (65535/(math.pi*2))
     yaw = yaw / (65535/math.pi) - math.pi/2
@@ -1838,24 +1743,12 @@ function CPlayer:Client_OnDamage(entity,health,armor,attack_type,damage,killerID
 		CPlayer:SndEnt("Hurt_Pent",entity) 
 		return
 	end
-	
 
-    --if((MPCfg.ProPlus) and MPCfg.GameState == GameStates.Playing and attack_type == AttackTypes.HitGround) then return end -- or not Cfg.FallingDamage
-
-
-
-
-   --- if( armor and armor > 160 and self) then self.ArmorType = 3 end
-	
-
-
-	
     if player then 
 
         player.Health = health
         player.Armor = armor
         
-       
         if player == Player then
         
             if Game.GMode == GModes.SingleGame and attack_type == AttackTypes.AIClose then
@@ -1900,13 +1793,6 @@ function CPlayer:Client_OnDamage(entity,health,armor,attack_type,damage,killerID
         end
     end
 
-    if Player and Player.ClientID == killerID and (player == nil or player ~= Player) then
-	if Cfg.HitSounds then
-	if Cfg.Newhitsound == false then PlaySound2D("../Hitsounds/hitsound",nil,nil,true) 
-	else PlaySound2D("../Hitsounds/hitsoundnew",nil,nil,true) end 
-	end
-    end
-
     if (not player or Player ~= player) and attack_type == AttackTypes.Lava then
 		local x,y,z = ENTITY.GetPosition(entity)
         PlaySound3D("actor/evilmonkv3/evil-fire-hit",x,y,z,20,40)
@@ -1943,12 +1829,8 @@ Network:RegisterMethod("CPlayer.Client_OnDamage", NCallOn.ServerAndAllClients, N
 --============================================================================
 function CPlayer:Common_UpdateStats(checkOnly,deadID,killerID,attack_type,score)
     
-    if MPCfg.GameState ~= GameStates.Playing then return end
-    
     local ds = Game.PlayerStats[deadID]
     local ks = Game.PlayerStats[killerID]
-    
-
 
     -- backup
     local b_ds,b_ks,b_team1Score,b_team2Score        
@@ -1971,17 +1853,15 @@ function CPlayer:Common_UpdateStats(checkOnly,deadID,killerID,attack_type,score)
             end
             
             if not checkOnly then 
-                CONSOLE_AddMessage(txt)
-
-                
+                CONSOLE.AddMessage(txt)
                 if ds ~= ks and score > 1 then
                     if MPCfg.GameMode == "People Can Fly" then 
-                        if score == 2 then CONSOLE_AddMessage(Languages.Texts[697]) end                
-                        if score == 3 then CONSOLE_AddMessage(Languages.Texts[698]) end
-                        if score == 5 then CONSOLE_AddMessage(Languages.Texts[699]) end
-                        if score == 10 then CONSOLE_AddMessage(Languages.Texts[700]) end
+                        if score == 2 then CONSOLE.AddMessage(Languages.Texts[697]) end                
+                        if score == 3 then CONSOLE.AddMessage(Languages.Texts[698]) end
+                        if score == 5 then CONSOLE.AddMessage(Languages.Texts[699]) end
+                        if score == 10 then CONSOLE.AddMessage(Languages.Texts[700]) end
                     else
-                        CONSOLE_AddMessage(score.."!!!")
+                        CONSOLE.AddMessage(score.."!!!")
                     end
                 end
             end
@@ -2061,78 +1941,7 @@ function CPlayer:Common_UpdateStats(checkOnly,deadID,killerID,attack_type,score)
                 StringToDo = "Game.EndOfMatch()"
             end
         end
-        elseif MPCfg.GameMode == "Clan Arena" then
-        if Game:IsServer() then 
-            if ds and ds.Deaths >= 1 then
-                Game.PlayerSpectatorRequest(deadID,1)
-                ds.CASpec = true
-                ds = nil
-            end
-            
-            local active_players = 0
-            for i,o in Game.PlayerStats do
-                if o.Spectator == 0 then active_players = active_players + 1 end
-            end
-
-    		local bluecount = 0
-    		local redcount = 0
-    		for i,ps in Game.PlayerStats do
-		    	if ps.Team == 0 and ps.Spectator == 0 then
-		    		bluecount = bluecount + 1
-		    	end
-		    	if ps.Team == 1 and ps.Spectator == 0 then
-		    		redcount = redcount + 1
-		    	end
-    		end
-            
-            
-            if redcount == 0 or bluecount == 0 then
-                --Game.SetGameState(GameStates.Finished)                
-                
-            end
-        end    
-        
-
-
-            
-
-
-
-
-            
-
-
-
-            
-
-
-
-
-
-
-              
-
-            
-       
-        
-  
-
-           
-
-               else
-
-
-
-            
-  
-        
-
-
-
-
-        
-        
-   
+    else        
         if ks and MPCfg.FragLimit > 0 then            
             local score = 0
             if MPGameRules[MPCfg.GameMode].Teams then
@@ -2171,15 +1980,6 @@ function CPlayer:Common_UpdateStats(checkOnly,deadID,killerID,attack_type,score)
         if ks then
             MPSTATS.Update(ks.ClientID,ks.Name, ks.Score, ks.Kills, ks.Deaths, ks.Ping, ks.PacketLoss, ks.Team, ks.State, ks.Spectator)
         end
-        -- PiTaBOT server mod
-        if(Cfg.PitabotEnabled) then
-	        if (ks) and ds and (ds ~= ks) and ds.Name~=nil and attack_type~=nil and ks.Name~=nil and ds.Score~=nil and ks.Score~=nil then
-	           PBLogEvent(ds.Name, attack_type, { ks.Name, ds.Score, ks.Score })
-	        elseif ds and ds.Name~=nil and attack_type~=nil and ds.Score~=nil then
-	           PBLogEvent(ds.Name, attack_type, { ds.Score })  -- Suicide
-	    	end
-    	end
-        -- end
     end
 
     --for i,o in Game.PlayerStats do
@@ -2200,27 +2000,6 @@ end
 --============================================================================
 -- [NET - SERVER & ALL CLIENTS]
 function CPlayer:Client_OnDeath(deadID,killerID,attack_type,gib,score,damage)
-    local ds = Game.PlayerStats[deadID]
-    local ks = Game.PlayerStats[killerID]
-
-    if Player and Player.ClientID == killerID and deadID ~= Player.ClientID then
-	if Cfg.HitSounds then
-	if Cfg.Newhitsound == false then PlaySound2D("../Hitsounds/killsound",nil,nil,true) 
-	else PlaySound2D("../Hitsounds/killsoundnew",nil,nil,true) end
-	end 
-    end
-
-    if Player and Player.ClientID == killerID and deadID ~= Player.ClientID and Cfg.HUD_FragMessage then
-
-    if ds then
-        Hud.fname = Game.PlayerStats[deadID].Name
-    end
-
-        fragmessagestart = Game.currentTime
-        fragmessageend = Game.currentTime+60
-    end
-
-
 
     Game:Print("Client_OnDeath")
     
@@ -2292,22 +2071,20 @@ function CPlayer:Client_OnDeath(deadID,killerID,attack_type,gib,score,damage)
                     WORLD.Explosion2(x,y+1,z,3000*FRand(0.8,1.2),2,nil,AttackTypes.Grenade,0)
                     ENTITY.SetTimeToDie(ge,3)            
                     local parts = {{"r_l_arm",-1},{"r_p_arm",1},{"n_l_bio",-1},{"n_p_bio",1},{"k_head",-1},{"k_chest",1},{"root",-1}}            
-                    if not Cfg.NoGibs then 
                     for i,v in parts do
                         local pfx = AddPFX("FX_gib_blood",0.3)
                         --if pfx then Game:Print(v[1]) end
                         ENTITY.RegisterChild(ge,pfx)        
                         PARTICLE.SetParentOffset(pfx,0,0,0,v[1], nil,nil,nil, 0, 0, math.pi/2 * v[2])
                     end
-                    end
                     local x,y,z = MDL.TransformPointByJoint(deadEntity,MDL.GetJointIndex(deadEntity, "k_chest"),0,0,0)
-                    if not Cfg.NoGibs then AddPFX("gibExplosion",0.4,Vector:New(x,y,z)) end                                                 
+                    AddPFX("gibExplosion",0.4,Vector:New(x,y,z))                                                 
                 end
             end
         else
             ENTITY.EnableDraw(deadEntity,false)            
             local x,y,z = MDL.TransformPointByJoint(deadEntity,MDL.GetJointIndex(deadEntity, "k_chest"),0,0,0)
-            if not Cfg.NoGibs then AddPFX("gibExplosion",0.5,Vector:New(x,y,z)) end                                                
+            AddPFX("gibExplosion",0.5,Vector:New(x,y,z))                                                 
         end
     end
     
@@ -2317,10 +2094,10 @@ function CPlayer:Client_OnDeath(deadID,killerID,attack_type,gib,score,damage)
             if Player.Comments > 0 then Player.Comments = 0 end
             Player.Comments = Player.Comments - 1
             if Player.Comments == -5 then
-                if not Cfg.NoMPComments then SOUND.Play2D("multiplayer/lucifer/Lucifer_bad0"..math.random(1,4),100,true) end
+                SOUND.Play2D("multiplayer/lucifer/Lucifer_bad0"..math.random(1,4),100,true)
             end
             if Player.Comments == -10 then
-                if not Cfg.NoMPComments then SOUND.Play2D("multiplayer/lucifer/Lucifer_verybad0"..math.random(1,2),100,true) end
+                SOUND.Play2D("multiplayer/lucifer/Lucifer_verybad0"..math.random(1,2),100,true)
                 Player.Comments = -5
             end
         end        
@@ -2328,10 +2105,10 @@ function CPlayer:Client_OnDeath(deadID,killerID,attack_type,gib,score,damage)
             if Player.Comments < 0 then Player.Comments = 0 end
             Player.Comments = Player.Comments + 1
             if Player.Comments == 5 then
-                if not Cfg.NoMPComments then SOUND.Play2D("multiplayer/lucifer/Lucifer_good0"..math.random(1,5),100,true) end
+                SOUND.Play2D("multiplayer/lucifer/Lucifer_good0"..math.random(1,5),100,true)
             end
             if Player.Comments == 10 then
-                if not Cfg.NoMPComments then SOUND.Play2D("multiplayer/lucifer/Lucifer_excellent0"..math.random(1,2),100,true) end
+                SOUND.Play2D("multiplayer/lucifer/Lucifer_excellent0"..math.random(1,2),100,true)
                 Player.Comments = 5
             end
         end        
@@ -2366,7 +2143,7 @@ function CPlayer:WeaponChangeRequest(entity, slot)
     --Game:Print("WeaponChangeRequest")
     local player = EntityToObject[entity]    
     if not player or not player:GetCurWeapon()then return end
-
+    
     player:TryToChangeWeapon(slot)
     --Game:Print(player:GetCurWeapon().BaseObj)
     Game:Print(player.EnabledWeapons[slot]..".CWeapon")

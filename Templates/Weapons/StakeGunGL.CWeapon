@@ -34,7 +34,7 @@ StakeGunGL.s_SubClass = {
     ComboCatchDistance     = 0.7,
     ComboExplosionDamage   = 200,
     ComboExplosionRange    = 7,
-    ComboExplosionStrength = 5000,
+    ComboExplosionStrength = 4000,
 
     Animations = 
     {   

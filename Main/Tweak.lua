@@ -94,10 +94,10 @@ Tweak =
         MaxCameraDiff = 0.5,
         MaxCorrectPosSearchDist = 0.1,
 
-	-- ugly hack for MP Rocket Jump
+		-- ugly hack for MP Rocket Jump
         AlternateRocketJump = true,
-	AlternateRocketJumpOnlyMyRockets = false,
-	AlternateRocketJumpWorkAboveThisStrength = 0.0,
+		AlternateRocketJumpOnlyMyRockets = false,
+		AlternateRocketJumpWorkAboveThisStrength = 0.0,
     },
 
     PromodePlayerMove =
@@ -208,7 +208,6 @@ function Tweak:Load()
     if not Cfg.AllowBunnyhopping then
         Tweak.MultiPlayerMove.BunnyHopAcceleration = 0
     end
-    if Cfg.RocketFix then Tweak.MultiPlayerMove.AlternateRocketJump = false end
     self:Apply()       
 end
 --============================================================================

@@ -72,10 +72,9 @@ function pentagram:Tick(delta)
             self._ReturnTime = nil            
             if Cfg.PowerupDrop then
                 -- wraca na miejsce ale niewidoczny czeka na respawn
-                CItem.Show(self._Entity,0)
+                CItem.Show(self._Entity,false)
                 self.Place = 1             
                 self._Rst = self.RespawnTime * 30 
-                if Cfg.ItemRespawnFix then self._Rst = INP.GetTime() + self.RespawnTime end
             end
         end
     end

@@ -61,7 +61,6 @@ function StakeGunGL:Client_FirePrediction(first)
 end
 --============================================================================
 function StakeGunGL:Fire(prevstate) -- Stake
-Game:AddToStats(self.ObjOwner.ClientID, AttackTypes.Stake, 0, 1, 0)
     local s = self:GetSubClass()
     if self.ObjOwner.Ammo.Stakes > 0 then       
         
@@ -70,20 +69,13 @@ Game:AddToStats(self.ObjOwner.ClientID, AttackTypes.Stake, 0, 1, 0)
         local x,y,z = ENTITY.PO_GetPawnHeadPos(self.ObjOwner._Entity)                
         local fv = self.ObjOwner.ForwardVector
         y = y - 0.2
-
+        
         obj._lastTraceStartPoint =  Vector:New(x,y,z)
         obj.Pos:Set(x+fv.X*1,y+fv.Y*1,z+fv.Z*1)
         obj.Rot:FromNormalZ(fv.X,fv.Y,fv.Z)     
         obj.ObjOwner = self.ObjOwner
         obj:Apply()
-        
-        
-        if(not MPCfg.ProPlus)then 
-        	obj.Damage = s.StakeDamage
-        else
-        	obj.Damage = 150
-        end
-        
+        obj.Damage = s.StakeDamage
         if self.ObjOwner.HasQuad then            
             obj.Damage = math.floor(obj.Damage * 4)
         end
@@ -97,10 +89,6 @@ Game:AddToStats(self.ObjOwner.ClientID, AttackTypes.Stake, 0, 1, 0)
         else
             obj.BurnAfterTime = s.BurnStakeAfterTime
         end
-        if(MPCfg.ProPlus)then 
-        	obj.BurnAfterTime = 100
-        end
-        
         obj.EnemyThrowBack = s.EnemyThrowBack
         obj.EnemyThrowUp   = s.EnemyThrowUp
 
@@ -125,7 +113,6 @@ end
 -- ALT FIRE - GRENADE (Server Side)
 --============================================================================
 function StakeGunGL:AltFire() -- grenade
-Game:AddToStats(self.ObjOwner.ClientID, AttackTypes.Grenade, 0, 1, 0)
     local s = self:GetSubClass()
     if self.ObjOwner.Ammo.Grenades > 0  then
        

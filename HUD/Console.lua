@@ -2,148 +2,16 @@
 Console = 
 {
 }
-
+--=======================================================================
 function Console:Cmd_SHOWWEAPON(enable)    
     enable = tonumber(enable)    
     if enable == nil then 
-        CONSOLE_AddMessage("showweapon 0/1  (disables/enables weapon rendering)") 
+        CONSOLE.AddMessage("showweapon 0/1  (disables/enables weapon rendering)") 
     end            
     if enable == 1 then Cfg.ViewWeaponModel = true  end    
     if enable == 0 then Cfg.ViewWeaponModel = false end        
 end
---=======================================================================
-function Console:Cmd_WHERE()
-	local me = 0
-	for i,ps in Game.PlayerStats do 
-		if(Player == Game:FindPlayerByClientID(ps.ClientID))then
-			me = ps.ClientID
-		end
-	end
-	if Game.PlayerStats[me] and Game.PlayerStats[me]._Entity and Game.PlayerStats[me]._Entity ~=0 then   		               
-		local x,y,z = ENTITY.PO_GetPawnHeadPos(Game.PlayerStats[me]._Entity) 
-		CONSOLE_AddMessage(x..", "..y..", "..z)
-	end
-end
---=======================================================================
-function Console:Cmd_ADDLOC(location,l1,l2,l3,l4,l5)
 
-	if(location==nil)then CONSOLE_AddMessage("Usage \addloc <location>") return end
-	
-	if(l1~=nil)then location = location .." ".. l1 end
-	if(l2~=nil)then location = location .." ".. l2 end
-	if(l3~=nil)then location = location .." ".. l3 end
-	if(l4~=nil)then location = location .." ".. l4 end
-	if(l5~=nil)then location = location .." ".. l5 end
-	
-	local me = -99
-	for i,ps in Game.PlayerStats do 
-		if(Player == Game:FindPlayerByClientID(ps.ClientID))then
-			me = ps.ClientID
-		end
-	end
-	if(me==-99)then return end
-	local x = 0
-	local y = 0
-	local z = 0
-	if Game.PlayerStats[me] and Game.PlayerStats[me]._Entity and Game.PlayerStats[me]._Entity ~=0 then   		               
-		x,y,z = ENTITY.PO_GetPawnHeadPos(Game.PlayerStats[me]._Entity) 
-		--CONSOLE_AddMessage(x..", "..y..", "..z)
-	end	
-	local locfile = "../Data/Locs/"  
-	local mapname = Lev.Map
-	if(mapname==nil)then return end
-    	locfile = locfile .. string.gsub (mapname,"(%a+).mpk", "%1")  .. ".loc"
-	local file = io.open(locfile,"a")
-	if not file then return end
-	local txt = location..","..x..","..y..","..z..'\n'
-	file:write(txt)
-	CONSOLE_AddMessage("Added Location.")
-	io.close(file)
-	Loc.Position = {}
-	Loc:Load(mapname)
-end
---=======================================================================
-function Console:Cmd_ADDWAYPOINT(location,l1,l2,l3,l4,l5)
-
-	if(location==nil)then location = "Waypoint" end
-	
-	
-	if(l1~=nil)then location = location .." ".. l1 end
-	if(l2~=nil)then location = location .." ".. l2 end
-	if(l3~=nil)then location = location .." ".. l3 end
-	if(l4~=nil)then location = location .." ".. l4 end
-	if(l5~=nil)then location = location .." ".. l5 end
-	
-	local me = -99
-	for i,ps in Game.PlayerStats do 
-		if(Player == Game:FindPlayerByClientID(ps.ClientID))then
-			me = ps.ClientID
-		end
-	end
-	if(me==-99)then return end
-	local x = 0
-	local y = 0
-	local z = 0
-	if Game.PlayerStats[me] and Game.PlayerStats[me]._Entity and Game.PlayerStats[me]._Entity ~=0 then   		               
-		x,y,z = ENTITY.PO_GetPawnHeadPos(Game.PlayerStats[me]._Entity) 
-		--CONSOLE_AddMessage(x..", "..y..", "..z)
-	end	
-	location = Game:GetLocationByPosition(x,y,z)
-	local Waypointfile = "../Data/Waypoints/"  
-	local mapname = Lev.Map
-	if(mapname==nil)then return end
-    	Waypointfile = Waypointfile .. string.gsub (mapname,"(%a+).mpk", "%1")  .. ".bwp"
-	local file = io.open(Waypointfile,"a")
-	if not file then return end
-	local txt = location..","..x..","..y..","..z..'\n'
-	file:write(txt)
-	CONSOLE_AddMessage("Added Location.")
-	io.close(file)
-	Waypoint.Position = {}
-	Waypoint:Load(mapname)
-end
---=======================================================================
-
-function Console:Cmd_PRINT(txt)
-	CONSOLE_AddMessage(txt)
-end
---=======================================================================
-function Console:Cmd_PLAYERSPLAYERSTATS()
-	CONSOLE_AddMessage("ID	x y z")
-	for i,ps in Game.PlayerStats do
-		if(ps.Player==nil)then
-			CONSOLE_AddMessage(ps.ClientID.."   ".."NIL CPlayer object")
-		else
-
-			CONSOLE_AddMessage(ps.ClientID.."   "..tostring(ps.Player.Pos.X).."   "..tostring(ps.Player.Pos.Y).."   "..tostring(ps.Player.Pos.Z))
-		end
-	end
-end
---=======================================================================
-function Console:Cmd_ENTITYPLAYERSTATS()
-	CONSOLE_AddMessage("ID	x y z")
-	for i,ps in Game.PlayerStats do
-			local px,py,pz = ENTITY.GetPosition(ps._Entity)
-			CONSOLE_AddMessage(ps.ClientID.."   "..tostring(px).."   "..tostring(py).."   "..tostring(pz))
-
-	end
-end
---=======================================================================
-function Console:Cmd_ENTITYPLAYER()
-	CONSOLE_AddMessage("ID	x y z")
-	for i,pp in Game.Players do
-			local px,py,pz = ENTITY.GetPosition(pp._Entity)
-			CONSOLE_AddMessage(pp.ClientID.."   "..tostring(px).."   "..tostring(py).."   "..tostring(pz))
-
-	end
-end
---=======================================================================
-function Console:Cmd_PLAYERSGAME()
-	CONSOLE_AddMessage("ID	x y z")
-	for i,pp in Game.Players do
-		CONSOLE_AddMessage(pp.ClientID.."   "..tostring(pp.Pos.X).."   "..tostring(pp.Pos.Y).."   "..tostring(pp.Pos.Z))
-	end
-end
 --=======================================================================
 function Console:Cmd_STRESSTEST()    
     if IsFinalBuild() then return end
@@ -180,7 +48,7 @@ end
 --=======================================================================
 function Console:Cmd_BIND(params,silent)
 	if not params or params == "" then
-		if not silent then CONSOLE_AddMessage("usage: bind key command") end
+		if not silent then CONSOLE.AddMessage("usage: bind key command") end
 		return
 	end
 	local i = string.find(params," ",1,true)
@@ -192,12 +60,12 @@ function Console:Cmd_BIND(params,silent)
 	local cmd = string.sub(params,1,i-1)
 
 	if not params or params == "" or not key or key == "" then
-		if not silent then CONSOLE_AddMessage("usage: bind key command") end
+		if not silent then CONSOLE.AddMessage("usage: bind key command") end
 		return
 	end
 
 	if not Console["Cmd_"..string.upper(cmd)] then
-		if not silent then CONSOLE_AddMessage("Unknown command: ".. cmd) end
+		if not silent then CONSOLE.AddMessage("Unknown command: ".. cmd) end
 		return
 	end
 
@@ -222,7 +90,7 @@ function Console:Cmd_BIND(params,silent)
 
 	local engName = INP.GetEngNameByShortName( key )
 	if engName == "None" then
-		if not silent then CONSOLE_AddMessage("Unknown key: "..keyOrig) end
+		if not silent then CONSOLE.AddMessage("Unknown key: "..keyOrig) end
 		return
 	end
 	Cfg_ClearKeyBinding( engName )
@@ -235,26 +103,26 @@ end
 function Console:Cmd_MAP(name)
 	if Game.GMode == GModes.SingleGame then return end
     if name == nil then 
-        CONSOLE_AddMessage('map "name"  (loads map)') 
+        CONSOLE.AddMessage('map "name"  (loads map)') 
     else
 		name = string.lower(name)
 		if string.sub(name,1,2) ~= "dm" and string.sub(name,1,3) ~= "ctf" then
-			CONSOLE_AddMessage( "Bad map name '"..name.."'" )
+			CONSOLE.AddMessage( "Bad map name '"..name.."'" )
 			return
 		end
 
 		if string.sub(name,1,3) == "dm_" and (MPCfg.GameMode == "People Can Fly" or MPCfg.GameMode == "Capture The Flag") then
-			CONSOLE_AddMessage( "Map not available in "..MPCfg.GameMode.." mode" )
+			CONSOLE.AddMessage( "Map not available in "..MPCfg.GameMode.." mode" )
 			return
 		end
 		
 		if string.sub(name,1,5) == "dmpcf" and MPCfg.GameMode ~= "People Can Fly" then
-			CONSOLE_AddMessage( "Map not available in "..MPCfg.GameMode.." mode" )
+			CONSOLE.AddMessage( "Map not available in "..MPCfg.GameMode.." mode" )
 			return
 		end
 		
 		if string.sub(name,1,3) == "ctf" and MPCfg.GameMode ~= "Capture The Flag" then
-			CONSOLE_AddMessage( "Map not available in "..MPCfg.GameMode.." mode" )
+			CONSOLE.AddMessage( "Map not available in "..MPCfg.GameMode.." mode" )
 			return
 		end
 
@@ -268,7 +136,7 @@ function Console:Cmd_MAP(name)
 		end
 
 		if not found then
-			CONSOLE_AddMessage( "Bad map name '"..name.."'" )
+			CONSOLE.AddMessage( "Bad map name '"..name.."'" )
 			return
 		end
 
@@ -280,16 +148,16 @@ function Console:Cmd_MAP(name)
         end
     end
     
-    CONSOLE_AddMessage("current map:  "..Lev._Name) 
+    CONSOLE.AddMessage("current map:  "..Lev._Name) 
 end
 --=======================================================================
 function Console:Cmd_MAPLIST() -- 04.10.2004 [Blowfish]    
     local path = "../Data/Levels/"
-    local files = FS.FindFiles(path.."*",0,1)
-    CONSOLE_AddMessage("Available maps:")
-    for i=1,table.getn(files) do
-        CONSOLE_AddMessage("   "..files[i])
-    end
+	local files = FS.FindFiles(path.."*",0,1)
+	CONSOLE.AddMessage("Available maps:")
+	for i=1,table.getn(files) do
+		CONSOLE.AddMessage("   "..files[i])
+	end
 end
 --=======================================================================
 function Console:Cmd_RELOADMAP()
@@ -308,13 +176,13 @@ function Console:Cmd_TEAM(nr)
     if(nr=="r" or nr=="red" or nr=="Red") then
         nr = 2
     end
-    if(nr=="f" or nr=="free") then
-        nr = 1
-    end
-    if(nr=="s" or nr=="spectator") then
-         Console:Cmd_SPECTATOR(1)
-       return
-   end
+    --if(nr=="f" or nr=="free") then
+    --    nr = 1
+    --end
+    --if(nr=="s" or nr=="spectator") then
+    --    Cmd_SPECTATOR
+    --    return
+    --end
     
     if nr then
         nr = tonumber(nr)
@@ -326,11 +194,8 @@ function Console:Cmd_TEAM(nr)
             end
         end
     end
-    if((Cfg.Team+1)==0)then
-    	CONSOLE_AddMessage("current team: blue")
-    else
-    	CONSOLE_AddMessage("current team: red")
-    end
+
+    CONSOLE.AddMessage("current team:  "..(Cfg.Team+1))
 end
 --=======================================================================
 function Console:Cmd_KILL()
@@ -388,7 +253,7 @@ function Console:Cmd_BANKICK(name)
 	if Game.GMode == GModes.SingleGame then return end
 	if not Game:IsServer() then return end
 	if name == nil then
-        CONSOLE_AddMessage('bankick "name"  (disconnect and ban player from the server)')
+        CONSOLE.AddMessage('bankick "name"  (disconnect and ban player from the server)')
         return
     end
     name = string.lower(name)
@@ -404,7 +269,7 @@ function Console:Cmd_KICK(name)
 	if Game.GMode == GModes.SingleGame then return end
 	if not Game:IsServer() then return end
 	if name == nil then
-        CONSOLE_AddMessage('kick "name"  (disconnect player from the server)')
+        CONSOLE.AddMessage('kick "name"  (disconnect player from the server)')
         return
     end
     name = string.lower(name)
@@ -419,7 +284,7 @@ function Console:Cmd_BANKICKID(id)
 	if Game.GMode == GModes.SingleGame then return end
 	if not Game:IsServer() then return end
 	if id == nil then
-        CONSOLE_AddMessage('kickid id  (disconnect player from the server)')
+        CONSOLE.AddMessage('kickid id  (disconnect player from the server)')
         return
     end
     id = tonumber(id)
@@ -433,7 +298,7 @@ function Console:Cmd_KICKID(id)
 	if Game.GMode == GModes.SingleGame then return end
 	if not Game:IsServer() then return end
 	if id == nil then
-        CONSOLE_AddMessage('kickid id  (disconnect player from the server)')
+        CONSOLE.AddMessage('kickid id  (disconnect player from the server)')
         return
     end
     id = tonumber(id)
@@ -445,12 +310,12 @@ function Console:Cmd_MAXPLAYERS(val)
 	if not Game:IsServer() then return end
 	
 	if val == nil then
-		CONSOLE_AddMessage("maxplayers value (sets max number of players on server)")
+		CONSOLE.AddMessage("maxplayers value (sets max number of players on server)")
 		return
 	end
 	
 	if Cfg.GameMode == "Duel" then
-		CONSOLE_AddMessage("maxplayers cannot be changed in Duel mode")
+		CONSOLE.AddMessage("maxplayers cannot be changed in Duel mode")
 		return
 	end
 	
@@ -493,7 +358,7 @@ function Console:Cmd_MAXPLAYERS(val)
         
         Game.ConsoleMessageAll( "Max number of players is now "..val )
     else
-		CONSOLE_AddMessage("Max number of players cannot be lower than 2")
+		CONSOLE.AddMessage("Max number of players cannot be lower than 2")
     end
 end
 --=======================================================================
@@ -502,7 +367,7 @@ function Console:Cmd_MAXSPECTATORS(val)
 	if not Game:IsServer() then return end
 
 	if val == nil then
-		CONSOLE_AddMessage("maxplayers value (sets max number of players on server)")
+		CONSOLE.AddMessage("maxplayers value (sets max number of players on server)")
 	end
 	
 	val = tonumber(val)
@@ -560,8 +425,8 @@ end
 --=======================================================================
 function Console:Cmd_SETMAXFPS(val)
 	if val == nil then
-        CONSOLE_AddMessage( "Give a new value after this command to change maxfps." )
-        CONSOLE_AddMessage( "Give a 0 to remove the limit." )
+        CONSOLE.AddMessage( "Give a new value after this command to change maxfps." )
+        CONSOLE.AddMessage( "Give a 0 to remove the limit." )
         return
     end
 	val = tonumber(val)
@@ -579,7 +444,7 @@ function Console:Cmd_POWERUPDROP(enable)
 	
 	enable = tonumber(enable)
     if enable == nil then
-        CONSOLE_AddMessage("powerupdrop 0/1  (disables/enables powerup drop)")
+        CONSOLE.AddMessage("powerupdrop 0/1  (disables/enables powerup drop)")
     end
     if enable == 1 then
 		Cfg.PowerupDrop = true
@@ -596,7 +461,7 @@ function Console:Cmd_POWERUPS(enable)
 
 	enable = tonumber(enable)
     if enable == nil then
-        CONSOLE_AddMessage("powerups 0/1  (disables/enables powerups)")
+        CONSOLE.AddMessage("powerups 0/1  (disables/enables powerups)")
     end
     if enable == 1 then
 		Cfg.Powerups = true
@@ -613,7 +478,7 @@ function Console:Cmd_WEAPONSSTAY(enable)
 
 	enable = tonumber(enable)
     if enable == nil then
-        CONSOLE_AddMessage("weaponsstay 0/1  (disables/enables weapons stay)")
+        CONSOLE.AddMessage("weaponsstay 0/1  (disables/enables weapons stay)")
     end
     if enable == 1 then
 		Cfg.WeaponsStay = true
@@ -630,7 +495,7 @@ function Console:Cmd_TEAMDAMAGE(enable)
 
 	enable = tonumber(enable)
     if enable == nil then
-        CONSOLE_AddMessage("teamdamage 0/1  (disables/enables team damage)")
+        CONSOLE.AddMessage("teamdamage 0/1  (disables/enables team damage)")
     end
     if enable == 1 then
 		Cfg.TeamDamage = true
@@ -649,7 +514,7 @@ function Console:Cmd_ALLOWBUNNYHOPPING(enable)
 
 	enable = tonumber(enable)
     if enable == nil then
-        CONSOLE_AddMessage("allowbunnyhopping 0/1  (disables/enables bunnyhopping)")
+        CONSOLE.AddMessage("allowbunnyhopping 0/1  (disables/enables bunnyhopping)")
     end
     if enable == 1 then
 		Cfg.AllowBunnyhopping = true
@@ -666,7 +531,7 @@ function Console:Cmd_ALLOWBRIGHTSKINS(enable)
 
 	enable = tonumber(enable)
     if enable == nil then
-        CONSOLE_AddMessage("allowbrightskins 0/1  (disables/enables brightskins)")
+        CONSOLE.AddMessage("allowbrightskins 0/1  (disables/enables brightskins)")
     end
     if enable == 1 then
 		Cfg.AllowBrightskins = true
@@ -688,7 +553,7 @@ function Console:Cmd_ALLOWFORWARDRJ(enable)
 
 	enable = tonumber(enable)
     if enable == nil then
-        CONSOLE_AddMessage("allowforwardrj 0/1  (disables/enables forward rocket jumps)")
+        CONSOLE.AddMessage("allowforwardrj 0/1  (disables/enables forward rocket jumps)")
     end
     if enable == 1 then
 		Cfg.AllowForwardRJ = true
@@ -705,7 +570,7 @@ function Console:Cmd_STARTUPWEAPON(enable)
 
 	enable = tonumber(enable)
     if enable == nil then
-        CONSOLE_AddMessage("startupweapon 0-7 (0 = default)")
+        CONSOLE.AddMessage("startupweapon 0-7 (0 = default)")
     else
 		Cfg.StartupWeapon = enable
     end
@@ -716,7 +581,7 @@ function Console:Cmd_GAMEMODE(mode)
 	if not Game:IsServer() then return end
 
 	if IsMPDemo() then
-		CONSOLE_AddMessage( "Command 'gamemode' not available in demo version" )
+		CONSOLE.AddMessage( "Command 'gamemode' not available in demo version" )
 		return
 	end
 
@@ -766,22 +631,16 @@ function Console:Cmd_GAMEMODE(mode)
 		Cfg.GameMode = "Duel"
 		newMap = "DM_Sacred"
 		mapsTable = Cfg.ServerMapsDUE
-	elseif mode == "caaa" then
-		if Cfg.GameMode == "Clan Arena" then return end
-		Cfg.GameMode = "Clan Arena"
-		newMap = "DM_Sacred"
-		mapsTable = Cfg.ServerMapsCLA	
-	
-
 	elseif mode == "lms" then
 		if Cfg.GameMode == "Last Man Standing" then return end
 		Cfg.GameMode = "Last Man Standing"
 		newMap = "DM_Factory"
 		mapsTable = Cfg.ServerMapsLMS
 	else
-		CONSOLE_AddMessage("Available modes: ffa, tdm, voosh, tlb, pcf, ctf, duel, lms")
+		CONSOLE.AddMessage("Available modes: ffa, tdm, voosh, tlb, pcf, ctf, duel, lms")
 		return
 	end
+
 	Cfg.ServerMaps = {}
 	PainMenu.mapsOnServer = {}
 
@@ -805,22 +664,22 @@ function Console:CheckVotingParams(cmd,params)
 	if cmd == "map" then
 		name = string.lower(params)
 		if string.sub(name,1,2) ~= "dm" and string.sub(name,1,3) ~= "ctf" then
-			CONSOLE_AddMessage( "Bad map name '"..name.."'" )
+			CONSOLE.AddMessage( "Bad map name '"..name.."'" )
 			return false
 		end
 
 		if string.sub(name,1,3) == "dm_" and (MPCfg.GameMode == "People Can Fly" or MPCfg.GameMode == "Capture The Flag") then
-			CONSOLE_AddMessage( "Map not available in "..MPCfg.GameMode.." mode" )
+			CONSOLE.AddMessage( "Map not available in "..MPCfg.GameMode.." mode" )
 			return
 		end
 		
 		if string.sub(name,1,5) == "dmpcf" and MPCfg.GameMode ~= "People Can Fly" then
-			CONSOLE_AddMessage( "Map not available in "..MPCfg.GameMode.." mode" )
+			CONSOLE.AddMessage( "Map not available in "..MPCfg.GameMode.." mode" )
 			return
 		end
 		
 		if string.sub(name,1,3) == "ctf" and MPCfg.GameMode ~= "Capture The Flag" then
-			CONSOLE_AddMessage( "Map not available in "..MPCfg.GameMode.." mode" )
+			CONSOLE.AddMessage( "Map not available in "..MPCfg.GameMode.." mode" )
 			return
 		end
 
@@ -834,7 +693,7 @@ function Console:CheckVotingParams(cmd,params)
 		end
 
 		if not found then
-			CONSOLE_AddMessage( "Bad map name '"..name.."'" )
+			CONSOLE.AddMessage( "Bad map name '"..name.."'" )
 			return false
 		end
 
@@ -842,7 +701,7 @@ function Console:CheckVotingParams(cmd,params)
 	elseif cmd == "timelimit" or cmd == "fraglimit" or cmd == "maxplayers" or cmd == "maxspectators" or cmd == "bankickid" or cmd == "kickid" or cmd == "weaponrespawntime" or cmd == "capturelimit" or cmd == "lmslives" or cmd == "startupweapon" then
 		local val = tonumber(params)
 		if not val or type(val) ~= "number" then
-			CONSOLE_AddMessage( "Wrong params for "..cmd )
+			CONSOLE.AddMessage( "Wrong params for "..cmd )
 			return false
 		end
 		return true
@@ -850,60 +709,22 @@ function Console:CheckVotingParams(cmd,params)
 		if params and type(params) == "string" then
 			return true
 		else
-			CONSOLE_AddMessage( "Wrong params for "..cmd )
+			CONSOLE.AddMessage( "Wrong params for "..cmd )
 			return false
 		end
 	elseif cmd == "powerupdrop" or cmd == "powerups" or cmd == "weaponsstay" or cmd == "teamdamage"
 		or cmd == "allowbunnyhopping" or cmd == "allowbrightskins" or cmd == "allowforwardrj" then
 		local val = tonumber(params)
 		if val ~= 0 and val ~= 1 then
-			CONSOLE_AddMessage( "Wrong params for "..cmd )
+			CONSOLE.AddMessage( "Wrong params for "..cmd )
 			return false
 		end
 		return true
 	elseif cmd == "reloadmap" then
 		return true
-	elseif cmd == "proplus" then
-		local val = tonumber(params)
-		if val ~= 0 and val ~= 1 then
-			CONSOLE_AddMessage( "Wrong params for "..cmd )
-			return false
-		end
-		return true
-	elseif cmd == "forcespec" then
-		return true
-	elseif cmd == "referee" then
-		return true
-	elseif cmd == "allready" then
-		return true
-	elseif cmd == "botskill" then	
-		local val = tonumber(params)
-		if val ~= 0 and val ~= 1 and val ~= 2 and val ~= 3 and val ~= 4 and val ~= 5 and val ~= 6 and val ~= 7 and val ~= 8 and val ~= 9 and val ~= 10 then
-			CONSOLE_AddMessage( "Wrong params for "..cmd )
-			return false
-		end
-		return true
-	elseif cmd == "addbot" then	
-		return true
-	elseif cmd == "teamlock" then	
-		return true
-	elseif cmd == "kickbot" then
-		return true
-	elseif cmd == "kickallbots" then
-		return true
-	elseif cmd == "restartmap" then
-		return true
-	elseif cmd == "saferespawn" then
-		return true
-	elseif cmd == "warmupdamage" then
-		return true
-	elseif cmd == "fallingdamage" then
-		return true
-	elseif cmd == "rocketfix" then
-		return true
 	end
 
-	CONSOLE_AddMessage( "Command '"..cmd.."' cannot be used for voting" )
+	CONSOLE.AddMessage( "Command '"..cmd.."' cannot be used for voting" )
 	return false
 end
 --=======================================================================
@@ -917,7 +738,7 @@ function Console:Cmd_CALLVOTE(params)
 	params = Trim( string.sub(params,i) )
 
 	if not Console["Cmd_"..string.upper(cmd)] then
-		CONSOLE_AddMessage("Unknown command: ".. cmd)
+		CONSOLE.AddMessage("Unknown command: ".. cmd)
 		return
 	end
 
@@ -930,25 +751,25 @@ function Console:Cmd_CALLVOTE(params)
 		numPlayers = numPlayers + 1
 	end
 --	if numPlayers < 2 then
---		CONSOLE_AddMessage( "Not enough players for voting" )
+--		CONSOLE.AddMessage( "Not enough players for voting" )
 --		return
 --	end
 
 	if Game._voteCmd == "" then
 		Game.StartVotingRequest(NET.GetClientID(),cmd,params)
 	else
-		CONSOLE_AddMessage("Please wait till current voting is over")
+		CONSOLE.AddMessage("Please wait till current voting is over")
 	end
 end
 --=======================================================================
 function Console:Cmd_VOTE(yesno)
 	if Game.GMode == GModes.SingleGame then return end
 	if NET.IsSpectator(NET.GetClientID()) then
-		CONSOLE_AddMessage( "Spectators cannot vote." )
+		CONSOLE.AddMessage( "Spectators cannot vote." )
 		return
 	end
 	if not yesno or (yesno ~= "no" and yesno ~= "yes") then
-		CONSOLE_AddMessage( "Usage: vote yes/no" )
+		CONSOLE.AddMessage( "Usage: vote yes/no" )
 		return
 	end
 
@@ -958,24 +779,24 @@ function Console:Cmd_VOTE(yesno)
 	if Game._voteCmd ~= "" then
 		Game.PlayerVoteRequest(NET.GetClientID(),val)
 	else
-		CONSOLE_AddMessage( "No voting in progress" )
+		CONSOLE.AddMessage( "No voting in progress" )
 	end
 end
 --=======================================================================
 function Console:Cmd_PLAYERS()
 	if Game.GMode == GModes.SingleGame then
-        CONSOLE_AddMessage( 'Command not available in Single Player mode' )
+        CONSOLE.AddMessage( 'Command not available in Single Player mode' )
         return
     end
     
     for i,o in Game.PlayerStats do
-		CONSOLE_AddMessage( o.ClientID.."  "..o.Name )
+		CONSOLE.AddMessage( o.ClientID.."  "..o.Name )
 	end
 end
 --=======================================================================
 function Console:Cmd_NETSTATS(cmd)
 	if Game.GMode == GModes.SingleGame then
-        CONSOLE_AddMessage( 'Command not available in Single Player mode' )
+        CONSOLE.AddMessage( 'Command not available in Single Player mode' )
         return
     end
 
@@ -987,21 +808,21 @@ function Console:Cmd_NETSTATS(cmd)
             if cmd == 1 then
                 NET.SetStatsShow( true )
             else
-                CONSOLE_AddMessage( 'Params are 0 or 1' )
+                CONSOLE.AddMessage( 'Params are 0 or 1' )
             end
         end
     else
         if cmd == nil then
-            CONSOLE_AddMessage(NET.GetClientStats(255,true)) 
+            CONSOLE.AddMessage(NET.GetClientStats(255,true)) 
         else
             if cmd == 'overall' then
-                CONSOLE_AddMessage(NET.GetClientStats(255,false)) 
+                CONSOLE.AddMessage(NET.GetClientStats(255,false)) 
             else
                 if cmd == 'help' then
-                    CONSOLE_AddMessage( 'Usage:' )
-                    CONSOLE_AddMessage( ' netstats         - to get stats for last 5 seconds' )
-                    CONSOLE_AddMessage( ' netstats overall - to get stats for the whole connection' )
-                    CONSOLE_AddMessage( ' netstats help    - for this message' )
+                    CONSOLE.AddMessage( 'Usage:' )
+                    CONSOLE.AddMessage( ' netstats         - to get stats for last 5 seconds' )
+                    CONSOLE.AddMessage( ' netstats overall - to get stats for the whole connection' )
+                    CONSOLE.AddMessage( ' netstats help    - for this message' )
                 end
             end
         end
@@ -1010,83 +831,83 @@ end
 --=======================================================================
 function Console:Cmd_NETSTATSAVGFROM(cmd)
 	if Game.GMode == GModes.SingleGame then
-        CONSOLE_AddMessage( 'Command not available in Single Player mode' )
+        CONSOLE.AddMessage( 'Command not available in Single Player mode' )
         return
     end
 
     if IsNewNetcode() then
         cmd = tonumber(cmd)
         if cmd == nil then
-            CONSOLE_AddMessage( 'Usage: netstatsavgfrom (1-1023)' )
+            CONSOLE.AddMessage( 'Usage: netstatsavgfrom (1-1023)' )
         else
             NET.SetStatsNrToAvg( cmd )
         end
     else
-        CONSOLE_AddMessage( 'Command not available with old netcode' )
+        CONSOLE.AddMessage( 'Command not available with old netcode' )
     end
 end
 --=======================================================================
 function Console:Cmd_NETSTATSUPDATEDELAY(cmd)
 	if Game.GMode == GModes.SingleGame then
-        CONSOLE_AddMessage( 'Command not available in Single Player mode' )
+        CONSOLE.AddMessage( 'Command not available in Single Player mode' )
         return
     end
 
     if IsNewNetcode() then
         cmd = tonumber(cmd)
         if cmd == nil then
-            CONSOLE_AddMessage( 'Usage: netstatsupdatedelay (1-65535)' )
-            CONSOLE_AddMessage( '    ( the value to set is in miliseconds)' )
+            CONSOLE.AddMessage( 'Usage: netstatsupdatedelay (1-65535)' )
+            CONSOLE.AddMessage( '    ( the value to set is in miliseconds)' )
         else
             NET.SetStatsUpdateDelay( cmd )
         end
     else
-        CONSOLE_AddMessage( 'Command not available with old netcode' )
+        CONSOLE.AddMessage( 'Command not available with old netcode' )
     end
 end
 --=======================================================================
 function Console:Cmd_SERVERFRAMERATE(cmd)
 	if Game.GMode == GModes.SingleGame then
-        CONSOLE_AddMessage( 'Command not available in Single Player mode' )
+        CONSOLE.AddMessage( 'Command not available in Single Player mode' )
         return
     end
 
     if IsNewNetcode() then
         cmd = tonumber(cmd)
         if cmd == nil then
-            CONSOLE_AddMessage( 'Usage: serverframerate (1-1000)' )
-            CONSOLE_AddMessage( '    ( the value to set is in frames per second)' )
+            CONSOLE.AddMessage( 'Usage: serverframerate (1-1000)' )
+            CONSOLE.AddMessage( '    ( the value to set is in frames per second)' )
         else
             NET.SetServerFramerate( cmd )
         end
     else
-        CONSOLE_AddMessage( 'Command not available with old netcode' )
+        CONSOLE.AddMessage( 'Command not available with old netcode' )
     end
 end
 --=======================================================================
 function Console:Cmd_CLIENTBANDWIDTH(cmd)
 	if Game.GMode == GModes.SingleGame then
-        CONSOLE_AddMessage( 'Command not available in Single Player mode' )
+        CONSOLE.AddMessage( 'Command not available in Single Player mode' )
         return
     end
 
     if IsNewNetcode() then
         cmd = tonumber(cmd)
         if cmd == nil then
-            CONSOLE_AddMessage( 'Usage: clientbandwidth <bytes-per-second>' )
-            CONSOLE_AddMessage( '    ( sets upstream bandwidth limiter )' )
-            CONSOLE_AddMessage( 'Current value: '..NET.GetClientBandwidth() )
+            CONSOLE.AddMessage( 'Usage: clientbandwidth <bytes-per-second>' )
+            CONSOLE.AddMessage( '    ( sets upstream bandwidth limiter )' )
+            CONSOLE.AddMessage( 'Current value: '..NET.GetClientBandwidth() )
         else
             NET.SetClientBandwidth( cmd )
         end
     else
-        CONSOLE_AddMessage( 'Command not available with old netcode' )
+        CONSOLE.AddMessage( 'Command not available with old netcode' )
     end
 end
 --=======================================================================
 function Console:Cmd_ENEMYINTERPOLATION(cmd)
 	if Game.GMode == GModes.SingleGame then
-        CONSOLE_AddMessage( 'Command not available in Single Player mode' )
+        CONSOLE.AddMessage( 'Command not available in Single Player mode' )
         return
     end
 
@@ -1100,18 +921,18 @@ function Console:Cmd_ENEMYINTERPOLATION(cmd)
                 Cfg.NetcodeEnemyPredictionInterpolation = true
                 NET.SetEnemyPredictionInterpolation( true )
             else
-                CONSOLE_AddMessage( 'Usage: enemyinterpolation 0/1' )
-                CONSOLE_AddMessage( '    ( interpolates between last two enemy positions )' )
+                CONSOLE.AddMessage( 'Usage: enemyinterpolation 0/1' )
+                CONSOLE.AddMessage( '    ( interpolates between last two enemy positions )' )
             end
         end
     else
-        CONSOLE_AddMessage( 'Command not available with old netcode' )
+        CONSOLE.AddMessage( 'Command not available with old netcode' )
     end
 end
 --=======================================================================
 function Console:Cmd_DISCONNECT()
 	if Game.GMode == GModes.SingleGame or Game:IsServer() then
-        CONSOLE_AddMessage( 'Command not available in Single Player or Server mode' )
+        CONSOLE.AddMessage( 'Command not available in Single Player or Server mode' )
         return
     end
 	NET.Disconnect()
@@ -1124,7 +945,7 @@ end
 --=======================================================================
 function Console:Cmd_RECONNECT()
 	if Game.GMode == GModes.SingleGame then
-        CONSOLE_AddMessage( 'Command not available in Single Player mode' )
+        CONSOLE.AddMessage( 'Command not available in Single Player mode' )
         return
     end
 	PMENU.Activate(false)
@@ -1138,7 +959,7 @@ end
 function Console:Cmd_SAY(txt)
 	if not txt then return end
 	if Game.GMode == GModes.SingleGame then
-        CONSOLE_AddMessage( 'Command not available in Single Player mode' )
+        CONSOLE.AddMessage( 'Command not available in Single Player mode' )
         return
     end
     Game.SayToAll(NET.GetClientID(), txt)
@@ -1147,7 +968,7 @@ end
 function Console:Cmd_TEAMSAY(txt)
 	if not txt then return end
 	if Game.GMode == GModes.SingleGame then
-        CONSOLE_AddMessage( 'Command not available in Single Player mode' )
+        CONSOLE.AddMessage( 'Command not available in Single Player mode' )
         return
     end
     Game.SayToTeam(NET.GetClientID(), txt)
@@ -1157,7 +978,7 @@ end
 --=======================================================================
 function Console:Cmd_BENCHMARK(name)
     if name == nil then 
-        CONSOLE_AddMessage('benchmark "name"') 
+        CONSOLE.AddMessage('benchmark "name"') 
     else
         if not Game:IsServer() then
             Game:LoadLevel(name.."_Benchmark")        
@@ -1172,28 +993,28 @@ end
 -- pkammo [gives full ammo]
 function Console:Cmd_PKAMMO()
 	if Game.GMode ~= GModes.SingleGame then return end
-	if Game.Difficulty > 1 then CONSOLE_AddMessage(TXT.Cheats.LowLevelOnly); return end
+	if Game.Difficulty > 1 then CONSOLE.AddMessage(TXT.Cheats.LowLevelOnly); return end
 	if Player then
 		Player.Ammo = Clone(CPlayer.s_SubClass.Ammo)
-		CONSOLE_AddMessage(TXT.Cheats.PKAmmo)
+		CONSOLE.AddMessage(TXT.Cheats.PKAmmo)
 	end
 end
 --=======================================================================
 -- pkweapons [gives all weapons]
 function Console:Cmd_PKWEAPONS()
 	if Game.GMode ~= GModes.SingleGame then return end
-	if Game.Difficulty > 1 then CONSOLE_AddMessage(TXT.Cheats.LowLevelOnly); return end
+	if Game.Difficulty > 1 then CONSOLE.AddMessage(TXT.Cheats.LowLevelOnly); return end
 	if Player then
         Player.EnabledWeapons = Clone(CPlayer.EnabledWeapons)
         Player.Ammo = Clone(CPlayer.s_SubClass.Ammo)
-        CONSOLE_AddMessage(TXT.Cheats.PKWeapons)
+        CONSOLE.AddMessage(TXT.Cheats.PKWeapons)
     end
 end
 --=======================================================================
 -- pkhealth [current armor regenerates, if health < 100 then health = 100]
 function Console:Cmd_PKHEALTH()
 	if Game.GMode ~= GModes.SingleGame then return end
-	if Game.Difficulty > 1 then CONSOLE_AddMessage(TXT.Cheats.LowLevelOnly); return end
+	if Game.Difficulty > 1 then CONSOLE.AddMessage(TXT.Cheats.LowLevelOnly); return end
 	if Player then
 		if Player.Health < Game.HealthCapacity then
 			Player.Health = Game.HealthCapacity
@@ -1207,14 +1028,14 @@ function Console:Cmd_PKHEALTH()
 
 		if t then Player.Armor = t.ArmorAdd end
 
-		CONSOLE_AddMessage(TXT.Cheats.PKHealth)
+		CONSOLE.AddMessage(TXT.Cheats.PKHealth)
 	end
 end
 --=======================================================================
 -- pkpower [pkammo + pkhealth together]
 function Console:Cmd_PKPOWER()
 	if Game.GMode ~= GModes.SingleGame then return end
-	if Game.Difficulty > 1 then CONSOLE_AddMessage(TXT.Cheats.LowLevelOnly); return end
+	if Game.Difficulty > 1 then CONSOLE.AddMessage(TXT.Cheats.LowLevelOnly); return end
 	self:Cmd_PKAMMO()
 	self:Cmd_PKHEALTH()
 end
@@ -1222,41 +1043,41 @@ end
 -- pkgod [monsters can't hurt you - on/off toggle]
 function Console:Cmd_PKGOD()
 	if Game.GMode ~= GModes.SingleGame then return end
-	if Game.Difficulty > 1 then CONSOLE_AddMessage(TXT.Cheats.LowLevelOnly); return end
+	if Game.Difficulty > 1 then CONSOLE.AddMessage(TXT.Cheats.LowLevelOnly); return end
 	if GOD == true then
 		GOD = false
-		CONSOLE_AddMessage(TXT.Cheats.PKGodOff)
+		CONSOLE.AddMessage(TXT.Cheats.PKGodOff)
 	else
 		GOD = true
-		CONSOLE_AddMessage(TXT.Cheats.PKGodOn)
+		CONSOLE.AddMessage(TXT.Cheats.PKGodOn)
 	end
 end
 --=======================================================================
 -- pkalwaysgib [always gib the enemy - on/off toggle]
 function Console:Cmd_PKALWAYSGIB()
 	if Game.GMode ~= GModes.SingleGame then return end
-	if Game.Difficulty > 1 then CONSOLE_AddMessage(TXT.Cheats.LowLevelOnly); return end
+	if Game.Difficulty > 1 then CONSOLE.AddMessage(TXT.Cheats.LowLevelOnly); return end
 	
 	if not Game.Cheat_AlwaysGib then
 		Game.Cheat_AlwaysGib = true
-		CONSOLE_AddMessage(TXT.Cheats.PKGibOn)
+		CONSOLE.AddMessage(TXT.Cheats.PKGibOn)
 	else
 		Game.Cheat_AlwaysGib = false
-		CONSOLE_AddMessage(TXT.Cheats.PKGibOff)
+		CONSOLE.AddMessage(TXT.Cheats.PKGibOff)
 	end
 end
 --=======================================================================
 -- pkweakenemies [all monsters have 1 HP - on/off toggle]
 function Console:Cmd_PKWEAKENEMIES()
 	if Game.GMode ~= GModes.SingleGame then return end
-	if Game.Difficulty > 1 then CONSOLE_AddMessage(TXT.Cheats.LowLevelOnly); return end
+	if Game.Difficulty > 1 then CONSOLE.AddMessage(TXT.Cheats.LowLevelOnly); return end
 
 	if not Game.Cheat_WeakEnemies then
 		Game.Cheat_WeakEnemies = true
-		CONSOLE_AddMessage(TXT.Cheats.PKWeakOn)
+		CONSOLE.AddMessage(TXT.Cheats.PKWeakOn)
 	else
 		Game.Cheat_WeakEnemies = false
-		CONSOLE_AddMessage(TXT.Cheats.PKWeakOff)
+		CONSOLE.AddMessage(TXT.Cheats.PKWeakOff)
 	end
 end
 --=======================================================================
@@ -1264,63 +1085,63 @@ end
 function Console:Cmd_PKCARDS()
 	if IsFinalBuild() then return end
 	if Game.GMode ~= GModes.SingleGame then return end
-	if Game.Difficulty > 1 then CONSOLE_AddMessage(TXT.Cheats.LowLevelOnly); return end
+	if Game.Difficulty > 1 then CONSOLE.AddMessage(TXT.Cheats.LowLevelOnly); return end
 	Game.GoldenCardsUseUnlimited = true
-	CONSOLE_AddMessage(TXT.Cheats.PKCards)
+	CONSOLE.AddMessage(TXT.Cheats.PKCards)
 end
 --=======================================================================
 -- pkgold [99999 gold]
 function Console:Cmd_PKGOLD()
 	if Game.GMode ~= GModes.SingleGame then return end
-	if Game.Difficulty > 1 then CONSOLE_AddMessage(TXT.Cheats.LowLevelOnly); return end
+	if Game.Difficulty > 1 then CONSOLE.AddMessage(TXT.Cheats.LowLevelOnly); return end
 	if Game then Game.PlayerMoney = 99999 end
 	MBOARD.SetCashCheat(99999)
-	CONSOLE_AddMessage(TXT.Cheats.PKGold)
+	CONSOLE.AddMessage(TXT.Cheats.PKGold)
 end
 --=======================================================================
 -- pkhaste [Haste x 8 - on/off toggle]
 function Console:Cmd_PKHASTE()
 	if Game.GMode ~= GModes.SingleGame then return end
-	if Game.Difficulty > 1 then CONSOLE_AddMessage(TXT.Cheats.LowLevelOnly); return end
+	if Game.Difficulty > 1 then CONSOLE.AddMessage(TXT.Cheats.LowLevelOnly); return end
 
 	if Game.BulletTime == true then
 		Game:EnableBulletTime(false)
-		CONSOLE_AddMessage(TXT.Cheats.PKHasteOff)
+		CONSOLE.AddMessage(TXT.Cheats.PKHasteOff)
 	else
 		local slow = Game.BulletTimeSlowdown
 		Game.BulletTimeSlowdown = 1/8
 		Game:EnableBulletTime(true)
 		Game.BulletTimeSlowdown = slow
-		CONSOLE_AddMessage(TXT.Cheats.PKHasteOn)
+		CONSOLE.AddMessage(TXT.Cheats.PKHasteOn)
 	end
 end
 --=======================================================================
 -- pkdemon [Demon Morph - on/off toggle]
 function Console:Cmd_PKDEMON()
 	if Game.GMode ~= GModes.SingleGame then return end
-	if Game.Difficulty > 1 then CONSOLE_AddMessage(TXT.Cheats.LowLevelOnly); return end
+	if Game.Difficulty > 1 then CONSOLE.AddMessage(TXT.Cheats.LowLevelOnly); return end
 	if Game.IsDemon then
 		Game:EnableDemon(false)
-		CONSOLE_AddMessage(TXT.Cheats.PKDemonOff)
+		CONSOLE.AddMessage(TXT.Cheats.PKDemonOff)
 	else
 		Game:EnableDemon(true)
-		CONSOLE_AddMessage(TXT.Cheats.PKDemonOn)
+		CONSOLE.AddMessage(TXT.Cheats.PKDemonOn)
 	end
 end
 --=======================================================================
 -- pkweaponmodifier [enables weapon modifier]
 function Console:Cmd_PKWEAPONMODIFIER()
 	if Game.GMode ~= GModes.SingleGame then return end
-	if Game.Difficulty > 1 then CONSOLE_AddMessage(TXT.Cheats.LowLevelOnly); return end
+	if Game.Difficulty > 1 then CONSOLE.AddMessage(TXT.Cheats.LowLevelOnly); return end
 	if Player then
 		if Player.HasWeaponModifier == false then
 			Player.HasWeaponModifier = true
 			Player._WeaponModifierCounter = 9999999
-			CONSOLE_AddMessage(TXT.Cheats.PKWeapModOn)
+			CONSOLE.AddMessage(TXT.Cheats.PKWeapModOn)
 		else
 			Player.HasWeaponModifier = false
 			Player._WeaponModifierCounter = 0
-			CONSOLE_AddMessage(TXT.Cheats.PKWeapModOff)
+			CONSOLE.AddMessage(TXT.Cheats.PKWeapModOff)
 		end
     end
 end
@@ -1329,14 +1150,14 @@ end
 --function Console:Cmd_PKALLLEVELS()
 --	if IsFinalBuild() then return end
 --	if Game.GMode ~= GModes.SingleGame then return end
---	if Game.Difficulty > 1 then CONSOLE_AddMessage(TXT.Cheats.LowLevelOnly); return end
+--	if Game.Difficulty > 1 then CONSOLE.AddMessage(TXT.Cheats.LowLevelOnly); return end
 --	for i=1,table.getn(Levels) do
 --		for j=1,table.getn(Levels[i]) do
 --			Game:MakeEmptyLevelStats(Levels[i][j][1])
 --			Game.LevelsStats[Levels[i][j][1]].Finished = true
 --		end
 --	end
---	CONSOLE_AddMessage(TXT.Cheats.PKAllLevels)
+--	CONSOLE.AddMessage(TXT.Cheats.PKAllLevels)
 --	PMENU.SwitchToMenu()
 --	PMENU.SwitchToMap()
 --end
@@ -1345,13 +1166,13 @@ end
 --function Console:Cmd_PKALLCARDS()
 --	if IsFinalBuild() then return end
 --	if Game.GMode ~= GModes.SingleGame then return end
---	if Game.Difficulty > 1 then CONSOLE_AddMessage(TXT.Cheats.LowLevelOnly); return end
+--	if Game.Difficulty > 1 then CONSOLE.AddMessage(TXT.Cheats.LowLevelOnly); return end
 --	for i=1,table.getn(Game.CardsAvailable) do
 --		Game.CardsAvailable[i] = true
 --	end
 --	Game.CardsAvailable[23] = false
 --	Game.CardsAvailable[32] = false
---	CONSOLE_AddMessage(TXT.Cheats.PKAllCards)
+--	CONSOLE.AddMessage(TXT.Cheats.PKAllCards)
 --	PMENU.SwitchToMap()
 --	PMENU.SwitchToBoard()
 --end
@@ -1359,26 +1180,26 @@ end
 -- pkkeepbodies [bodies never disappear - on/off toggle]
 function Console:Cmd_PKKEEPBODIES()
 	if Game.GMode ~= GModes.SingleGame then return end
-	if Game.Difficulty > 1 then CONSOLE_AddMessage(TXT.Cheats.LowLevelOnly); return end
+	if Game.Difficulty > 1 then CONSOLE.AddMessage(TXT.Cheats.LowLevelOnly); return end
 	if Game.Cheat_KeepBodies then
 		Game.Cheat_KeepBodies = false
-		CONSOLE_AddMessage(TXT.Cheats.PKKeepBodiesOff)
+		CONSOLE.AddMessage(TXT.Cheats.PKKeepBodiesOff)
 	else
 		Game.Cheat_KeepBodies = true
-		CONSOLE_AddMessage(TXT.Cheats.PKKeepBodiesOn)
+		CONSOLE.AddMessage(TXT.Cheats.PKKeepBodiesOn)
 	end
 end
 --=======================================================================
 -- pkkeepdecals [decals never wear off - on/off toggle]
 function Console:Cmd_PKKEEPDECALS()
 	if Game.GMode ~= GModes.SingleGame then return end
-	if Game.Difficulty > 1 then CONSOLE_AddMessage(TXT.Cheats.LowLevelOnly); return end
+	if Game.Difficulty > 1 then CONSOLE.AddMessage(TXT.Cheats.LowLevelOnly); return end
 	if Game.Cheat_KeepDecals then
 		Game.Cheat_KeepDecals = false
-		CONSOLE_AddMessage(TXT.Cheats.PKKeepDecalsOff)
+		CONSOLE.AddMessage(TXT.Cheats.PKKeepDecalsOff)
 	else
 		Game.Cheat_KeepDecals = true
-		CONSOLE_AddMessage(TXT.Cheats.PKKeepDecalsOn)
+		CONSOLE.AddMessage(TXT.Cheats.PKKeepDecalsOn)
 	end
 	
 	R3D.KeepDecals(Game.Cheat_KeepDecals)
@@ -1405,15 +1226,15 @@ function Console:Cmd_SERVER(name)
 
     if IsFinalBuild() then return end
     if name == nil then 
-        CONSOLE_AddMessage('server map_name') 
+        CONSOLE.AddMessage('server map_name') 
     else
         if PMENU.StartServer( Cfg.PlayerName, "", name, 1, 3455 ) then
             NET.LoadMapOnServer(name)
         end
     end
-    CONSOLE_AddMessage("server started on map:  "..Lev._Name) 
+    CONSOLE.AddMessage("server started on map:  "..Lev._Name) 
 
-    --CONSOLE_AddMessage(asd) 
+    --CONSOLE.AddMessage(asd) 
     --Game:Print(asd)
     --asd = asd +1
 end
@@ -1421,7 +1242,7 @@ end
 function Console:Cmd_CONNECT(ip)
 --  if IsFinalBuild() then return end
 	if ip == nil then
-		CONSOLE_AddMessage('connect ip:port')
+		CONSOLE.AddMessage('connect ip:port')
 	else
 		local host = nil
 		local port = nil
@@ -1460,7 +1281,7 @@ end
 function Console:Cmd_MSENSITIVITY(val)
     val = tonumber(val)    
     if val == nil then 
-        CONSOLE_AddMessage('msensitivity value  (sets mouse sensitivity)') 
+        CONSOLE.AddMessage('msensitivity value  (sets mouse sensitivity)') 
     elseif type(val) == "number" then
         if val < 201 and val >= 0 then
 			Cfg.MouseSensitivity = val
@@ -1468,27 +1289,13 @@ function Console:Cmd_MSENSITIVITY(val)
 		end
     end
     
-    CONSOLE_AddMessage("current mouse sensitivity:  "..Cfg.MouseSensitivity) 
-end
---=======================================================================
-function Console:Cmd_SENSITIVITY(val)
-    val = tonumber(val)    
-    if val == nil then 
-        CONSOLE_AddMessage('msensitivity value  (sets mouse sensitivity)') 
-    elseif type(val) == "number" then
-        if val < 201 and val >= 0 then
-			Cfg.MouseSensitivity = val
-			MOUSE.SetSensitivity(Cfg.MouseSensitivity)
-		end
-    end
-    
-    CONSOLE_AddMessage("current mouse sensitivity:  "..Cfg.MouseSensitivity) 
+    CONSOLE.AddMessage("current mouse sensitivity:  "..Cfg.MouseSensitivity) 
 end
 --=======================================================================
 function Console:Cmd_MSMOOTH(enable)
     enable = tonumber(enable)    
     if enable == nil then 
-        CONSOLE_AddMessage('msmooth value  (enables smooth mouse)') 
+        CONSOLE.AddMessage('msmooth value  (enables smooth mouse)') 
     end
     
     if enable == 1 then  Cfg.SmoothMouse = true  end
@@ -1497,9 +1304,9 @@ function Console:Cmd_MSMOOTH(enable)
     MOUSE.SetSmooth(Cfg.SmoothMouse)            
     
     if Cfg.SmoothMouse then
-        CONSOLE_AddMessage("smooth mouse is enabled") 
+        CONSOLE.AddMessage("smooth mouse is enabled") 
     else
-        CONSOLE_AddMessage("smooth mouse is disabled") 
+        CONSOLE.AddMessage("smooth mouse is disabled") 
     end
 end
 --=======================================================================
@@ -1507,7 +1314,7 @@ function Console:Cmd_FOV(val)
     
     val = tonumber(val)    
     if val == nil then 
-        CONSOLE_AddMessage("fov value  (sets camera's FOV)") 
+        CONSOLE.AddMessage("fov value  (sets camera's FOV)") 
     elseif type(val) == "number" then
         Cfg.FOV = val
         PainMenu.cameraFOV = val
@@ -1515,13 +1322,13 @@ function Console:Cmd_FOV(val)
     
     R3D.SetCameraFOV(Cfg.FOV)
     
-    CONSOLE_AddMessage("current fov:  "..Cfg.FOV)     	
+    CONSOLE.AddMessage("current fov:  "..Cfg.FOV)     	
 end
 --=======================================================================
 function Console:Cmd_CAMERAINTERPOLATION(enable)
     enable = tonumber(enable)    
     if enable == nil then 
-        CONSOLE_AddMessage("camerainterpolation 0/1  (disables/enables camera interpolation for MP clients)") 
+        CONSOLE.AddMessage("camerainterpolation 0/1  (disables/enables camera interpolation for MP clients)") 
     end    
     
     if enable == 1 then Cfg.CameraInterpolation = true  end    
@@ -1530,9 +1337,9 @@ function Console:Cmd_CAMERAINTERPOLATION(enable)
     CAM.EnableInterpolation(Cfg.CameraInterpolation)
     
     if Cfg.CameraInterpolation then
-        CONSOLE_AddMessage("camera interpolation is enabled") 
+        CONSOLE.AddMessage("camera interpolation is enabled") 
     else
-        CONSOLE_AddMessage("camera interpolation is disabled") 
+        CONSOLE.AddMessage("camera interpolation is disabled") 
     end
 end
 --=======================================================================
@@ -1554,7 +1361,7 @@ function Console:Cmd_TPP(enable,view)
     view = tonumber(view)    
 
     if enable == nil then 
-        CONSOLE_AddMessage("third person view [1/0]") 
+        CONSOLE.AddMessage("third person view [1/0]") 
     end
 
     if enable == 1 then Game.TPP = true end
@@ -1565,16 +1372,16 @@ function Console:Cmd_TPP(enable,view)
     if Player and Player._Entity then ENTITY.EnableDraw(Player._Entity,Game.TPP) end
     
     if Game.TPP then
-        CONSOLE_AddMessage("current state: on") 
+        CONSOLE.AddMessage("current state: on") 
     else
-        CONSOLE_AddMessage("current state: off") 
+        CONSOLE.AddMessage("current state: off") 
     end
 end
 --=======================================================================
 function Console:Cmd_TIMELIMIT(val)
     val = tonumber(val)    
     if val == nil then 
-        CONSOLE_AddMessage('timelimit value  (sets time limit)') 
+        CONSOLE.AddMessage('timelimit value  (sets time limit)') 
     elseif type(val) == "number" then
         Cfg.TimeLimit = val
         if Game:IsServer() then
@@ -1582,13 +1389,13 @@ function Console:Cmd_TIMELIMIT(val)
         end
     end
     
-    CONSOLE_AddMessage("current time limit:  "..Cfg.TimeLimit) 
+    CONSOLE.AddMessage("current time limit:  "..Cfg.TimeLimit) 
 end
 --=======================================================================
 function Console:Cmd_FRAGLIMIT(val)
     val = tonumber(val)    
     if val == nil then 
-        CONSOLE_AddMessage('fraglimit value  (sets frag limit)') 
+        CONSOLE.AddMessage('fraglimit value  (sets frag limit)') 
     elseif type(val) == "number" then        
         Cfg.FragLimit = val
         if Game:IsServer() then
@@ -1596,13 +1403,13 @@ function Console:Cmd_FRAGLIMIT(val)
         end
     end
     
-    CONSOLE_AddMessage("current frag limit:  "..Cfg.FragLimit) 
+    CONSOLE.AddMessage("current frag limit:  "..Cfg.FragLimit) 
 end
 --=======================================================================
 function Console:Cmd_CAPTURELIMIT(val)
     val = tonumber(val)    
     if val == nil then 
-        CONSOLE_AddMessage('capturelimit value  (sets flag capture limit)') 
+        CONSOLE.AddMessage('capturelimit value  (sets flag capture limit)') 
     elseif type(val) == "number" then        
         Cfg.CaptureLimit = val
         if Game:IsServer() then
@@ -1610,13 +1417,13 @@ function Console:Cmd_CAPTURELIMIT(val)
         end
     end
     
-    CONSOLE_AddMessage("current capture limit:  "..Cfg.CaptureLimit) 
+    CONSOLE.AddMessage("current capture limit:  "..Cfg.CaptureLimit) 
 end
 --=======================================================================
 function Console:Cmd_LMSLIVES(val)
     val = tonumber(val)    
     if val == nil then 
-        CONSOLE_AddMessage('lmslives value  (sets number of lives in LMS mode)') 
+        CONSOLE.AddMessage('lmslives value  (sets number of lives in LMS mode)') 
     elseif type(val) == "number" then        
         Cfg.LMSLives = val
         if Game:IsServer() then
@@ -1624,24 +1431,24 @@ function Console:Cmd_LMSLIVES(val)
         end
     end
     
-    CONSOLE_AddMessage("current LMS lives:  "..Cfg.LMSLives)
+    CONSOLE.AddMessage("current LMS lives:  "..Cfg.LMSLives)
 end
 --=======================================================================
 function Console:Cmd_WEAPONRESPAWNTIME(val)
     val = tonumber(val)    
     if val == nil then 
-        CONSOLE_AddMessage('weaponrespawntime value  (sets weapon respawn time)') 
+        CONSOLE.AddMessage('weaponrespawntime value  (sets weapon respawn time)') 
     elseif type(val) == "number" then
         Cfg.WeaponRespawnTime = val
     end
     
-    CONSOLE_AddMessage("current weapon respawn time:  "..Cfg.WeaponRespawnTime)
+    CONSOLE.AddMessage("current weapon respawn time:  "..Cfg.WeaponRespawnTime)
 end
 --=======================================================================
 function Console:Cmd_CROSSHAIR(val)
     val = tonumber(val)    
 	if val == nil then 
-		CONSOLE_AddMessage('crosshair value [1-32] (changes crosshair)')
+		CONSOLE.AddMessage('crosshair value [1-32] (changes crosshair)')
     elseif type(val) == "number" then
 		if val <= 32 and val > 0 then
 			Cfg.Crosshair = val
@@ -1649,14 +1456,14 @@ function Console:Cmd_CROSSHAIR(val)
 		end
     end
 
-    CONSOLE_AddMessage("current crosshair:  "..Cfg.Crosshair)
+    CONSOLE.AddMessage("current crosshair:  "..Cfg.Crosshair)
 end
 --=======================================================================
 function Console:Cmd_HUDSIZE(val)
     
     val = tonumber(val)    
     if val == nil then
-        CONSOLE_AddMessage("hudsize value  (sets HUD size)") 
+        CONSOLE.AddMessage("hudsize value  (sets HUD size)") 
     elseif type(val) == "number" then
 		if val > 3.0 then
 			Cfg.HUDSize = 3.0
@@ -1667,22 +1474,22 @@ function Console:Cmd_HUDSIZE(val)
 		end
     end
     
-    CONSOLE_AddMessage("current HUD size:  "..Cfg.HUDSize)     	
+    CONSOLE.AddMessage("current HUD size:  "..Cfg.HUDSize)     	
 end
 --=======================================================================
 function Console:Cmd_SPEEDMETER(enable)
     enable = tonumber(enable)    
     if enable == nil then 
-        CONSOLE_AddMessage("shows speed meter [1/0]") 
+        CONSOLE.AddMessage("shows speed meter [1/0]") 
     end
    
     if enable == 1 then Tweak.PlayerMove.ShowSpeedmeter = true  end
     if enable == 0 then Tweak.PlayerMove.ShowSpeedmeter = false end
 
     if Tweak.PlayerMove.ShowSpeedmeter then
-        CONSOLE_AddMessage("current state: on") 
+        CONSOLE.AddMessage("current state: on") 
     else
-        CONSOLE_AddMessage("current state: off") 
+        CONSOLE.AddMessage("current state: off") 
     end
 end
 --=======================================================================
@@ -1691,7 +1498,7 @@ function Console:Cmd_BULLETTIME(enable)
     if IsFinalBuild() then return end
     enable = tonumber(enable)    
     if enable == nil then 
-        CONSOLE_AddMessage("enables bullet time [1/0]") 
+        CONSOLE.AddMessage("enables bullet time [1/0]") 
     end
 
     if enable == 1 then Game:EnableBulletTime(true) end
@@ -1701,7 +1508,7 @@ end
 --=======================================================================
 function Console:Cmd_NAME(name)
     if name == nil then 
-        CONSOLE_AddMessage('name "nick" (changes player name)') 
+        CONSOLE.AddMessage('name "nick" (changes player name)') 
     else
         Cfg.PlayerName = HUD.ColorSubstr(tostring(name),16)
         Cfg.PlayerName = string.gsub(Cfg.PlayerName, "$KILLER", "KILLER")
@@ -1712,7 +1519,7 @@ function Console:Cmd_NAME(name)
     end
     
     if Game.GMode == GModes.SingleGame and CONSOLE.IsActive() then        
-        CONSOLE_AddMessage("current player name:  "..Cfg.PlayerName) 
+        CONSOLE.AddMessage("current player name:  "..Cfg.PlayerName) 
     end
 end
 --=======================================================================
@@ -1723,7 +1530,7 @@ function Console:Cmd_POS(x,y,z)
     if x then GX = x end
     if y then GY = y end
     if z then GZ = z end
-    CONSOLE_AddMessage(GX.." "..GY.." "..GZ)
+    CONSOLE.AddMessage(GX.." "..GY.." "..GZ)
 end
 --=======================================================================
 function Console:Cmd_ROT(x,y,z)
@@ -1733,13 +1540,13 @@ function Console:Cmd_ROT(x,y,z)
     if x then GAX = x end
     if y then GAY = y end
     if z then GAZ = z end
-    CONSOLE_AddMessage(GAX.." "..GAY.." "..GAZ)
+    CONSOLE.AddMessage(GAX.." "..GAY.." "..GAZ)
 end
 --=======================================================================
 function Console:Cmd_WEAPONSPECULAR(enable)
 	enable = tonumber(enable)    
     if enable == nil then 
-        CONSOLE_AddMessage("enables weapon specular [1/0]") 
+        CONSOLE.AddMessage("enables weapon specular [1/0]") 
     end
 
     if enable == 1 then Cfg.WeaponSpecular = true end
@@ -1750,15 +1557,7 @@ end
 --=======================================================================
 function Console:Cmd_DEMOPLAY(filename)
     if filename == nil then
-        CONSOLE_AddMessage("Usage: demoplay <filename_to_play_from>") 
-    else
---        NET.DemoPlay(filename)
-        CONSOLE.DemoPlay(filename)
-    end
-end
-function Console:Cmd_PLAYDEMO(filename)
-    if filename == nil then
-        CONSOLE_AddMessage("Usage: playdemo <filename_to_play_from>") 
+        CONSOLE.AddMessage("Usage: demoplay <filename_to_play_from>") 
     else
 --        NET.DemoPlay(filename)
         CONSOLE.DemoPlay(filename)
@@ -1767,7 +1566,7 @@ end
 --=======================================================================
 function Console:Cmd_TIMEDEMO(filename)
     if filename == nil then
-        CONSOLE_AddMessage("Usage: timedemo <filename_to_play_from>") 
+        CONSOLE.AddMessage("Usage: timedemo <filename_to_play_from>") 
     else
 --        NET.DemoPlay(filename)
         CONSOLE.DemoPlay(filename,true)
@@ -1776,7 +1575,7 @@ end
 --=======================================================================
 function Console:Cmd_DEMOPLAYBMP(filename)
     if filename == nil then
-        CONSOLE_AddMessage("Usage: demoplaytga <filename_to_play_from>") 
+        CONSOLE.AddMessage("Usage: demoplaytga <filename_to_play_from>") 
     else
 --        NET.DemoPlay(filename)
         CONSOLE.DemoPlay(filename,true,true)
@@ -1785,21 +1584,11 @@ end
 --=======================================================================
 function Console:Cmd_DEMORECORD(filename)
     if filename == nil then
-        CONSOLE_AddMessage("Usage: demorecord <filename_to_record_in>") 
+        CONSOLE.AddMessage("Usage: demorecord <filename_to_record_in>") 
     else
 --        NET.DemoRecord(filename)
 		CONSOLE.DemoRecord(filename)
-        CONSOLE_AddMessage("Demo recording scheduled") 
-    end
-end
-
-function Console:Cmd_RECORDDEMO(filename)
-    if filename == nil then
-        CONSOLE_AddMessage("Usage: recorddemo <filename_to_record_in>") 
-    else
---        NET.DemoRecord(filename)
-		CONSOLE.DemoRecord(filename)
-        CONSOLE_AddMessage("Demo recording scheduled") 
+        CONSOLE.AddMessage("Demo recording scheduled") 
     end
 end
 --=======================================================================
@@ -1807,28 +1596,28 @@ function Console:Cmd_DEMOSTOP()
 --    if Game.GMode ~= GModes.SingleGame then
 --        NET.DemoStop(filename)
 		CONSOLE.DemoStop()
-        CONSOLE_AddMessage("Demo stopped")
+        CONSOLE.AddMessage("Demo stopped")
 --    end
 end
 --=======================================================================
 --function Console:Cmd_DEMO2(filename)
 --	if filename == nil then
---        CONSOLE_AddMessage("Usage: demo2 <filename_to_record_in>") 
+--        CONSOLE.AddMessage("Usage: demo2 <filename_to_record_in>") 
 --    else
 --		SaveGame:SaveRequest(filename,"Normal",true)
 --        CONSOLE.DemoRecord(filename)
---        CONSOLE_AddMessage("Demo recording scheduled") 
+--        CONSOLE.AddMessage("Demo recording scheduled") 
 --    end
 --end
 --=======================================================================
 --function Console:Cmd_DEMO2STOP()
 --    CONSOLE.DemoStop()
---    CONSOLE_AddMessage("Demo stopped")
+--    CONSOLE.AddMessage("Demo stopped")
 --end
 --=======================================================================
 --function Console:Cmd_DEMO2PLAY(filename)
 --    if filename == nil then
---        CONSOLE_AddMessage("Usage: demo2play <filename_to_play_from>") 
+--        CONSOLE.AddMessage("Usage: demo2play <filename_to_play_from>") 
 --    else
 --		SaveGame:LoadRequest(filename,false,true)
 --		CONSOLE.DemoPlay(filename)
@@ -1839,7 +1628,7 @@ end
 function Console:Cmd_SHOWFPS(show)
 	show = tonumber(show)
 	if show == nil then
-		CONSOLE_AddMessage("enables FPS display [1/0]")
+		CONSOLE.AddMessage("enables FPS display [1/0]")
 		return
 	end
 
@@ -1856,7 +1645,7 @@ end
 function Console:Cmd_SHOWTIMER(show)
 	show = tonumber(show)
 	if show == nil then
-		CONSOLE_AddMessage("enables timer display [1/0]")
+		CONSOLE.AddMessage("enables timer display [1/0]")
 		return
 	end
 
@@ -1873,7 +1662,7 @@ end
 function Console:Cmd_SHOWTIMERCOUNTUP(show)
 	show = tonumber(show)
 	if show == nil then
-		CONSOLE_AddMessage("enables timer display [1/0]")
+		CONSOLE.AddMessage("enables timer display [1/0]")
 		return
 	end
 
@@ -1890,16 +1679,16 @@ function Console:Cmd_USEDINPUT(enable)
 	if IsFinalBuild() then return end
     enable = tonumber(enable)    
     if enable == nil then 
-        CONSOLE_AddMessage("enable/disable DirectInput usage [1/0]") 
+        CONSOLE.AddMessage("enable/disable DirectInput usage [1/0]") 
     end
 
     if enable == 1 then INP.SetUseDInput(true)  end
     if enable == 0 then INP.SetUseDInput(false) end
 
     if INP.GetUseDInput() then
-        CONSOLE_AddMessage("current state: on") 
+        CONSOLE.AddMessage("current state: on") 
     else
-        CONSOLE_AddMessage("current state: off") 
+        CONSOLE.AddMessage("current state: off") 
     end
 end
 --=======================================================================
@@ -1907,19 +1696,18 @@ function Console:Cmd_DIDELTASCALE(scale)
 	if IsFinalBuild() then return end
     scale = tonumber(scale)
     if scale == nil then 
-        CONSOLE_AddMessage("set DInput delta scale") 
+        CONSOLE.AddMessage("set DInput delta scale") 
     else
 		INP.SetDIDeltaScale(scale)
     end
 
 	scale = INP.GetDIDeltaScale()
-    CONSOLE_AddMessage("current scale: "..scale) 
+    CONSOLE.AddMessage("current scale: "..scale) 
 end
 ]]--
 --=======================================================================
 function Console:OnCommand(cmd)    
     local exist = false
-    local dontshowerror = false -- cubik's variable
     cmd = Trim(cmd)
     if cmd == "" then return end
 
@@ -1938,19 +1726,10 @@ function Console:OnCommand(cmd)
         if Console["Cmd_"..func] then
             
             if Game.GMode == GModes.MultiplayerClient and MPCfg.ClientConsoleLockdown then                
-                CONSOLE_AddMessage("Console is locked!")        
+                CONSOLE.AddMessage("Console is locked!")        
                 return
             end
-	dontshowerror = true
-       if not Cfg.TournamentSettings or Cfg.TournamentSettings and 
-       (func == "MAP" or func == "RELOADMAP" or func == "TEAM" or func == "SPECTATOR" 
-       or func == "READY" or func == "NOTREADY" or func == "BREAK" or func == "KICK" 
-       or func == "BANKICK" or func == "KICKID" or func == "BANKICKID" or func == "CALLVOTE" 
-       or func == "VOTE" or func == "DISCONNECT" or func == "RECONNECT" or func == "CONNECT" 
-       or func == "QUIT" or func == "DEMOPLAY" or func == "DEMOSTOP" or func == "DEMORECORD") then
-       
-       
---------------------------------------------------------------------------------------------
+
             local params = string.sub(cmd,i+1)
 
 			local semicolon = string.find(params,";")
@@ -1974,12 +1753,8 @@ function Console:OnCommand(cmd)
 			else
 				Console["Cmd_"..func](self,params)
 			end
-	            Cfg:Save()
-	            return
--------------------------------------------------------------------------------------------
-	        else
-	        	CONSOLE_AddMessage("This command is disabled.")
-	        end
+            Cfg:Save()
+            return
         end
     end
     
@@ -1987,7 +1762,7 @@ function Console:OnCommand(cmd)
         if IsDedicatedServer() then
             Console:OnPrompt(cmd)
         else
-            CONSOLE_AddMessage("Unknown command: ".. cmd)        
+            CONSOLE.AddMessage("Unknown command: ".. cmd)        
         end
     else        
         cmd = string.sub(cmd,1,200)    
@@ -2020,10 +1795,10 @@ function Console:OnPrompt(txt)
 
     if table.getn(commandlist) > 1 then 
         local commonPart = commandlist[1]
-        CONSOLE_AddMessage(">"..string.lower(txt)) 
+        CONSOLE.AddMessage(">"..string.lower(txt)) 
         table.sort(commandlist,function (a,b) return a < b end)
         for i,o in commandlist do
-            CONSOLE_AddMessage("    "..o) 
+            CONSOLE.AddMessage("    "..o) 
             for j=1, string.len(commonPart) do
                 if string.sub(commonPart,j,j) ~= string.sub(o,j,j) then
                     commonPart = string.sub(commonPart,1,j-1)
@@ -2039,13 +1814,3 @@ function Console:OnPrompt(txt)
     CONSOLE.SetCurrentText("\\"..string.lower(txt))
 end
 --=======================================================================
-function Console:Cmd_DEMOLIST()
-    local files = FS.FindFiles("../Recordings/*.*",1,0)
-    table.sort(files,function (a,b) return a < b end) 
-	CONSOLE_AddMessage("Available demos:")
-	for i=1,table.getn(files) do
-		CONSOLE_AddMessage(" "..files[i])
-	end
-end
---======================================================================
-

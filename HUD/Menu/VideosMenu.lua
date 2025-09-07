@@ -8,8 +8,8 @@ VideosMenu =
 	textColor	= R3D.RGBA( 100, 100, 100, 255 ),
 	disabledColor = R3D.RGBA( 155, 155, 155, 255 ),
 	
-	fontBigTex  = "../PKPlusData/font_texturka_alpha",
-	fontSmallTex  = "../PKPlusData/font_texturka_alpha",
+	fontBigTex  = "HUD/font_texturka_alpha",
+	fontSmallTex  = "HUD/font_texturka_alpha",
 	descColor	= R3D.RGB( 255, 255, 255 ),
 
 	useItemBG = true,

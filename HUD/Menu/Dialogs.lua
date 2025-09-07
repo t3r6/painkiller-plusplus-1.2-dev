@@ -3,8 +3,8 @@ YesNoAlert =
 	bgStartFrame = { 120, 243, 268 },
 	bgEndFrame   = { 180, 267, 291 },
 
---	fontBigTex  = "../PKPlusData/font_texturka_alpha",
---	fontSmallTex  = "../PKPlusData/font_texturka_alpha",
+--	fontBigTex  = "HUD/font_texturka_alpha",
+--	fontSmallTex  = "HUD/font_texturka_alpha",
 	descColor	= R3D.RGB( 255, 255, 255 ),
 
 	items		=

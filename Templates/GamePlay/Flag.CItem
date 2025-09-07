@@ -144,7 +144,7 @@ function Flag:TakeFX(pe,sound)
         local color = Languages.Texts[769]
         if ps.Team == 0 then color = Languages.Texts[768] end        
         txt = string.gsub(txt,"$COLOR",color)
-        CONSOLE_AddMessage(txt)
+        CONSOLE.AddMessage(txt)
     end
     
 end
@@ -204,7 +204,7 @@ function Flag:OnFinishFX(pe,mode,fteam,fx,fy,fz)
         local color = Languages.Texts[769]
         if fteam == 1 then color = Languages.Texts[768] end        
         txt = string.gsub(txt,"$COLOR",color)        
-        CONSOLE_AddMessage(txt) 
+        CONSOLE.AddMessage(txt) 
     end
 end
 Network:RegisterMethod("Flag.OnFinishFX", NCallOn.ServerAndAllClients, NMode.Reliable, "ebbfff") 

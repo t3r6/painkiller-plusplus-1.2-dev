@@ -89,7 +89,6 @@ end
 -- ALT FIRE - BULLET (Server Side)
 --============================================================================
 function MiniGunRL:AltFire() -- bullets
-	Game:AddToStats(self.ObjOwner.ClientID, AttackTypes.MiniGun, 0, 8, 0)
     if self.ObjOwner.Ammo.MiniGun > 0 then
         PlayLogicSound("FIRE",self.ObjOwner.Pos.X,self.ObjOwner.Pos.Y,self.ObjOwner.Pos.Z,15,30,self.ObjOwner)
         self.StartAltFireFX(self.ObjOwner.ClientID, self.ObjOwner._Entity, self.ObjOwner.Ammo.MiniGun)
@@ -118,9 +117,8 @@ function MiniGunRL:StartAltFireFX(pe,ammo)
     if player == Player then
         SOUND2D.SetLoopCount(cw._sndRotor,0)
         SOUND2D.SetLoopCount(cw._sndRotor2,0)
-
         SOUND2D.Play(cw._sndRotor)
-       SOUND2D.Play(cw._sndRotor2)
+        SOUND2D.Play(cw._sndRotor2)
          -- to musimy recznie ustawic na kliencie
         cw:SetAnim("cshot")
         cw._ActionState = "AltFire"
@@ -165,8 +163,8 @@ function MiniGunRL:Client_FirePrediction(first)
 end
 --============================================================================
 function MiniGunRL:Fire() -- rocket
-Game:AddToStats(self.ObjOwner.ClientID, AttackTypes.Rocket, 0, 1, 0)
     local s = self:GetSubClass()
+
     if self.ObjOwner.Ammo.Grenades > 0 and not self.ObjOwner._jammed then
         if Player then Player.ExplosiveFired = true end
 
@@ -175,13 +173,9 @@ Game:AddToStats(self.ObjOwner.ClientID, AttackTypes.Rocket, 0, 1, 0)
         -- set position
         local x,y,z = ENTITY.PO_GetPawnHeadPos(self.ObjOwner._Entity)
         local orientation = ENTITY.GetOrientation(self.ObjOwner._Entity)
-        
-        if(Player and Cfg.RocketsFromGun and false)then
-	        y = y - 0.8
-	        x = x - math.cos(orientation)*0.4
-	        z = z + math.sin(orientation)*0.4
-        end
-        
+        --y = y - 0.65
+        --x = x - math.cos(orientation)*0.4
+        --z = z + math.sin(orientation)*0.4
         local fv = self.ObjOwner.ForwardVector
 
         local b = self.ObjOwner:Trace(0.2)

@@ -97,7 +97,7 @@ function PPlayerAnimation:SetAnim(anim,loop,speed,blend)
                 if vy < -11 then
                     if vy > -25 then  CPlayer:SndEnt("Jump_End",e) end -- poniewaz bedzie slychac damage
                     local dx,dz = vx/vl, vz/vl
-                    if not Cfg.NoSmoke then AddPFX("but", 0.15 ,Vector:New(x+dx*2,y-0.3,z+dz*2)) end
+                    AddPFX("but", 0.15 ,Vector:New(x+dx*2,y-0.3,z+dz*2))
                 end
             end
         --end

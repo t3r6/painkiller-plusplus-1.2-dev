@@ -88,7 +88,7 @@ function Teleport:MovePlayer(entity,x,y,z,a)
     local ox,oy,oz = ENTITY.GetPosition(entity)
     local player = EntityToObject[entity]
     if player then        
-        if Game:IsServer() and not MPCfg.ProPlus then player:CheckTeleFrag(x,y,z) end
+        if Game:IsServer() then player:CheckTeleFrag(x,y,z) end
         ENTITY.SetPosition(entity,x,y,z)    
         ENTITY.SetOrientation(entity,a)
         local vx,vy,vz,vl = ENTITY.GetVelocity(entity)

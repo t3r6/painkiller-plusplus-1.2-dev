@@ -1,9 +1,6 @@
 function NunSpell:OnCreateEntity()
     local pfx = AddPFX(self.fx,0.15)
     ENTITY.RegisterChild(self._Entity,pfx)    
-end
-
-function NunSpell:OnCreateEntity()
 	self:PO_Create(BodyTypes.Simple,0.2)
 	-- ENTITY.PO_SetCollisionGroup(self._Entity, ECollisionGroups.Noncolliding)
 	ENTITY.EnableCollisions(self._Entity, true)

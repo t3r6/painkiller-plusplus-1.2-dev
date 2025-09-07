@@ -48,12 +48,6 @@ function MegaHealth:OnTake(player)
         player.Health = player.Health + add
         if player.Health > self.MaxLimit then player.Health = self.MaxLimit  end
         self.TakeFX(player._Entity,player.Health)
-        -- PiTaBOT server mod
-        if(Cfg.PitabotEnabled)then
-		local ps = Game.PlayerStats[player.ClientID]
-	        PBLogEvent(ps.Name, "TakeMega", { player.Health, player.Armor, player.ArmorType })
-        end
-        -- end
     else
         return true
     end

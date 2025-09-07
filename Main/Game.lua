@@ -7,18 +7,14 @@ Game =
 { 
     Active = false,
     AddOn = false,
-
-    bot = {},
-
+    
     -- timer
     TPart = 0, -- time transfer to next loop 
     Counter = 0, -- globalny licznik tickow
     currentTime = 0,
     
     Paused = false,
-    Players = {},  
-    NewComers = {}, 
-    GameCount ={},   
+    Players = {},    
   
     -- game info
     GMode = GModes.SingleGame,
@@ -59,9 +55,7 @@ Game =
     TotalDemonMorphCount = 0,
     TimeLimit = 0,
     PlayerStats = {},
-    PlayerData = {},
     LevelsStats = {},
-    Stats = {},
     CurrLevel = 0,
     CurrChapter = 0,
     
@@ -318,7 +312,6 @@ function Game:Clear(doNotReloadTemplates)
     self.TotalDemonMorphCount = 0
     self.Players = {}
     self.PlayerStats = {}
-    self.PlayerData = {}
     self.TimeLimit = 0
     self.GoldenCardsUseCount = 0
     self.EndOfLevelActive = false
@@ -506,7 +499,7 @@ function Game:Tick(delta)
 		if self.Difficulty < 3 then
 			SaveGame:Save(0,"Quick")
 		else
-			CONSOLE_AddMessage(Languages.Texts[684])
+			CONSOLE.AddMessage(Languages.Texts[684])
 		end
     end
 
@@ -688,9 +681,6 @@ function Game:Tick2(delta) -- after physics
 end
 --============================================================================
 function Game:Render(delta) -- do HUD'a
-
-    if Cfg.DisableHud then return end
-
     if IsDedicatedServer() then return end    
     if self.WaitForServer then return end
     
@@ -701,13 +691,11 @@ end
 function Game:PostRender(delta) -- do HUD'a
     if IsDedicatedServer() then return end    
     if self.WaitForServer then return end
-    if Cfg.DisableHud then return end
 
 	if MPCfg.GameState == GameStates.WarmUp then
         local w,h = R3D.ScreenSize()
-	
-   HUD.PrintXY(11*w/1024+1.1+2,71*h/768+1.1+2,"Warm Up","Impact",0,0,0,28)
-	 HUD.PrintXY(11*w/1024+1.1,71*h/768+1.1,"Warm Up","Impact",160,160,160,28)
+        HUD.DrawBorder(332,20,380,60)
+        HUD.PrintXY(-1,40*h/768,"Warm Up","timesbd",230,161,97,26)
     end
 
     GObjects:PostRender(delta)
@@ -946,12 +934,7 @@ function Game:LoadLevel(name)
     local path = "../Data/Levels/"..name.."/"        
     local files = FS.FindFiles(path.."*.CLevel",1,0)
 	if table.getn(files)<=0 then 
-        CONSOLE_AddMessage("Level '"..name.."' not found!!!")
-        local maplist = "Available maps: "
-        for file in files do
-         maplist = maplist .. file .. ", "
-        end
-         CONSOLE_AddMessage(maplist)
+        CONSOLE.AddMessage("Level '"..name.."' not found!!!")
         return 0 
     end
     
@@ -972,7 +955,6 @@ function Game:LoadLevel(name)
         MPCfg.GameMode = ""
     end
 
-    PMENU.ActivateLoadingScreen( false )
     PMENU.ActivateLoadingScreen( true, self.CurrLevel, Levels_GetSketchByDir(name), name )
 	PMENU.SetLoadingScreenOverall( Game:CountLevelElems(name), 10 )
     
@@ -1060,7 +1042,7 @@ function Game:LoadLevel(name)
     self.LevelTime = 0
     self.LevelStarted = true
     if self.GMode == GModes.SingleGame then
-    PHYSICS.WarmUp(10)
+        PHYSICS.WarmUp(10)
 		self.GameInProgress = true
 	else
 		self.GameInProgress = false
@@ -1068,7 +1050,6 @@ function Game:LoadLevel(name)
 	self.GoldenCardsUseCount = 0
     PX,PY,PZ = Lev.Pos.X,Lev.Pos.Y,Lev.Pos.Z        
     
- 
 
     AddObject(Templates["FadeInOut.CProcess"]:New(true,2))
     
@@ -1948,7 +1929,7 @@ function Game:EnableGoldenCards()
 
 			if t then Player.Armor = t.ArmorAdd end
 
-			CONSOLE_AddMessage(TXT.Cheats.PKHealth)
+			CONSOLE.AddMessage(TXT.Cheats.PKHealth)
 		end
 	end
 	
@@ -2241,12 +2222,7 @@ function Game:RecordPlayers()
 	if (Game.GMode == GModes.MultiplayerClient or Game.GMode == GModes.MultiplayerServer) then
 		for i,o in self.Players do
 			if o.ClientID == NET.GetClientID() then
-				if(Game.GMode == GModes.MultiplayerServer)then
-					CONSOLE.DemoRecordPlayer(o._Entity, (o._yaw + math.pi/2) * (65535/math.pi), o.Health, o.Armor)
-				end
-				if(Game.GMode == GModes.MultiplayerClient)then
-					CONSOLE.DemoRecordPlayer(o._Entity, (o._yaw + math.pi/2) * (65535/math.pi), o.Health, o.Armor)
-				end
+				CONSOLE.DemoRecordPlayer(o._Entity, (o._yaw + math.pi/2) * (65535/math.pi), o.Health, o.Armor)
 			end
 		end
 	elseif Player then
@@ -2312,11 +2288,11 @@ function Game_DemoLoadLevel(name)
 
     PMENU.ActivateLoadingScreen( false )
     INP.ResetTimer()
-    CONSOLE_AddMessage(TXT.Menu.GameLoaded)
+    CONSOLE.AddMessage(TXT.Menu.GameLoaded)
     PMENU.Activate(false)
 --    PMENU.ResumeSounds()
     Game.PlayerEnabledWeapons = nil
-    --MOUSE.Lock()
+    MOUSE.Lock()
 
 --    SOUND.ApplySoundSettings( Cfg.MasterVolume, 100, Cfg.SfxVolume, Cfg.SpeakersSetup, Cfg.SoundPan, Cfg.ReverseStereo, Cfg.SoundProvider3D )
 --	SOUND.StreamSetVolume(0,Cfg.AmbientVolume)
@@ -2327,15 +2303,4 @@ function Game_DemoLoadLevel(name)
 
 	Game.CameraFromPlayer = false
 	GlobalAIDisable()
-	
-	Game:AfterWorldSynchronization(Lev.Map,Lev._Name) 
-	
-	-- FORCE SPEC
-	
-            Game._procSpec = GObjects:Add(TempObjName(),Templates["PSpectatorControler.CProcess"]:New())            
-            Game._procSpec:Init()            
-            if Game._procStats  then -- kasuje okienko statystki
-                GObjects:ToKill(Game._procStats)
-                Game._procStats = nil
-            end
 end

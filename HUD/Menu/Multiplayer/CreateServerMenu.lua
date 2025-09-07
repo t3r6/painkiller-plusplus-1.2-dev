@@ -4,8 +4,6 @@ CreateServerMenu =
 	bgEndFrame   = { 180, 267, 291 },
 
 	fontBigSize = 26,
-	fontBig		= "timesbd",
-	fontSmall	= "timesbd",
 
 	backAction = "PainMenu:ApplySettings(); PainMenu:SaveMapsOnServer(); PainMenu:ActivateScreen(MultiplayerMenu)",
 
@@ -68,8 +66,8 @@ CreateServerMenu =
 					text = TXT.Menu.Mode,
 					desc = TXT.MenuDesc.Mode,
 					option = "GameMode",
-					values = { "Free For All", "Team Deathmatch", "Voosh", "The Light Bearer", "People Can Fly", "Capture The Flag", "Duel", "Last Man Standing"}, --  , "Clan Arena"
-					visible = { TXT.Menu.FreeForAll, TXT.Menu.TeamDeathmatch, TXT.Menu.Voosh, TXT.Menu.TheLightBearer, TXT.Menu.PeopleCanFly, TXT.Menu.CaptureTheFlag, TXT.Menu.Duel, TXT.Menu.LastManStanding}, -- , "Clan Area"
+					values = { "Free For All", "Team Deathmatch", "Voosh", "The Light Bearer", "People Can Fly", "Capture The Flag", "Duel", "Last Man Standing" },
+					visible = { TXT.Menu.FreeForAll, TXT.Menu.TeamDeathmatch, TXT.Menu.Voosh, TXT.Menu.TheLightBearer, TXT.Menu.PeopleCanFly, TXT.Menu.CaptureTheFlag, TXT.Menu.Duel, TXT.Menu.LastManStanding },
 					x	 = -1,
 					y	 = 280,
 					action = "",
@@ -127,19 +125,6 @@ CreateServerMenu =
 					option = "TimeLimit",
 					x	 = -1,
 					y	 = 280,
-					action = "",
-					maxLength = 3,
-					align = MenuAlign.Right,
-				},
-
-				Overtime =
-				{
-					type = MenuItemTypes.NumEdit,
-					text = "Overtime"..":",
-					desc = "Amount of overtime minutes, 0 = disabled",
-					option = "overtime",
-					x	 = -1,
-					y	 = 320,
 					action = "",
 					maxLength = 3,
 					align = MenuAlign.Right,
@@ -424,12 +409,23 @@ CreateServerMenu =
 			action = "PainMenu:SaveMapsOnServer(); PainMenu.lastScreen='server'; PainMenu:ApplySettings(); PainMenu:StartMultiplayerServer()",
 			fontBigSize = 36,
 			align = MenuAlign.Right,
-			fontBigTex  = "../PKPlusData/font_texturka_alpha",
-			fontSmallTex  = "../PKPlusData/font_texturka_alpha",
+			fontBigTex  = "HUD/font_texturka_alpha",
+			fontSmallTex  = "HUD/font_texturka_alpha",
 			textColor   = R3D.RGBA( 255, 255, 255, 255 ),
 			descColor	= R3D.RGB( 255, 255, 255 ),
 		},
 		
-
+		GameSpyLogo =
+		{
+			type = MenuItemTypes.ImageButton,
+			text = "",
+			desc = "",
+			image = "HUD/powered_by_gamespy_web",
+			imageUnder = "HUD/powered_by_gamespy_web",
+			imagePressed = "HUD/powered_by_gamespy_web",
+			x	 = 820,
+			y	 = 76,
+			action = "",
+		},
 	}
 }

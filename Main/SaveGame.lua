@@ -231,7 +231,7 @@ function SaveGame:Load(slot,loadOnly,demo)
 	end
 
 	if saveData.Type == "NewLevel" or saveData.Type == "AutoNewLevel" or saveData.Type == "StartLevel" then
-        CONSOLE_AddMessage(TXT.Menu.GameLoaded)
+        CONSOLE.AddMessage(TXT.Menu.GameLoaded)
         if not loadOnly then
 			Game:NewLevel("NoName","","",0.3,true) 
 			Lev:Apply()
@@ -327,7 +327,7 @@ function SaveGame:Load(slot,loadOnly,demo)
 
     PMENU.ActivateLoadingScreen( false )
     INP.ResetTimer()
-    CONSOLE_AddMessage(TXT.Menu.GameLoaded)
+    CONSOLE.AddMessage(TXT.Menu.GameLoaded)
     PMENU.Activate(false)
     PMENU.ResumeSounds()
     Game.PlayerEnabledWeapons = nil
@@ -480,7 +480,7 @@ function SaveGame:Save(slot,stype,forcetime,demo)
 		end
         
 		if stype == "NewLevel" or stype == "AutoNewLevel" or stype == "StartLevel" then 
-			if slot ~= 0 then CONSOLE_AddMessage(TXT.Menu.GameSaved) end
+			if slot ~= 0 then CONSOLE.AddMessage(TXT.Menu.GameSaved) end
             FS.ClosePAK()
 			return 
 		end
@@ -497,7 +497,7 @@ function SaveGame:Save(slot,stype,forcetime,demo)
     end        
     self:SaveOtherData(slot,demo)
     WORLD.SaveGame(path..Lev._Name..".World")
-    CONSOLE_AddMessage(TXT.Menu.GameSaved)
+    CONSOLE.AddMessage(TXT.Menu.GameSaved)
     INP.ResetTimer()
     FS.ClosePAK()
 end

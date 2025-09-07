@@ -7,14 +7,14 @@ MultiplayerMenu =
 
 	backAction = "PainMenu:ActivateScreen(MainMenu)",
 	
-	textColor	= R3D.RGBA( 255, 255, 255, 255 ),
+	textColor	= R3D.RGBA( 100, 100, 100, 255 ),
 	disabledColor = R3D.RGBA( 155, 155, 155, 255 ),
 	
-	fontBigTex  = "../PKPlusData/font_texturka_alpha",
-	fontSmallTex  = "../PKPlusData/font_texturka_alpha",
+	fontBigTex  = "HUD/font_texturka_alpha",
+	fontSmallTex  = "HUD/font_texturka_alpha",
 	descColor	= R3D.RGB( 255, 255, 255 ),
 	
-	useItemBG = false,
+	useItemBG = true,
 
 	items =
 	{
@@ -22,8 +22,8 @@ MultiplayerMenu =
 		{
 			text = TXT.Menu.JoinGame,
 			desc = TXT.MenuDesc.JoinGame,
-			x	 = 15,
-			y	 = 550,
+			x	 = -1,
+			y	 = 264,
 			action = "PainMenu:ActivateScreen(LANGameMenu)",
 		},
 
@@ -31,8 +31,8 @@ MultiplayerMenu =
 		{
 			text = TXT.Menu.StartGame,
 			desc = TXT.MenuDesc.StartGame,
-			x	 = 15,
-			y	 = 630,
+			x	 = -1,
+			y	 = 344,
 			action = "PainMenu:ActivateScreen(CreateServerMenu)",
 		},
 
@@ -40,8 +40,8 @@ MultiplayerMenu =
 		{
 			text = TXT.Menu.PlayerSettings,
 			desc = TXT.MenuDesc.PlayerSettings,
-			x	 = 15,
-			y	 = 710,
+			x	 = -1,
+			y	 = 424,
 			action = "PainMenu:ActivateScreen(PlayerOptions)",
 		},
 	}

@@ -125,7 +125,6 @@ function DriverElectro:DrawHUD(delta)
 end
 --============================================================================
 function DriverElectro:Fire()
-Game:AddToStats(self.ObjOwner.ClientID, AttackTypes.Shuriken, 0, 1, 0)
     local s = self:GetSubClass()
     if self.ObjOwner.Ammo.Shurikens > 0 then
 
@@ -180,7 +179,7 @@ end
 -- ALT FIRE -
 --============================================================================
 function DriverElectro:AltFire()
-Game:AddToStats(self.ObjOwner.ClientID, AttackTypes.Electro, 0, 8, 0)
+
     if self.ObjOwner.Ammo.Electro > 0 then
         self.StartAltFireFX(self.ObjOwner._Entity, self.ObjOwner.Ammo.Electro)
     else

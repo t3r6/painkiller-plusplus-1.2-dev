@@ -103,7 +103,7 @@ function Rocket:OnCollision(x,y,z,nx,ny,nz,e,h_me,h_other,vx,vy,vz,vl)
     -- PEOPLE CAN FLY MODE
     local factorY = 1
     if MPCfg.GameMode == "People Can Fly" then
-	self.ExplosionRange = 4.5
+		self.ExplosionRange = 4.5
         self.ExplosionStrength = self.ExplosionStrength * 0.5
         factorY = 5
         local d = self._StartPos:Dist(x,y,z)
@@ -138,31 +138,7 @@ function Rocket:OnCollision(x,y,z,nx,ny,nz,e,h_me,h_other,vx,vy,vz,vl)
     ENTITY.RemoveFromIntersectionSolver(self._Entity)
     ENTITY.PO_Enable(self._Entity, false)
 
-    if(Cfg.RocketFix or MPCfg.RocketFix)then --MPCfg.ProPlus or 
-    	local resultfactor = 1 + ((math.abs(vy) / 40) * 0.23 ) --Cfg.RocketFactor
-    	self.ExplosionStrength = 3150 --Cfg.RocketExplosionStrength
-    	resultfactor = math.pow(resultfactor,5.2) --Cfg.RocketFactorOrder
-    	if(Cfg.RocketLogging)then
-		local file = io.open ("rocketinclines.log","a")
-		file:write( tostring((math.abs(vy) / 40))..'\n' )
-		io.close(file)
-	end
-    	if MPCfg.GameMode == "People Can Fly" then
-		self.ExplosionRange = 4.5
-	        self.ExplosionStrength = 3150 * 0.5 --Cfg.RocketExplosionStrength
-	        Explosion(x,y,z,self.ExplosionStrength/resultfactor,self.ExplosionRange,self.ObjOwner.ClientID,AttackTypes.Rocket,self.Damage,resultfactor*5)
-        else
-    		Explosion(x,y,z,self.ExplosionStrength/resultfactor,self.ExplosionRange,self.ObjOwner.ClientID,AttackTypes.Rocket,self.Damage,resultfactor)
-   	end
-    else
-    	if MPCfg.GameMode == "People Can Fly" then
-		self.ExplosionRange = 4.5
-	        self.ExplosionStrength = self.ExplosionStrength * 0.5
-	        factorY = 5
-        end
-    	Explosion(x,y,z,self.ExplosionStrength,self.ExplosionRange,self.ObjOwner.ClientID,AttackTypes.Rocket,self.Damage,factorY)
-    end
-    
+    Explosion(x,y,z,self.ExplosionStrength,self.ExplosionRange,self.ObjOwner.ClientID,AttackTypes.Rocket,self.Damage,factorY)
     self.ExplosionFX(self._Entity,x,y,z,nx,ny,nz)
     GObjects:ToKill(self)
 end
@@ -187,9 +163,9 @@ function Rocket:ExplosionFX(entity,x,y,z,nx,ny,nz)
     local r = Quaternion:New_FromNormal(nx,ny,nz)
     --AddPFX("Grenade",0.4,Vector:New(x,y,z),r)                
     if MPCfg.GameMode == "People Can Fly" then
-        if not Cfg.NoExplosions then AddObject("FX_rexplodePCF.CActor",1,Vector:New(x,y,z),r,true) end
+        AddObject("FX_rexplodePCF.CActor",1,Vector:New(x,y,z),r,true) 
     else    
-        if not Cfg.NoExplosions then AddObject("FX_rexplode.CActor",1,Vector:New(x,y,z),r,true) end 
+        AddObject("FX_rexplode.CActor",1,Vector:New(x,y,z),r,true) 
     end
     
     --Log("Rocket.ExplosionFX 5\n")

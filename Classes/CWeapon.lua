@@ -217,7 +217,7 @@ function CWeapon:Tick(delta)
     
     local tm = INP.GetTime()
     if not self._lastTime then self._lastTime = tm end
-    self.ShotTimeOut = self.ShotTimeOut - (tm - self._lastTime) * 30 / Game.ReloadSpeedFactor
+    self.ShotTimeOut = self.ShotTimeOut - (tm - self._lastTime) *30 / Game.ReloadSpeedFactor
     self._lastTime = tm 
     
     if self.ShotTimeOut < -1 and self._ActionState == "Idle" then

@@ -185,7 +185,7 @@ function Cache:PrecacheItem(objname)
     if not Cached[hash] then 
         Cached[hash] = true
         
-        if CacheLog then Game:Print("CACHE MESH: "..hash) end
+        if CacheLog then Game:Print("CACHE MESH: "..hash) end        
         if fLog then
             local dpack = ""
             if obj.DestroyPack then dpack = obj.DestroyPack end

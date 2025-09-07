@@ -77,7 +77,6 @@ end
 -- FIRE - Painkiller closed (Server Side)
 --============================================================================
 function PainKiller:Fire()
-Game:AddToStats(self.ObjOwner.ClientID, AttackTypes.Painkiller, 0, 1, 0)
     if self.r_PainHead then 
         self._ActionState = "Idle"
         return 
@@ -94,7 +93,7 @@ end
 -- ALT FIRE - PainKiller opened (Server Side)
 --============================================================================
 function PainKiller:AltFire(first,combo)
-Game:AddToStats(self.ObjOwner.ClientID, AttackTypes.PainkillerRotor, 0, 1, 0)
+
     self._ActionState = "Idle"
     if not first then return end
     

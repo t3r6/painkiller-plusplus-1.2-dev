@@ -358,11 +358,9 @@ function BoltStick:OnHitSomething(se,e,mode)
         ENTITY.KillAllChildrenByName(se,"impacts/barrel-wood-fire-loop")        
         if ENTITY.KillAllChildrenByName(se,"stakeflame")then -- burning?
             -- add smoke
-            if not Cfg.NoSmoke then
             local smokefx = AddPFX("GrenadeSmoke",1)
             PARTICLE.SetParentOffset(smokefx,0,0,-1)
-            ENTITY.RegisterChild(se,smokefx)   
-            end    
+            ENTITY.RegisterChild(se,smokefx)       
         end
         
     end
@@ -393,7 +391,7 @@ function BoltStick:OnHitSomething(se,e,mode)
                         ENTITY.SetTimeToDie(ke,FRand(1,2))
                     end
                 end
-                if not Cfg.NoSmoke then AddPFX("stakeHitWall",0.25,Vector:New(px,py,pz),r) end
+                AddPFX("stakeHitWall",0.25,Vector:New(px,py,pz),r)
             end
         else
             local obj = EntityToObject[e]

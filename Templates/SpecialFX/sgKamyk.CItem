@@ -15,11 +15,9 @@ function sgKamyk:OnCreateEntity()
     ENTITY.RemoveFromIntersectionSolver(self._Entity)
     ENTITY.PO_SetMovedByExplosions(self._Entity, false)
 
-    if not Cfg.NoSmoke then
     --local r = Quaternion:New_FromEntity(self._Entity)    
     local pfx = AddPFX('sgKamykFX',0.6) --,nil,r) -- 
     ENTITY.RegisterChild(self._Entity,pfx)
-    end
     
     local e = ENTITY.Create(ETypes.Trail,self.trail,"trailName")
     ENTITY.AttachTrailToBones(self._Entity,e)

@@ -66,18 +66,6 @@ Languages.English =
 
     Menu = 
     {
-	CPL		  = Languages.Texts[900],
-        CPLBrightskinEnemy = Languages.Texts[911],
-        CPLBrightskinRed = Languages.Texts[913],
-        CPLBrightskinGreen = Languages.Texts[914],
-        CPLBrightskinBlue = Languages.Texts[915],
-        CPLBrightskinWhite = Languages.Texts[916],
-        CPLBrightskinTeam = Languages.Texts[917],
-        CPLFixedColors = Languages.Texts[919],
-	CPLRight = Languages.Texts[921],
-        CPLLeft = Languages.Texts[922],
-	CPLCenter = Languages.Texts[923],
-
         SignAPact         = Languages.Texts[10],
         LoadGame          = Languages.Texts[11],
         Multiplayer       = Languages.Texts[12],
@@ -393,11 +381,6 @@ Languages.English =
 
     MenuDesc =
     {
-        CPL		=	Languages.Texts[901],       
-        CPLBrightskinEnemy = Languages.Texts[912],
-        CPLBrightskinTeam = Languages.Texts[918],
-        CPLFixedColors = Languages.Texts[920],
-
 		Back              = Languages.Texts[189],
 		Apply             = Languages.Texts[190],
 

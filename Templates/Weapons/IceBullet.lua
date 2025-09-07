@@ -80,14 +80,13 @@ function IceBullet:CL_OnHit(e,x,y,z,mode)
     if mode == 1 then
         local obj = EntityToObject[e]
         if obj then 
-        
-	            local action = {
-	                {"L:p.FrozenArmor = true"},
-	                {"Wait:5"},
-	                {"L:p.FrozenArmor = false"},
-	            }	
-	            AddAction(action,obj,"p._died")      
-	            	end   
+            local action = {
+                {"L:p.FrozenArmor = true"},
+                {"Wait:5"},
+                {"L:p.FrozenArmor = false"},
+            }
+            AddAction(action,obj,"p._died")                                
+        end
         
         if not obj or obj ~= Player then
             local fx = AddPFX("bones_glow",0.5)

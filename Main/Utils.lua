@@ -798,7 +798,7 @@ function Trim(str)
 end
 --============================================================================
 function BindFX(entity,name,scale,joint,ox,oy,oz,cox,coy,coz,ax,ay,az)
-    local pfx = AddPFX(name,scale,rot)   
+    local pfx = AddPFX(name,scale,rot)    
     ENTITY.RegisterChild(entity,pfx,true)    
     if type(joint) == "string" then joint = MDL.GetJointIndex(entity, joint) end
     if ox then
@@ -869,13 +869,8 @@ function Explosion(x,y,z,explosionStrength,explosionRange,clientID,attackType,da
     PlayLogicSound("EXPLOSION",x,y,z,15,30)
     if Game.GMode == GModes.SingleGame then 
         WORLD.Explosion2(x,y,z,explosionStrength,explosionRange,clientID,attackType,damage)    
-    else        
+    else
         WORLD.MultiplayerExplosion(x,y,z,explosionStrength,explosionRange,clientID,attackType,damage,factorY)
-    	--ENTITY.GetVelocity(Game.PlayerStats[666]._Entity
-    	--local x,y,z = ENTITY.GetPosition(Game.PlayerStats[666]._Entity)
-    	--ENTITY.SetPosition(Game.PlayerStats[666]._Entity,x,y+0.1,z)
-    	--MsgBox("BANG"..clientID)
-    	--if(clientID==666)then MsgBox("BANG"..clientID) Game.botshock = true end
     end    
     LastExplosion = {x,y,z,explosionStrength,explosionRange}
 end

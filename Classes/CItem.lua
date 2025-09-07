@@ -233,7 +233,7 @@ end
 --============================================================================
 function CItem:CheckDistFromPlayers(dist,delta)
    
-    if MPCfg.GameState ~= GameStates.Playing and MPCfg.GameState ~= GameStates.WarmUp or self.Frozen then return end
+    if MPCfg.GameState ~= GameStates.Playing or self.Frozen then return end
 
 	if not dist then
 		dist = 2.0
@@ -248,9 +248,9 @@ function CItem:CheckDistFromPlayers(dist,delta)
 				if self:OnTake(Player,delta) then return end
                 if self._blockedBy then
                     self.Place = 1
-                    CItem.Show(self._Entity,false)
+                    CItem.Show(self._Entity,false)                    
                     -- zabije sie po skonczniu
-                else
+                else                    
                     GObjects:ToKill(self)
                 end
 			end
@@ -273,14 +273,10 @@ function CItem:CheckDistFromPlayers(dist,delta)
                         end                        
                         --MsgBox("show")
                         CItem.Show(self._Entity,false)
-                            --ENTITY.Release(self._Entity)
-                            --self._Entity = nil
-   
+                        --ENTITY.Release(self._Entity)
+                        --self._Entity = nil
                         self.Place = 1
-     
-			self._Rst = self.RespawnTime * 30 
-			if Cfg.ItemRespawnFix then self._Rst = INP.GetTime() + self.RespawnTime end
-			
+                        self._Rst = self.RespawnTime * 30 
                         break
                     end
                 end
@@ -307,8 +303,8 @@ function CItem:TryToRespawn(force)
     end
     if self.Place == 1 and not self._blockedBy then 
         --Game:Print(self._Rst)
-        if not Cfg.ItemRespawnFix then self._Rst = self._Rst - 1 end  
-        if self._Rst < 0 and self.RespawnTime and self.RespawnTime > 0 and not Cfg.ItemRespawnFix or Cfg.ItemRespawnFix and self._Rst < INP.GetTime() and self.RespawnTime and self.RespawnTime > 0  or Cfg.ItemRespawnFix and self.RespawnTime and math.abs(self._Rst - INP.GetTime()) > self.RespawnTime + 1 then
+        self._Rst = self._Rst - 1        
+        if self._Rst < 0 and self.RespawnTime and self.RespawnTime > 0 then
             self.Place = 0
             self._Rst = 0 
             self.Pos = Clone(self._RespawnPos)
@@ -603,8 +599,6 @@ function CItem:DestroyMe()
             self:ReleaseTimers()
             self.Place = 1             
             self._Rst = self.RespawnTime * 30 
-            if Cfg.ItemRespawnFix then self._Rst = INP.GetTime() + self.RespawnTime end
-            
         else
             -- kill object
             GObjects:ToKill(self)

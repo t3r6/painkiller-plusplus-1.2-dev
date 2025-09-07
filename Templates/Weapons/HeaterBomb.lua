@@ -67,11 +67,9 @@ function HeaterBomb:SetSFX(hbe,nr)
         ENTITY.RegisterChild(hbe,glow)        
         PARTICLE.SetParentOffset(glow,0,0,0,nil,0.2,0.2,0.2)    
     end    
-    if not Cfg.NoSmoke then
     if nr == 2 or nr == 9 then 
         local smoke = AddPFX("GrenadeSmoke",1)
         ENTITY.RegisterChild(hbe,smoke)
-    end
     end
 end
 Network:RegisterMethod("HeaterBomb.SetSFX", NCallOn.AllClients, NMode.Unreliable, "eb")

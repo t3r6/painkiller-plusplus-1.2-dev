@@ -18,9 +18,6 @@ function o:OnCreateEntity()
     local pfx = AddPFX(self.fx,0.15)
     ENTITY.RegisterChild(self._Entity,pfx)
     ENTITY.EnableDraw(self._Entity,false)
-end
-
-function o:OnCreateEntity()
 	self:PO_Create(BodyTypes.Simple,0.2,ECollisionGroups.Noncolliding)
 	ENTITY.PO_EnableGravity(self._Entity,false)
 	self.timer = 3

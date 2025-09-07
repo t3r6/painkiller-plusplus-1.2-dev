@@ -159,8 +159,8 @@ function Beast._CustomAiStates.beastRoll:OnUpdate(brain)
 				PlaySound2D("actor/beast/beast_roll-hit")
 				return
 			end
-			actor:RotateToVector(Player._groundx, Player._groundy, Player._groundz, true)
-			actor._proc:SetDir(Vector:New(Player._groundx - actor._groundx, 0, Player._groundz - actor._groundz))
+			actor:RotateToVector(brain.Target._groundx, brain.Target._groundy, brain.Target._groundz, true)
+			actor._proc:SetDir(Vector:New(brain.Target._groundx - actor._groundx, 0, brain.Target._groundz - actor._groundz))
 		end
 	end
 	brain._lastRollTime = brain._currentTime

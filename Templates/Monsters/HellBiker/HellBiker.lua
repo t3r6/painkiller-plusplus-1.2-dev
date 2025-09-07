@@ -57,7 +57,7 @@ function HellBiker:CustomUpdate()
 	if not self._onceSpecial then
 		if self._HealthMax * self.AiParams.specialAttackHP > self.Health and ENTITY.PO_IsOnFloor(self._Entity) and self.Health > 0 then
 			if self._AIBrain.r_closestEnemy and not self._enabledRD and not self._hitDelay then
-				if self._AIBrain.r_lastDamageWho == Player then
+				if self._AIBrain.r_lastDamageWho == self._AIBrain.Target then
 					self._onceSpecial = true
 					ENTITY.EnableCollisions(self._Entity, true, self.EnableCollisions, nil)
 					self.doNotUseWP = true
@@ -77,7 +77,7 @@ function HellBiker:CustomUpdate()
 		if not self._enabledRD then
 			if not ENTITY.PO_IsOnFloor(self._Entity) then
 				--Game:Print("NOTF - die")
-				self:OnDamage(self.Health + 2, Player)
+				self:OnDamage(self.Health + 2, self._AIBrain.Target)
 				return
 			end
 			if self.state < 0 then
@@ -110,13 +110,13 @@ function HellBiker:CustomUpdate()
 					--Game:Print("slowdown check "..self._lastCantMoveTime.." "..self._AIBrain._currentTime)
 					if self._lastCantMoveTime > 0 and self._AIBrain._currentTime < self._lastCantMoveTime + 2/30 then
 						--Game:Print("COLLL - slowdown")
-						self:OnDamage(self.Health + 2, Player)
+						self:OnDamage(self.Health + 2, self._AIBrain.Target)
 						return
 					end
 				end
 				if not self._isWalking then
 					--Game:Print("NO walkin - die")
-					self:OnDamage(self.Health + 2, Player)
+					self:OnDamage(self.Health + 2, self._AIBrain.Target)
 				end
 			end
 		end

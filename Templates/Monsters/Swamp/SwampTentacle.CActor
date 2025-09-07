@@ -98,7 +98,7 @@ function SwampTentacle._CustomAiStates.tentacleAttack:OnInit(brain)
 	self.mode = 0
 	actor:ForceAnim(actor.Animation, false)
 	self.anim = actor.Animation
-	actor:RotateToVector(Player._groundx, Player._groundy, Player._groundz)
+	actor:RotateToVector(brain.Target._groundx, brain.Target._groundy, brain.Target._groundz)
 	self.lastDamageTime = 0
 end
 
@@ -115,31 +115,31 @@ function SwampTentacle._CustomAiStates.tentacleAttack:OnUpdate(brain)
 			--GObjects:ToKill(actor)
 		else
 			if math.random(100) < 30 then
-				actor:RotateToVector(Player._groundx, Player._groundy, Player._groundz)
+				actor:RotateToVector(brain.Target._groundx, brain.Target._groundy, brain.Target._groundz)
 			end
 			if self.lastDamageTime + 1.0 < brain._currentTime then
 				local checkDist = aiParams.damageCheckDistance
 				local x,y,z = actor:GetJointPos("joint11")
-				local dist1 = Dist3D(x,y,z, Player._groundx, Player._groundy + 1, Player._groundz)
+				local dist1 = Dist3D(x,y,z, brain.Target._groundx, brain.Target._groundy + 1, brain.Target._groundz)
 				local doDamage = false
 				if dist1 < checkDist then
 					if debugMarek then Game:Print(">BEZPOSREDNI hit j11 "..dist1) end
 					doDamage = true
 				else
 					x,y,z = actor:GetJointPos("joint10")
-					local dist2 = Dist3D(x,y,z, Player._groundx, Player._groundy + 1, Player._groundz)
+					local dist2 = Dist3D(x,y,z, brain.Target._groundx, brain.Target._groundy + 1, brain.Target._groundz)
 					if dist2 < checkDist then
 						if debugMarek then Game:Print(">BEZPOSREDNI hit j10 "..dist2) end
 						doDamage = true
 					else
 						x,y,z = actor:GetJointPos("joint8")
-						local dist2 = Dist3D(x,y,z, Player._groundx, Player._groundy + 1, Player._groundz)
+						local dist2 = Dist3D(x,y,z, brain.Target._groundx, brain.Target._groundy + 1, brain.Target._groundz)
 						if dist2 < checkDist then
 							if debugMarek then Game:Print(">BEZPOSREDNI hit j8 "..dist2) end
 							doDamage = true
 						else
 							x,y,z = actor:GetJointPos("joint6")
-							local dist3 = Dist3D(x,y,z, Player._groundx, Player._groundy + 1, Player._groundz)
+							local dist3 = Dist3D(x,y,z, brain.Target._groundx, brain.Target._groundy + 1, brain.Target._groundz)
 							if dist3 < checkDist then
 								if debugMarek then Game:Print(">BEZPOSREDNI hit j6 "..dist3) end
 								doDamage = true
@@ -148,7 +148,7 @@ function SwampTentacle._CustomAiStates.tentacleAttack:OnUpdate(brain)
 					end
 				end
 				if doDamage then
-					Player:OnDamage(aiParams.damage, actor)
+					brain.Target:OnDamage(aiParams.damage, actor)
 					self.lastDamageTime = brain._currentTime
 					PlaySound2D("actor/swamp/swamp-macka-hit-hero")
 				end

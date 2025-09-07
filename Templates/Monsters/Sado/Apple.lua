@@ -46,7 +46,7 @@ function Apple:OnUpdate()
 				--for i,v in Actors do		-- a itemy?
 				--	if v.OnDamage and v.Health > 0 then
 				if Player.Health > 0 then
-					local dist = Dist3D(Player._groundx, Player._groundy, Player._groundz, x,y,z)
+					local dist = Dist3D(self.ObjOwner._AIBrain.Target._groundx, self.ObjOwner._AIBrain.Target._groundy, self.ObjOwner._AIBrain.Target._groundz, x,y,z)
 					if dist < self.distance or self._damaged then
 						self.mode = 2
                         PlaySound3D("actor/sado/sado_apple_ticktock", x,y,z, 20, 80)

@@ -13,7 +13,8 @@ MultiplayerMenu =
 	fontBigTex  = "../PKPlusData/font_texturka_alpha",
 	fontSmallTex  = "../PKPlusData/font_texturka_alpha",
 	descColor	= R3D.RGB( 255, 255, 255 ),
-	
+			fontBig		= Cfg.DefaultFont,
+			fontSmall	= Cfg.DefaultFont,	
 	useItemBG = false,
 
 	items =
@@ -25,6 +26,8 @@ MultiplayerMenu =
 			x	 = 15,
 			y	 = 550,
 			action = "PainMenu:ActivateScreen(LANGameMenu)",
+				fontBig		= Cfg.DefaultFont,
+			fontSmall	= Cfg.DefaultFont,
 		},
 
 		StartGame =
@@ -34,6 +37,8 @@ MultiplayerMenu =
 			x	 = 15,
 			y	 = 630,
 			action = "PainMenu:ActivateScreen(CreateServerMenu)",
+					fontBig		= Cfg.DefaultFont,
+			fontSmall	= Cfg.DefaultFont,
 		},
 
 		PlayerSettings =
@@ -43,6 +48,8 @@ MultiplayerMenu =
 			x	 = 15,
 			y	 = 710,
 			action = "PainMenu:ActivateScreen(PlayerOptions)",
+					fontBig		= Cfg.DefaultFont,
+			fontSmall	= Cfg.DefaultFont,
 		},
 	}
 }

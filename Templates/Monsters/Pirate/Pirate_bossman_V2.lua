@@ -18,7 +18,7 @@ end
 
 function o:Fire()
     local brain = self._AIBrain
-	local x2,y2,z2 = brain._enemyLastSeenPoint.X, brain._enemyLastSeenPoint.Y, brain._enemyLastSeenPoint.Z	--Player._groundx, Player.Pos.Y, Player._groundz			-- pozniej zgodnie z obrotem
+	local x2,y2,z2 = brain._enemyLastSeenPoint.X, brain._enemyLastSeenPoint.Y, brain._enemyLastSeenPoint.Z	--self._AIBrain.Target._groundx, Player.Pos.Y, self._AIBrain.Target._groundz			-- pozniej zgodnie z obrotem
 	if brain.r_closestEnemy then
 		x2,y2,z2 = brain.r_closestEnemy._groundx, brain.r_closestEnemy._groundy, brain.r_closestEnemy._groundz
 	end

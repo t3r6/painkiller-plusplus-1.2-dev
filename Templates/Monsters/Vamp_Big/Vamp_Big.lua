@@ -81,7 +81,7 @@ function Vamp_Big:TakeMeat()
     self._procStoneThrow:Tick(0, true)
     --MDL.ApplyRotationToJoint(e, brain._JointH, FRand(0,6.28) , FRand(0,6.28), FRand(0,6.28))	-- chyba to nie dziala...?
 	GObjects:Add(TempObjName(),self._procStoneThrow)
-	self:RotateToVector(Player._groundx,Player._groundy,Player._groundz)
+	self:RotateToVector(self._AIBrain.Target._groundx,self._AIBrain.Target._groundy,self._AIBrain.Target._groundz)
 	self:BloodFX(x,y,z)
 end
 
@@ -90,16 +90,16 @@ function Vamp_Big:Throw()
     if self._objStone then
         local brain = self._AIBrain
         local aiParams = self.AiParams
-        self:RotateToVector(Player._groundx,Player._groundy,Player._groundz)
+        self:RotateToVector(self._AIBrain.Target._groundx,self._AIBrain.Target._groundy,self._AIBrain.Target._groundz)
     
         local entity = self._objStone._Entity
 		local force = aiParams.throwSpeed
     
         local x,y,z = self:GetJointPos(aiParams.holdJoint)
         
-        local dx = Player._groundx - x
-        local dy = Player._groundy - y + FRand(1.65,1.75)
-        local dz = Player._groundz - z
+        local dx = self._AIBrain.Target._groundx - x
+        local dy = self._AIBrain.Target._groundy - y + FRand(1.65,1.75)
+        local dz = self._AIBrain.Target._groundz - z
     
         local v = Vector:New(dx, dy, dz)
         v:Normalize()

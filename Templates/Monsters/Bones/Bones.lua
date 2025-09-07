@@ -5,8 +5,8 @@ function Bones:OnInitTemplate()
 end
 
 function Bones:drainsoul()
-	if Player and Player.SoulsCount and Player.SoulsCount > 0 then
-		Player.SoulsCount = Player.SoulsCount - 1
+	if self._AIBrain.Target and self._AIBrain.Target.SoulsCount and self._AIBrain.Target.SoulsCount > 0 then
+		self._AIBrain.Target.SoulsCount = self._AIBrain.Target.SoulsCount - 1
 	end
 end
 
@@ -175,7 +175,7 @@ function Bones._CustomAiStates.ABbones:OnInit(brain)
 	local actor = brain._Objactor
 	actor._disableHits = true
 	actor:Stop()
-	actor:RotateToVector(Player._groundx,Player._groundy,Player._groundz)
+	if self._AIBrain.Target then actor:RotateToVector(self._AIBrain.Target._groundx,self._AIBrain.Target._groundy,self._AIBrain.Target._groundz) end
 	self.mode = 0
 end
 

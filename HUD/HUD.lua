@@ -1,24 +1,25 @@
 Hud =
 {
-    fname = "",
-    Enabled = true,
-    DrawEyes = false,
-    TickCount = 0,
-    _matCrosshair = -1,
-    _matAmmo = -1,
-    _matGameOver = -1,
-    _matHealth = -1,
-    _matArmor = -1,
-    _matArmorNormal = -1,
-    _matArmorRed = -1,
-    _matArmorGreen = -1,
-    _matArmorYellow = -1,
-    _matHead = -1,
-    _matEyes = -1,
-    _matDemons = -1,
-    _matNumbers = -1,
-    _matLifeIcon = -1,
-    _matShieldIcon = -1,
+	Graph = {},
+	fname = "",
+	Enabled = true,
+	DrawEyes = false,
+	TickCount = 0,
+	_matCrosshair = -1,
+	_matAmmo = -1,
+	_matGameOver = -1,
+	_matHealth = -1,
+	_matArmor = -1,
+	_matArmorNormal = -1,
+	_matArmorRed = -1,
+	_matArmorGreen = -1,
+	_matArmorYellow = -1,
+	_matHead = -1,
+	_matEyes = -1,
+	_matDemons = -1,
+	_matNumbers = -1,
+	_matLifeIcon = -1,
+	_matShieldIcon = -1,
 
 	_matHUDTop = -1,
 	_matHUDLeft = -1,
@@ -59,36 +60,36 @@ Hud =
 	_matDigits = {},
 	_matDigitsRed = {},
 
---    _matShotgunIcon = -1,
---    _matGrenadeIcon = -1,
+	--    _matShotgunIcon = -1,
+	--    _matGrenadeIcon = -1,
 
 	_lastCross = -1,
-    CrossScale = 1,
+	CrossScale = 1,
 
 	_matModifier = -1,
 
 	_showSPStats = false,
 
 	-- MP messages
---	mpMsgColor = { 255, 255, 255 },
+	mpMsgColor = { 255, 255, 255 },
 	mpMsgColor = { 255, 186, 122 },
 	mpMsgPosition = { 0, 0 },
-	mpMsgFont = "courbd",
---	mpMsgFontTex = "HUD/font_texturka",
+	mpMsgFont = Cfg.DefaultFont,
+	--mpMsgFontTex = "HUD/font_texturka",
 	mpMsgFontTex = "",
 	mpMsgFontSize = 20,
 
 	_matDemonCross = nil,
 
 	_crosshairs = {		"HUD/crosshair", "HUD/crossy/cross1", "HUD/crossy/cross2", "HUD/crossy/cross3",
-				"HUD/crossy/cross4", "HUD/crossy/cross5", "HUD/crossy/cross6", "HUD/crossy/cross7",
-				"HUD/crossy/cross8", "HUD/crossy/cross9", "HUD/crossy/cross91", "HUD/crossy/cross92",
-				"HUD/crossy/cross93", "HUD/crossy/cross94", "HUD/crossy/cross95", "HUD/crossy/cross96",
-				"HUD/crossy/cross97", "HUD/crossy/cross98", "HUD/crossy/cross99", "HUD/crossy/cross991",
-				"HUD/crossy/cross992", "HUD/crossy/cross993", "HUD/crossy/cross994", "HUD/crossy/cross995",
-				"HUD/crossy/cross996", "HUD/crossy/cross997", "HUD/crossy/cross998", "HUD/crossy/cross999",
-				"HUD/crossy/cross9991", "HUD/crossy/cross9992", "HUD/crossy/cross9993", "HUD/crossy/cross9994",
-				"../PKPlusData/Crosshairs/crosshairc", "../PKPlusData/Crosshairs/crosshairb"},
+		"HUD/crossy/cross4", "HUD/crossy/cross5", "HUD/crossy/cross6", "HUD/crossy/cross7",
+		"HUD/crossy/cross8", "HUD/crossy/cross9", "HUD/crossy/cross91", "HUD/crossy/cross92",
+		"HUD/crossy/cross93", "HUD/crossy/cross94", "HUD/crossy/cross95", "HUD/crossy/cross96",
+		"HUD/crossy/cross97", "HUD/crossy/cross98", "HUD/crossy/cross99", "HUD/crossy/cross991",
+		"HUD/crossy/cross992", "HUD/crossy/cross993", "HUD/crossy/cross994", "HUD/crossy/cross995",
+		"HUD/crossy/cross996", "HUD/crossy/cross997", "HUD/crossy/cross998", "HUD/crossy/cross999",
+		"HUD/crossy/cross9991", "HUD/crossy/cross9992", "HUD/crossy/cross9993", "HUD/crossy/cross9994",
+	"../PKPlusData/Crosshairs/crosshairc", "../PKPlusData/Crosshairs/crosshairb"},
 
 	_colors = { R3D.RGB(0,0,255) },
 
@@ -113,8 +114,8 @@ function Hud:LoadData()
 
 	if(Cfg.OldScoreboard)then self._mpStatsDrawFunc = MPSTATS.Draw end
 
---    self._matAmmo = MATERIAL.Create("HUD/waz_P 75 %transp", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
---    self._matHealth = MATERIAL.Create("HUD/waz_L 75 %transp", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+	--    self._matAmmo = MATERIAL.Create("HUD/waz_P 75 %transp", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+	--    self._matHealth = MATERIAL.Create("HUD/waz_L 75 %transp", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
 
 	self._matHealth = MATERIAL.Create("HUD/energia", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
 	self._matArmorNormal = MATERIAL.Create("HUD/armor", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
@@ -124,46 +125,46 @@ function Hud:LoadData()
 
 	self._matArmor = self._matArmorNormal
 
---PK++
+	--PK++
 
-if Cfg.ColouredIcons then
-        Hud._matTeamRed        = MATERIAL.Create("../PKPlusData/Textures/team_redcol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        Hud._matTeamBlue       = MATERIAL.Create("../PKPlusData/Textures/team_bluecol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        Hud._matShell          = MATERIAL.Create("../PKPlusData/Textures/Shellcol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        Hud._matFreezer        = MATERIAL.Create("../PKPlusData/Textures/Freezercol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        Hud._matRocket         = MATERIAL.Create("../PKPlusData/Textures/Rocketcol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        Hud._matMinigun        = MATERIAL.Create("../PKPlusData/Textures/Miniguncol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        Hud._matStake          = MATERIAL.Create("../PKPlusData/Textures/Stakecol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        Hud._matSzuriken       = MATERIAL.Create("../PKPlusData/Textures/Szurikencol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        Hud._matElectro        = MATERIAL.Create("../PKPlusData/Textures/Electrocol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        Hud._matPainkiller     = MATERIAL.Create("../PKPlusData/Textures/Painkillercol", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        Hud._matInfinity       = MATERIAL.Create("../PKPlusData/Textures/infinitycol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        Hud._matout            = MATERIAL.Create("../PKPlusData/Textures/outcol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-else
+	if Cfg.ColouredIcons then
+		Hud._matTeamRed        = MATERIAL.Create("../PKPlusData/Textures/team_redcol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matTeamBlue       = MATERIAL.Create("../PKPlusData/Textures/team_bluecol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matShell          = MATERIAL.Create("../PKPlusData/Textures/Shellcol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matFreezer        = MATERIAL.Create("../PKPlusData/Textures/Freezercol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matRocket         = MATERIAL.Create("../PKPlusData/Textures/Rocketcol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matMinigun        = MATERIAL.Create("../PKPlusData/Textures/Miniguncol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matStake          = MATERIAL.Create("../PKPlusData/Textures/Stakecol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matSzuriken       = MATERIAL.Create("../PKPlusData/Textures/Szurikencol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matElectro        = MATERIAL.Create("../PKPlusData/Textures/Electrocol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matPainkiller     = MATERIAL.Create("../PKPlusData/Textures/Painkillercol", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matInfinity       = MATERIAL.Create("../PKPlusData/Textures/infinitycol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matout            = MATERIAL.Create("../PKPlusData/Textures/outcol.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+	else
 
-        Hud._matTeamRed        = MATERIAL.Create("../PKPlusData/Textures/team_red.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        Hud._matTeamBlue       = MATERIAL.Create("../PKPlusData/Textures/team_blue.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        Hud._matShell          = MATERIAL.Create("../PKPlusData/Textures/Shell.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        Hud._matFreezer        = MATERIAL.Create("../PKPlusData/Textures/Freezer.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        Hud._matRocket         = MATERIAL.Create("../PKPlusData/Textures/Rocket.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        Hud._matMinigun        = MATERIAL.Create("../PKPlusData/Textures/Minigun.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        Hud._matStake          = MATERIAL.Create("../PKPlusData/Textures/Stake.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        Hud._matSzuriken       = MATERIAL.Create("../PKPlusData/Textures/Szuriken.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        Hud._matElectro        = MATERIAL.Create("../PKPlusData/Textures/Electro.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        Hud._matPainkiller     = MATERIAL.Create("../PKPlusData/Textures/Painkiller", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        Hud._matInfinity       = MATERIAL.Create("../PKPlusData/Textures/infinity.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        Hud._matout            = MATERIAL.Create("../PKPlusData/Textures/out.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-end
-        if(Cfg.AltScoreboard)then
-        	Hud._matRedPix            = MATERIAL.Create("../PKPlusData/Textures/redpixalt.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-	        Hud._matGreenPix            = MATERIAL.Create("../PKPlusData/Textures/greenpixalt.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-	        Hud._matBluePix            = MATERIAL.Create("../PKPlusData/Textures/bluepixalt.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        else
+		Hud._matTeamRed        = MATERIAL.Create("../PKPlusData/Textures/team_red.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matTeamBlue       = MATERIAL.Create("../PKPlusData/Textures/team_blue.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matShell          = MATERIAL.Create("../PKPlusData/Textures/Shell.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matFreezer        = MATERIAL.Create("../PKPlusData/Textures/Freezer.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matRocket         = MATERIAL.Create("../PKPlusData/Textures/Rocket.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matMinigun        = MATERIAL.Create("../PKPlusData/Textures/Minigun.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matStake          = MATERIAL.Create("../PKPlusData/Textures/Stake.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matSzuriken       = MATERIAL.Create("../PKPlusData/Textures/Szuriken.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matElectro        = MATERIAL.Create("../PKPlusData/Textures/Electro.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matPainkiller     = MATERIAL.Create("../PKPlusData/Textures/Painkiller", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matInfinity       = MATERIAL.Create("../PKPlusData/Textures/infinity.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matout            = MATERIAL.Create("../PKPlusData/Textures/out.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+	end
+	if(Cfg.AltScoreboard)then
+		Hud._matRedPix            = MATERIAL.Create("../PKPlusData/Textures/redpixalt.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matGreenPix            = MATERIAL.Create("../PKPlusData/Textures/greenpixalt.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matBluePix            = MATERIAL.Create("../PKPlusData/Textures/bluepixalt.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+	else
 		Hud._matRedPix            = MATERIAL.Create("../PKPlusData/Textures/redpix.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-	        Hud._matGreenPix            = MATERIAL.Create("../PKPlusData/Textures/greenpix.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-	        Hud._matBluePix            = MATERIAL.Create("../PKPlusData/Textures/bluepix.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-        end
-        
+		Hud._matGreenPix            = MATERIAL.Create("../PKPlusData/Textures/greenpix.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+		Hud._matBluePix            = MATERIAL.Create("../PKPlusData/Textures/bluepix.tga", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+	end
+
 
 
 
@@ -175,14 +176,14 @@ end
 		self._matCrosshair = MATERIAL.Create("HUD/crosshair", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
 		self._lastCross = "HUD/crosshair"
 	end
-    self._matHead = MATERIAL.Create("HUD/czaszka sama", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-    self._matEyes = MATERIAL.Create("HUD/oczy_do_czachy copy", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-    self._matDemons = MATERIAL.Create("HUD/demon count 64 % transp", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-    self._matDemonsGrey = MATERIAL.Create("HUD/demon count szary30 % transp", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-    self._matNumbers = MATERIAL.Create("HUD/cyfry", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-    self._matLifeIcon = MATERIAL.Create("HUD/eskulap", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-    self._matShieldIcon = MATERIAL.Create("HUD/tarcza", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-    self._matGameOver = MATERIAL.Create("HUD/gejm_ouwer", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+	self._matHead = MATERIAL.Create("HUD/czaszka sama", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+	self._matEyes = MATERIAL.Create("HUD/oczy_do_czachy copy", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+	self._matDemons = MATERIAL.Create("HUD/demon count 64 % transp", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+	self._matDemonsGrey = MATERIAL.Create("HUD/demon count szary30 % transp", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+	self._matNumbers = MATERIAL.Create("HUD/cyfry", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+	self._matLifeIcon = MATERIAL.Create("HUD/eskulap", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+	self._matShieldIcon = MATERIAL.Create("HUD/tarcza", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+	self._matGameOver = MATERIAL.Create("HUD/gejm_ouwer", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
 
 	if not Cfg.BlackEdition then
 		self._matHUDTop = MATERIAL.Create("HUD/hud_top", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
@@ -198,10 +199,10 @@ end
 	self._matPentagram = MATERIAL.Create("HUD/pentagram", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
 	self._matStar = MATERIAL.Create("HUD/gwiazdka", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
 
-for i=0,9 do	
+	for i=0,9 do
 		self._matDigits[i+1] = MATERIAL.Create("HUD/numbers/"..i, TextureFlags.NoLOD + TextureFlags.NoMipMaps)
 		self._matDigitsRed[i+1] = MATERIAL.Create("HUD/numbers/"..i.."_cz", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
-end
+	end
 
 	self._matBossFace = MATERIAL.Create("HUD/hud_boss", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
 	self._matBossAlastor = MATERIAL.Create("HUD/kompas/icon_alastor", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
@@ -225,54 +226,100 @@ end
 
 	self._matModifier = MATERIAL.Create("HUD/modifier", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
 
---    self._matShotgunIcon = MATERIAL.Create("HUD/kulka_szotganowa", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
---    self._matGrenadeIcon = MATERIAL.Create("HUD/raketa", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+	--    self._matShotgunIcon = MATERIAL.Create("HUD/kulka_szotganowa", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
+	--    self._matGrenadeIcon = MATERIAL.Create("HUD/raketa", TextureFlags.NoLOD + TextureFlags.NoMipMaps)
 
 	CONSOLE.SetMPMsgColor( self.mpMsgColor[1], self.mpMsgColor[2], self.mpMsgColor[3] )
 	CONSOLE.SetMPMsgPosition( self.mpMsgPosition[1], self.mpMsgPosition[2] )
 	CONSOLE.SetMPMsgFont( self.mpMsgFont, self.mpMsgFontTex, self.mpMsgFontSize )
 
-	self.CrossScale = Cfg.CrosshairSize
 
 	HUD.SetTransparency( Cfg.HUDTransparency )
 
 	fragmessagestart = 0
-        fragmessageend = 0.1
+	fragmessageend = 0.1
 	fname = ""
 
 end
 --============================================================================
 function Hud:Clear()
-    if self._ShotGun then MDL.Release(self._ShotGun) end
-    self.r_closestEnemy = nil
+	if self._ShotGun then MDL.Release(self._ShotGun) end
+	self.r_closestEnemy = nil
 	self._nearestCheckPoint = nil
 	self._lastTime = 0.0
 end
 --============================================================================
 function Hud:Tick(delta)
-    --self.TickCount = self.TickCount + delta * 10
-    --self.CrossScale = 0.85 +  (1 + math.sin(self.TickCount))/2 * 0.15
+	--self.TickCount = self.TickCount + delta * 10
+	--Cfg.CrosshairSize = 0.85 +  (1 + math.sin(self.TickCount))/2 * 0.15
+end
+--============================================================================
+function Hud:DrawGraph(id,val,height,x,title,range)
+	local scaledown = 1
+	local historylength = 200
+	local w,h = R3D.ScreenSize()
+	if not self.Graph[id] then self.Graph[id]={} end
+	HUD.DrawQuadRGBA(nil,x-historylength/2,h-height-range*10-10,historylength,range*10+10,255,255,255,10)
+	for i,o in self.Graph[id] do
+		o = tonumber(o)
+		if o ~= nil then
+			if o >= 250 then
+				if o > range*10 then o = range*10 end
+				HUD.DrawQuadRGBA(nil,x-historylength/2+i,h-height-o,1,o,255,0,0)
+			elseif o > 100 then
+				if o > range*10 then o = range*10 end
+				HUD.DrawQuadRGBA(nil,x-historylength/2+i,h-height-o,1,o,127,127,0)
+			else
+				if o > range*10 then o = range*10 end
+				HUD.DrawQuadRGBA(nil,x-historylength/2+i,h-height-o,1,o,0,255,0)
+			end
+		end
+		if i<0 or i>historylength then
+			self.Graph[id][i]=nil
+		end
+	end
+	HUD.PrintXY(x-historylength/2,h-height+2,tostring(title),Cfg.DefaultFont,230,161,97,12)
+	
+	-- EXAMPLE HUD.PrintXY(-1,24+2,countdown,Cfg.DefaultFont,15,15,15,26)
+	for i=1,range,1 do
+		HUD.PrintXY(x,h-height-i*10-5,tostring(i*10),Cfg.DefaultFont,230,161,97,10)
+	end
+	--self.Graph[id] = {}
+	
+	if self.Graph[id][historylength] == val then return end
+	
+	for i,o in self.Graph[id] do
+		self.Graph[id][i-1] = self.Graph[id][i]
+	end
+	--if val > range*10 then val = range*10 end
+	self.Graph[id][historylength] = val
 end
 --============================================================================
 function Hud:Render(delta)
-	--if CONSOLE.DemoIsPlaying() then self:DrawForDemo()  end --return
 	local w,h = R3D.ScreenSize()
-
+	HUD.SetFont(Cfg.DefaultFont,26)
+	if not Game.interpolationdelta then Game.interpolationdelta = 0 end
+	if Cfg.DrawGraphLatency then self:DrawGraph(4,Game.interpolationdelta*200.0,h-150,110,"",2) end --NET.GetLastFrameLatency()
+	if Cfg.DrawGraphLatency then self:DrawGraph(1,NET.GetLastFrameLatency(),h-300,110,"Lagometer",13) end --
 	if Cfg.DisableHud then return end
-
 	if(not Cfg.DisableMOTDRendering) then if(Hud._MOTDTime and Hud._MOTDTime >= INP.GetTime()) then Hud:DrawMOTD() end end
 	if MPCfg.GameState == GameStates.WarmUp or MPCfg.GameState == GameStates.Counting then Hud:DrawPlayerVsPlayer() end
-	
+	if MPCfg.GameState == GameStates.WarmUp then
+		local w,h = R3D.ScreenSize()
+
+		HUD.PrintXY(11*w/1024+1.1+2,71*h/768+1.1+2,"Warm Up",Cfg.DefaultFont,0,0,0,28)
+		HUD.PrintXY(11*w/1024+1.1,71*h/768+1.1,"Warm Up",Cfg.DefaultFont,160,160,160,28)
+	end
 	Hud:DrawTimer()
 	Hud:DrawFPS()
-
+	if(not Hud.NoCrosshair and not Cfg.CustomCrosshairLocation)then self:QuadRGBA(self._matCrosshair,w/2,h/2,Cfg.CrosshairSize,true,Cfg.CrosshairR,Cfg.CrosshairG,Cfg.CrosshairB,Cfg.CrosshairTrans/100.0*255) end
+	if(not Hud.NoCrosshair and Cfg.CustomCrosshairLocation)then self:QuadRGBA(self._matCrosshair,w*Cfg.CustomCrosshairLocationX,h*Cfg.CustomCrosshairLocationY,Cfg.CrosshairSize,true,Cfg.CrosshairR,Cfg.CrosshairG,Cfg.CrosshairB,Cfg.CrosshairTrans/100.0*255) end
+			
 	if Game and MPCfg.GameState == GameStates.Counting and Game._countTimer and Game._countTimer > 0.99 then
-		HUD.SetFont("Impact",26)
 		local countdown = "Match begins in: "..string.format("%02d",Game._countTimer)
-		
-		HUD.PrintXY(-1,24+2,countdown,"Impact",15,15,15,26)
-		HUD.PrintXY(-1,24,countdown,"Impact",255,255,255,26)
-	 end
+		HUD.PrintXY(-1,45+2,countdown,Cfg.DefaultFont,15,15,15,32)
+		HUD.PrintXY(-1,45,countdown,Cfg.DefaultFont,255,255,255,32)
+	end
 	if Game and Game._voteTimeLeft > 0 then
 		local yesVotes = 0
 		local noVotes = 0
@@ -285,22 +332,22 @@ function Hud:Render(delta)
 				end
 			end
 		end
-		HUD.SetFont("Impact",26)
+		HUD.SetFont(Cfg.DefaultFont,26)
 		local currentvote = "Vote("..string.format("%02d",Game._voteTimeLeft).."): '"..Game._voteCmd.." "..Game._voteParams.."'  yes("..yesVotes..") no("..noVotes..")"
-		HUD.PrintXY(-1,h/6,currentvote,"Impact",200,200,200,26)
+		HUD.PrintXY(-1,h/6,currentvote,Cfg.DefaultFont,200,200,200,32)
 	end
-    if not self.Enabled then return end
+	if not self.Enabled then return end
 	if Player then
-        if not Player._died and Game.IsDemon then
-			self:QuadRGBA(self._matDemonCross,w/2,h/2,self.CrossScale,true,255,255,255,Cfg.CrosshairTrans/100.0*96)
-        end
+		if not Player._died and Game.IsDemon then
+			self:QuadRGBA(self._matDemonCross,w/2,h/2,Cfg.CrosshairSize,true,255,255,255,Cfg.CrosshairTrans/100.0*96)
+		end
 
-        if Player.HasWeaponModifier then
+		if Player.HasWeaponModifier then
 			HUD.DrawQuad(self._matModifier,0,0,w,h)
-        end
-    end
+		end
+	end
 
-    if Game.IsDemon and not Lucifer_001 then return end
+	if Game.IsDemon and not Lucifer_001 then return end
 
 	if Cfg.Crosshair and not Game.IsDemon then
 		if self._crosshairs[Cfg.Crosshair] ~= self._lastCross then
@@ -314,23 +361,23 @@ function Hud:Render(delta)
 	if Game.GMode == GModes.SingleGame then
 		self:QuadTrans(self._matHUDTop,(512-Cfg.HUDSize*230)*w/1024,0,Cfg.HUDSize,false,trans)
 	end
-	
+
 	local sizex, sizey = MATERIAL.Size(self._matHUDLeft)
 	if Cfg.Simplehud == false then
-	self:QuadTrans(self._matHUDLeft,0,(768-Cfg.HUDSize*sizey)*h/768,Cfg.HUDSize,false,trans)
-	self:QuadTrans(self._matHUDRight,(1024-Cfg.HUDSize*sizex)*w/1024,(768-Cfg.HUDSize*sizey)*h/768,Cfg.HUDSize,false,trans)
-end
+		self:QuadTrans(self._matHUDLeft,0,(768-Cfg.HUDSize*sizey)*h/768,Cfg.HUDSize,false,trans)
+		self:QuadTrans(self._matHUDRight,(1024-Cfg.HUDSize*sizex)*w/1024,(768-Cfg.HUDSize*sizey)*h/768,Cfg.HUDSize,false,trans)
+	end
 	if Game.GMode == GModes.SingleGame then
 		self:Quad(self._matPentagram,(512-Cfg.HUDSize*105)*w/1024,Cfg.HUDSize*14*h/768,Cfg.HUDSize,false)
 		self:Quad(self._matMoney,(512+Cfg.HUDSize*55)*w/1024,Cfg.HUDSize*4*h/768,Cfg.HUDSize,false)
 	end
 	if Cfg.Simplehud == false then
-	self:Quad(self._matHealth,Cfg.HUDSize*17*w/1024,((768+Cfg.HUDSize*14)-Cfg.HUDSize*sizey)*h/768,Cfg.HUDSize,false)
-end
-    if Player then
-        if not Player._died  then
-			if(not Hud.NoCrosshair and not Cfg.CustomCrosshairLocation)then self:QuadRGBA(self._matCrosshair,w/2,h/2,self.CrossScale,true,Cfg.CrosshairR,Cfg.CrosshairG,Cfg.CrosshairB,Cfg.CrosshairTrans/100.0*255) end
-			if(not Hud.NoCrosshair and Cfg.CustomCrosshairLocation)then self:QuadRGBA(self._matCrosshair,w*Cfg.CustomCrosshairLocationX,h*Cfg.CustomCrosshairLocationY,self.CrossScale,true,Cfg.CrosshairR,Cfg.CrosshairG,Cfg.CrosshairB,Cfg.CrosshairTrans/100.0*255) end
+		self:Quad(self._matHealth,Cfg.HUDSize*17*w/1024,((768+Cfg.HUDSize*14)-Cfg.HUDSize*sizey)*h/768,Cfg.HUDSize,false)
+	end
+
+	if Player then
+		if not Player._died  then
+
 			local nameviewed = self:GetCrosshairPlayerName()
 			if(nameviewed~=-1)then
 				local teamgame = false
@@ -351,50 +398,50 @@ end
 			if Cfg.HUD_AmmoList == 1 then self:AmmoListPos1() self:AmmoList() end
 			if Cfg.HUD_AmmoList == 2 then self:AmmoListPos2() self:AmmoList() end
 			if Cfg.HUD_CurrentWeapon_Icon then self:CurrentWeaponIcon() end
-	    		if Cfg.HUD_FragMessage then
-	       			if fragmessagestart < Game.currentTime and fragmessageend > Game.currentTime and fragmessageend > Game.currentTime then self:FragMessage(self.fname) end
-	    		end
-        end
+			if Cfg.HUD_FragMessage then
+				if fragmessagestart < Game.currentTime and fragmessageend > Game.currentTime and fragmessageend > Game.currentTime then self:FragMessage(self.fname) end
+			end
+		end
 
-	if Cfg.Simplehud == false then 
-        if Player.ArmorType == 0 then
-            self:Quad(self._matArmorNormal,Cfg.HUDSize*17*w/1024,((768+Cfg.HUDSize*49)-Cfg.HUDSize*sizey)*h/768,Cfg.HUDSize,false)
-        elseif Player.ArmorType == 1 then
-            self:Quad(self._matArmorGreen,Cfg.HUDSize*17*w/1024,((768+Cfg.HUDSize*49)-Cfg.HUDSize*sizey)*h/768,Cfg.HUDSize,false)
-        elseif Player.ArmorType == 2 then
-            self:Quad(self._matArmorYellow,Cfg.HUDSize*17*w/1024,((768+Cfg.HUDSize*49)-Cfg.HUDSize*sizey)*h/768,Cfg.HUDSize,false)
-        elseif Player.ArmorType == 3 then
-            self:Quad(self._matArmorRed,Cfg.HUDSize*17*w/1024,((768+Cfg.HUDSize*49)-Cfg.HUDSize*sizey)*h/768,Cfg.HUDSize,false)
-        end
-	if Cfg.Simplehud == false then 
-        if Player:GetCurWeapon() then
-            Player:GetCurWeapon():DrawHUD(delta)
-       end
-end
-end
+		if Cfg.Simplehud == false then
+			if Player.ArmorType == 0 then
+				self:Quad(self._matArmorNormal,Cfg.HUDSize*17*w/1024,((768+Cfg.HUDSize*49)-Cfg.HUDSize*sizey)*h/768,Cfg.HUDSize,false)
+			elseif Player.ArmorType == 1 then
+				self:Quad(self._matArmorGreen,Cfg.HUDSize*17*w/1024,((768+Cfg.HUDSize*49)-Cfg.HUDSize*sizey)*h/768,Cfg.HUDSize,false)
+			elseif Player.ArmorType == 2 then
+				self:Quad(self._matArmorYellow,Cfg.HUDSize*17*w/1024,((768+Cfg.HUDSize*49)-Cfg.HUDSize*sizey)*h/768,Cfg.HUDSize,false)
+			elseif Player.ArmorType == 3 then
+				self:Quad(self._matArmorRed,Cfg.HUDSize*17*w/1024,((768+Cfg.HUDSize*49)-Cfg.HUDSize*sizey)*h/768,Cfg.HUDSize,false)
+			end
+			if Cfg.Simplehud == false then
+				if Player:GetCurWeapon() then
+					Player:GetCurWeapon():DrawHUD(delta)
+				end
+			end
+		end
 
-        if Game.GMode == GModes.SingleGame then
+		if Game.GMode == GModes.SingleGame then
 			self:DrawDigitsText((512-Cfg.HUDSize*202)*w/1024,Cfg.HUDSize*14*h/768,string.format("%05d",Game.BodyCountTotal),0.8 * Cfg.HUDSize)
 			self:DrawDigitsText((512+Cfg.HUDSize*105)*w/1024,Cfg.HUDSize*14*h/768,string.format("%05d",Player.SoulsCount),0.8 * Cfg.HUDSize,5-Game.Demon_HowManyCorpses)
 		end
-        local he = Player.Health
-        if he < 1 and he > 0 then
-            he = 1
-        end
---==HEALTH EDIT
+		local he = Player.Health
+		if he < 1 and he > 0 then
+			he = 1
+		end
+		--==HEALTH EDIT
 		if Cfg.Simplehud == false then
-		self:DrawDigitsText(Cfg.HUDSize*52*w/1024,((768+Cfg.HUDSize*16)-Cfg.HUDSize*sizey)*h/768,string.sub(string.format("%03d",he),-3),0.9 * Cfg.HUDSize,Player.HealthWarning)
-        local armor = Player.Armor
-        if Player.FrozenArmor then armor = 0 end
-		self:DrawDigitsText(Cfg.HUDSize*52*w/1024,((768+Cfg.HUDSize*50)-Cfg.HUDSize*sizey)*h/768,string.sub(string.format("%03d",armor),-3),0.9 * Cfg.HUDSize,Player.ArmorWarning)
-    end
-end
---== HEALTH EDIT END
+			self:DrawDigitsText(Cfg.HUDSize*52*w/1024,((768+Cfg.HUDSize*16)-Cfg.HUDSize*sizey)*h/768,string.sub(string.format("%03d",he),-3),0.9 * Cfg.HUDSize,Player.HealthWarning)
+			local armor = Player.Armor
+			if Player.FrozenArmor then armor = 0 end
+			self:DrawDigitsText(Cfg.HUDSize*52*w/1024,((768+Cfg.HUDSize*50)-Cfg.HUDSize*sizey)*h/768,string.sub(string.format("%03d",armor),-3),0.9 * Cfg.HUDSize,Player.ArmorWarning)
+		end
+	end
+	--== HEALTH EDIT END
 
 	if Game.GMode == GModes.SingleGame then
 		local time = INP.GetTime()
 		if( time - self._lastTime ) >= 1.0 then
---			Game:Print( "Update" )
+			--			Game:Print( "Update" )
 			self:UpdateCompass()
 			self._lastTime = time
 		end
@@ -433,8 +480,8 @@ end
 		if self._showCheckPointInfo then
 			local w,h = R3D.ScreenSize()
 			HUD.DrawBorder(312,200,400,140)
-			HUD.PrintXY(-1,240*h/768,Languages.Texts[647],"timesbd",230,161,97,26)
-			HUD.PrintXY(-1,280*h/768,Languages.Texts[648].."...","timesbd",230,161,97,26)
+			HUD.PrintXY(-1,240*h/768,Languages.Texts[647],Cfg.DefaultFont,230,161,97,26)
+			HUD.PrintXY(-1,280*h/768,Languages.Texts[648].."...",Cfg.DefaultFont,230,161,97,26)
 		end
 
 		if self._overlayMessage ~= "" and self._overlayMsgStart == 0 then
@@ -443,11 +490,11 @@ end
 
 		if self._overlayMessage ~= "" and ( INP.GetTime() - self._overlayMsgStart ) < 5 then
 			local w,h = R3D.ScreenSize()
-			HUD.SetFont("timesbd",26)
+			HUD.SetFont(Cfg.DefaultFont,26)
 			local tw = HUD.GetTextWidth(self._overlayMessage)
 			local th = HUD.GetTextHeight(self._overlayMessage)
 			HUD.DrawBorder(((w-tw)/2)*1024/w-20,198,tw*1024/w+40,th*768/h+40)
-			HUD.PrintXY(-1,220*h/768,self._overlayMessage,"timesbd",230,161,97,26)
+			HUD.PrintXY(-1,220*h/768,self._overlayMessage,Cfg.DefaultFont,230,161,97,26)
 		else
 			self._overlayMessage = ""
 			self._overlayMsgStart = 0
@@ -458,25 +505,25 @@ end
 		local w,h = R3D.ScreenSize()
 		HUD.DrawQuadRGBA(nil,0,0,w,h,0,0,0,90)
 		HUD.DrawBorder(332,220,360,100)
-		HUD.PrintXY(-1,260*h/768,Languages.Texts[709],"timesbd",230,161,97,26)
+		HUD.PrintXY(-1,260*h/768,Languages.Texts[709],Cfg.DefaultFont,230,161,97,26)
 	end
 
-    if Game.IsDemon then return end
+	if Game.IsDemon then return end
 
-    -- speedmeter
-    if  Tweak.PlayerMove.ShowSpeedmeter and Player and Player._Entity then
-        local vx,vy,vz,vl = ENTITY.GetVelocity(Player._Entity)
-        local hl = Dist2D(0,0,vx,vz)
-        HUD.DrawQuadRGBA(nil,w/2-50,h-17,100,13,100,100,100)
-        HUD.DrawQuadRGBA(nil,w/2-50,h-17,hl*2,13,255,0,0)
-        HUD.PrintXY(w/2-10,h-15,string.format("%.02f",hl))
-    end
+	-- speedmeter
+	if  Tweak.PlayerMove.ShowSpeedmeter and Player and Player._Entity then
+		local vx,vy,vz,vl = ENTITY.GetVelocity(Player._Entity)
+		local hl = Dist2D(0,0,vx,vz)
+		HUD.DrawQuadRGBA(nil,w/2-50,h-17,100,13,100,100,100)
+		HUD.DrawQuadRGBA(nil,w/2-50,h-17,hl*2,13,255,0,0)
+		HUD.PrintXY(w/2-10,h-15,string.format("%.02f",hl))
+	end
 
-    if self._showPacketLoss and Game.GMode ~= GModes.SingleGame then
+	if self._showPacketLoss and Game.GMode ~= GModes.SingleGame then
 		local w,h = R3D.ScreenSize()
 		local mw,mh = MATERIAL.Size(self._matPacketLoss)
 		HUD.DrawQuad(self._matPacketLoss,w-(mw+8)*w/1024,8*h/768,mw*w/1024,mh*h/768)
-    end
+	end
 end
 --============================================================================
 function Hud:DrawForDemo()
@@ -484,23 +531,23 @@ function Hud:DrawForDemo()
 
 	if self._showFPS or (Cfg.ShowFPS and Game.GMode ~= GModes.SingleGame) then
 		local fps = string.format("FPS: %d",R3D.GetFPS())
-		HUD.SetFont("timesbd",26)
-		HUD.PrintXY(w-HUD.GetTextWidth(fps)+1,1,fps,"timesbd",15,15,15,26)
-		HUD.PrintXY(w-HUD.GetTextWidth(fps),0,fps,"timesbd",230,161,97,26)
-	 end
+		HUD.SetFont(Cfg.DefaultFont,26)
+		HUD.PrintXY(w-HUD.GetTextWidth(fps)+1,1,fps,Cfg.DefaultFont,15,15,15,26)
+		HUD.PrintXY(w-HUD.GetTextWidth(fps),0,fps,Cfg.DefaultFont,230,161,97,26)
+	end
 	Hud.Render()
 	--Hud:DrawTimer()
 	--Hud:DrawFPS()
-	
-	--if(not Hud.NoCrosshair and not Cfg.CustomCrosshairLocation)then self:QuadRGBA(self._matCrosshair,w/2,h/2,self.CrossScale,true,Cfg.CrosshairR,Cfg.CrosshairG,Cfg.CrosshairB,Cfg.CrosshairTrans/100.0*255) end
-	--if(not Hud.NoCrosshair and Cfg.CustomCrosshairLocation)then self:QuadRGBA(self._matCrosshair,w*Cfg.CustomCrosshairLocationX,h*Cfg.CustomCrosshairLocationY,self.CrossScale,true,Cfg.CrosshairR,Cfg.CrosshairG,Cfg.CrosshairB,Cfg.CrosshairTrans/100.0*255) end
+
+	--if(not Hud.NoCrosshair and not Cfg.CustomCrosshairLocation)then self:QuadRGBA(self._matCrosshair,w/2,h/2,Cfg.CrosshairSize,true,Cfg.CrosshairR,Cfg.CrosshairG,Cfg.CrosshairB,Cfg.CrosshairTrans/100.0*255) end
+	--if(not Hud.NoCrosshair and Cfg.CustomCrosshairLocation)then self:QuadRGBA(self._matCrosshair,w*Cfg.CustomCrosshairLocationX,h*Cfg.CustomCrosshairLocationY,Cfg.CrosshairSize,true,Cfg.CrosshairR,Cfg.CrosshairG,Cfg.CrosshairB,Cfg.CrosshairTrans/100.0*255) end
 
 end
 --============================================================================
 function Hud:DrawSingleStat(index,name,val,total,bonus,show_star)
 	local w,h = R3D.ScreenSize()
 
-	HUD.SetFont("timesbd",26)
+	HUD.SetFont(Cfg.DefaultFont,26)
 	local fh = HUD.GetTextHeight() + 8 * h/768
 
 	local sepPos = w/2 + 50*w/1024
@@ -519,16 +566,16 @@ function Hud:DrawSingleStat(index,name,val,total,bonus,show_star)
 	local colorMax = { 189, 0, 0 }
 
 	spos = sepPos - HUD.GetTextWidth( name )
-	HUD.PrintXY(spos,y,name..": ","timesbd",colorTxt[1],colorTxt[2],colorTxt[3],26)
+	HUD.PrintXY(spos,y,name..": ",Cfg.DefaultFont,colorTxt[1],colorTxt[2],colorTxt[3],26)
 
 	local star_pos = maxPos
 
 	if val < 1000 then
-		HUD.PrintXY(minPos,y,string.format("%03d",val),"timesbd",colorMin[1],colorMin[2],colorMin[3],26)
-		HUD.PrintXY(slashPos,y,"/","timesbd",colorTxt[1],colorTxt[2],colorTxt[3],26)
-		HUD.PrintXY(maxPos,y,string.format("%03d",total),"timesbd",colorMax[1],colorMax[2],colorMax[3],26)
+		HUD.PrintXY(minPos,y,string.format("%03d",val),Cfg.DefaultFont,colorMin[1],colorMin[2],colorMin[3],26)
+		HUD.PrintXY(slashPos,y,"/",Cfg.DefaultFont,colorTxt[1],colorTxt[2],colorTxt[3],26)
+		HUD.PrintXY(maxPos,y,string.format("%03d",total),Cfg.DefaultFont,colorMax[1],colorMax[2],colorMax[3],26)
 		if bonus and bonus > 0 then
-			HUD.PrintXY(maxPos+HUD.GetTextWidth(string.format("%03d",total)),y,string.format("+%d",bonus),"timesbd",120,120,120,26)
+			HUD.PrintXY(maxPos+HUD.GetTextWidth(string.format("%03d",total)),y,string.format("+%d",bonus),Cfg.DefaultFont,120,120,120,26)
 			star_pos = maxPos+HUD.GetTextWidth(string.format("%03d+%d",total,bonus))
 		else
 			star_pos = maxPos+HUD.GetTextWidth(string.format("%03d",total))
@@ -536,11 +583,11 @@ function Hud:DrawSingleStat(index,name,val,total,bonus,show_star)
 	else
 		local len = HUD.GetTextWidth(string.format("%d",val))
 		local diff = len - HUD.GetTextWidth("000")
-		HUD.PrintXY(minPos,y,string.format("%03d",val),"timesbd",colorMin[1],colorMin[2],colorMin[3],26)
-		HUD.PrintXY(slashPos+diff,y,"/","timesbd",colorTxt[1],colorTxt[2],colorTxt[3],26)
-		HUD.PrintXY(maxPos+diff,y,string.format("%03d",total),"timesbd",colorMax[1],colorMax[2],colorMax[3],26)
+		HUD.PrintXY(minPos,y,string.format("%03d",val),Cfg.DefaultFont,colorMin[1],colorMin[2],colorMin[3],26)
+		HUD.PrintXY(slashPos+diff,y,"/",Cfg.DefaultFont,colorTxt[1],colorTxt[2],colorTxt[3],26)
+		HUD.PrintXY(maxPos+diff,y,string.format("%03d",total),Cfg.DefaultFont,colorMax[1],colorMax[2],colorMax[3],26)
 		if bonus and bonus > 0 then
-			HUD.PrintXY(maxPos+diff+HUD.GetTextWidth(string.format("%03d",total)),y,string.format("+%d",bonus),"timesbd",120,120,120,26)
+			HUD.PrintXY(maxPos+diff+HUD.GetTextWidth(string.format("%03d",total)),y,string.format("+%d",bonus),Cfg.DefaultFont,120,120,120,26)
 			star_pos = maxPos+HUD.GetTextWidth(string.format("%03d+%d",total,bonus))
 		else
 			star_pos = maxPos+HUD.GetTextWidth(string.format("%03d",total))
@@ -561,10 +608,10 @@ function Hud:RenderSPStats()
 
 	local w,h = R3D.ScreenSize()
 
-	HUD.SetFont("timesbd",26)
+	HUD.SetFont(Cfg.DefaultFont,26)
 	local fh = HUD.GetTextHeight() + 8 * h/768
 
-	HUD.PrintXY(-1,h/2-fh*7,TXT.SPStats.YourScore,"timesbd",colorTxt[1],colorTxt[2],colorTxt[3],26)
+	HUD.PrintXY(-1,h/2-fh*7,TXT.SPStats.YourScore,Cfg.DefaultFont,colorTxt[1],colorTxt[2],colorTxt[3],26)
 
 	local min = math.abs(Game.LevelTime / 60)
 	local sec = math.mod(Game.LevelTime, 60)
@@ -579,22 +626,22 @@ function Hud:RenderSPStats()
 	local maxPos = slashPos + slashWidth
 
 	spos = sepPos - HUD.GetTextWidth( TXT.SPStats.GameplayTime )
-	HUD.PrintXY(spos,h/2-fh*5,TXT.SPStats.GameplayTime..": ","timesbd",colorTxt[1],colorTxt[2],colorTxt[3],26)
+	HUD.PrintXY(spos,h/2-fh*5,TXT.SPStats.GameplayTime..": ",Cfg.DefaultFont,colorTxt[1],colorTxt[2],colorTxt[3],26)
 	if min < 60 then
-		HUD.PrintXY(minPos,h/2-fh*5,string.format("%02d",min)..":"..string.format("%02d",sec),"timesbd",colorMin[1],colorMin[2],colorMin[3],26)
+		HUD.PrintXY(minPos,h/2-fh*5,string.format("%02d",min)..":"..string.format("%02d",sec),Cfg.DefaultFont,colorMin[1],colorMin[2],colorMin[3],26)
 	else
 		local hour = math.floor(min/60)
 		min = min - hour * 60
-		HUD.PrintXY(minPos,h/2-fh*5,string.format("%02d",hour)..":"..string.format("%02d",min)..":"..string.format("%02d",sec),"timesbd",colorMin[1],colorMin[2],colorMin[3],26)
+		HUD.PrintXY(minPos,h/2-fh*5,string.format("%02d",hour)..":"..string.format("%02d",min)..":"..string.format("%02d",sec),Cfg.DefaultFont,colorMin[1],colorMin[2],colorMin[3],26)
 	end
 
 	local diff = { TXT.Menu.Daydream, TXT.Menu.Insomnia, TXT.Menu.Nightmare, TXT.Menu.Trauma }
 
 	spos = sepPos - HUD.GetTextWidth( TXT.SPStats.Difficulty )
-	HUD.PrintXY(spos,h/2-fh*4,TXT.SPStats.Difficulty..": ","timesbd",colorTxt[1],colorTxt[2],colorTxt[3],26)
-	HUD.PrintXY(minPos,h/2-fh*4,diff[Game.Difficulty+1],"timesbd",colorMin[1],colorMin[2],colorMin[3],26)
+	HUD.PrintXY(spos,h/2-fh*4,TXT.SPStats.Difficulty..": ",Cfg.DefaultFont,colorTxt[1],colorTxt[2],colorTxt[3],26)
+	HUD.PrintXY(minPos,h/2-fh*4,diff[Game.Difficulty+1],Cfg.DefaultFont,colorMin[1],colorMin[2],colorMin[3],26)
 
-    if not Player then return end
+	if not Player then return end
 	self:DrawSingleStat(2,TXT.SPStats.MonstersKilled,Game.BodyCountTotal,Game.TotalActors)
 	self:DrawSingleStat(3,TXT.SPStats.SoulsCollected,Player.TotalSoulsCount,Game.TotalSouls)
 	self:DrawSingleStat(4,TXT.SPStats.GoldFound,Game.PlayerMoneyFound-Player.BonusItems,Game.TotalMoney,Player.BonusItems)
@@ -605,8 +652,8 @@ function Hud:RenderSPStats()
 	self:DrawSingleStat(8,TXT.SPStats.ObjectsDestroyed,Game.PlayerDestroyedItems,Game.TotalDestroyed,nil,true)
 	self:DrawSingleStat(9,TXT.SPStats.SecretsFound,Player.SecretsFound,Game.TotalSecrets,nil,true)
 
-	HUD.PrintXY(-1,h/2+fh*6-8*w/768,TXT.SPStats.CardCondition..":","timesbd",colorTxt[1],colorTxt[2],colorTxt[3],26)
-	HUD.PrintXY(-1,h/2+fh*7-8*w/768,Lev._CardTask,"timesbd",colorMax[1],colorMax[2],colorMax[3],26)
+	HUD.PrintXY(-1,h/2+fh*6-8*w/768,TXT.SPStats.CardCondition..":",Cfg.DefaultFont,colorTxt[1],colorTxt[2],colorTxt[3],26)
+	HUD.PrintXY(-1,h/2+fh*7-8*w/768,Lev._CardTask,Cfg.DefaultFont,colorMax[1],colorMax[2],colorMax[3],26)
 
 	local cardStatus = Lev:GetCardStatus()
 	local cardText = TXT.SPStats.Locked
@@ -621,14 +668,14 @@ function Hud:RenderSPStats()
 	end
 
 	local statLen = HUD.GetTextWidth(TXT.SPStats.Status..": "..cardText)
-	HUD.PrintXY(w/2-statLen/2,h/2+fh*8-8*w/768,TXT.SPStats.Status..": ","timesbd",colorTxt[1],colorTxt[2],colorTxt[3],26)
-	HUD.PrintXY(w/2+statLen/2-HUD.GetTextWidth(cardText),h/2+fh*8-8*w/768,cardText,"timesbd",colorMin[1],colorMin[2],colorMin[3],26)
+	HUD.PrintXY(w/2-statLen/2,h/2+fh*8-8*w/768,TXT.SPStats.Status..": ",Cfg.DefaultFont,colorTxt[1],colorTxt[2],colorTxt[3],26)
+	HUD.PrintXY(w/2+statLen/2-HUD.GetTextWidth(cardText),h/2+fh*8-8*w/768,cardText,Cfg.DefaultFont,colorMin[1],colorMin[2],colorMin[3],26)
 end
 --============================================================================
 function Hud:DrawSingleStat2(index,name,val,total,bonus,show_star,diff)
 	local w,h = R3D.ScreenSize()
 
-	HUD.SetFont("timesbd",26)
+	HUD.SetFont(Cfg.DefaultFont,26)
 	local fh = HUD.GetTextHeight() + 8 * h/768
 
 	local sepPos = w/2 - 80*w/1024
@@ -647,16 +694,16 @@ function Hud:DrawSingleStat2(index,name,val,total,bonus,show_star,diff)
 	local colorMax = { 189, 0, 0 }
 
 	spos = sepPos - HUD.GetTextWidth( name )
-	HUD.PrintXY(spos,y,name..": ","timesbd",colorTxt[1],colorTxt[2],colorTxt[3],26)
+	HUD.PrintXY(spos,y,name..": ",Cfg.DefaultFont,colorTxt[1],colorTxt[2],colorTxt[3],26)
 
 	local star_pos = maxPos
 
 	if val < 1000 then
-		HUD.PrintXY(minPos,y,string.format("%03d",val),"timesbd",colorMin[1],colorMin[2],colorMin[3],26)
-		HUD.PrintXY(slashPos,y,"/","timesbd",colorTxt[1],colorTxt[2],colorTxt[3],26)
-		HUD.PrintXY(maxPos,y,string.format("%03d",total),"timesbd",colorMax[1],colorMax[2],colorMax[3],26)
+		HUD.PrintXY(minPos,y,string.format("%03d",val),Cfg.DefaultFont,colorMin[1],colorMin[2],colorMin[3],26)
+		HUD.PrintXY(slashPos,y,"/",Cfg.DefaultFont,colorTxt[1],colorTxt[2],colorTxt[3],26)
+		HUD.PrintXY(maxPos,y,string.format("%03d",total),Cfg.DefaultFont,colorMax[1],colorMax[2],colorMax[3],26)
 		if bonus and bonus > 0 then
-			HUD.PrintXY(maxPos+HUD.GetTextWidth(string.format("%03d",total)),y,string.format("+%d",bonus),"timesbd",120,120,120,26)
+			HUD.PrintXY(maxPos+HUD.GetTextWidth(string.format("%03d",total)),y,string.format("+%d",bonus),Cfg.DefaultFont,120,120,120,26)
 			star_pos = maxPos+HUD.GetTextWidth(string.format("%03d+%d",total,bonus))
 		else
 			star_pos = maxPos+HUD.GetTextWidth(string.format("%03d",total))
@@ -664,11 +711,11 @@ function Hud:DrawSingleStat2(index,name,val,total,bonus,show_star,diff)
 	else
 		local len = HUD.GetTextWidth(string.format("%d",val))
 		local diff = len - HUD.GetTextWidth("000")
-		HUD.PrintXY(minPos,y,string.format("%03d",val),"timesbd",colorMin[1],colorMin[2],colorMin[3],26)
-		HUD.PrintXY(slashPos+diff,y,"/","timesbd",colorTxt[1],colorTxt[2],colorTxt[3],26)
-		HUD.PrintXY(maxPos+diff,y,string.format("%03d",total),"timesbd",colorMax[1],colorMax[2],colorMax[3],26)
+		HUD.PrintXY(minPos,y,string.format("%03d",val),Cfg.DefaultFont,colorMin[1],colorMin[2],colorMin[3],26)
+		HUD.PrintXY(slashPos+diff,y,"/",Cfg.DefaultFont,colorTxt[1],colorTxt[2],colorTxt[3],26)
+		HUD.PrintXY(maxPos+diff,y,string.format("%03d",total),Cfg.DefaultFont,colorMax[1],colorMax[2],colorMax[3],26)
 		if bonus and bonus > 0 then
-			HUD.PrintXY(maxPos+diff+HUD.GetTextWidth(string.format("%03d",total)),y,string.format("+%d",bonus),"timesbd",120,120,120,26)
+			HUD.PrintXY(maxPos+diff+HUD.GetTextWidth(string.format("%03d",total)),y,string.format("+%d",bonus),Cfg.DefaultFont,120,120,120,26)
 			star_pos = maxPos+HUD.GetTextWidth(string.format("%03d+%d",total,bonus))
 		else
 			star_pos = maxPos+HUD.GetTextWidth(string.format("%03d",total))
@@ -680,7 +727,7 @@ function Hud:DrawSingleStat2(index,name,val,total,bonus,show_star,diff)
 	end
 
 	if diff then
-		HUD.PrintXY(maxPos + HUD.GetTextWidth("000000000"),y,string.format("(%s)",diff),"timesbd",colorTxt[1],colorTxt[2],colorTxt[3],26)
+		HUD.PrintXY(maxPos + HUD.GetTextWidth("000000000"),y,string.format("(%s)",diff),Cfg.DefaultFont,colorTxt[1],colorTxt[2],colorTxt[3],26)
 	end
 end
 --============================================================================
@@ -693,7 +740,7 @@ function Hud_RenderLevelStats()
 	local stats = Game.LevelsStats[name]
 	if not stats then return end
 
---	if stats.GameplayTime < 1 then return end
+	--	if stats.GameplayTime < 1 then return end
 
 	local colorTxt = { 230, 161, 97 }
 	local colorMin = { 214, 0, 23 }
@@ -703,10 +750,10 @@ function Hud_RenderLevelStats()
 
 	local w,h = R3D.ScreenSize()
 
-	HUD.SetFont("timesbd",26)
+	HUD.SetFont(Cfg.DefaultFont,26)
 	local fh = HUD.GetTextHeight() + 8 * h/768
 
-	HUD.PrintXY(-1,h/2-fh*7,TXT.SPStats.BestScore,"timesbd",colorTxt[1],colorTxt[2],colorTxt[3],26)
+	HUD.PrintXY(-1,h/2-fh*7,TXT.SPStats.BestScore,Cfg.DefaultFont,colorTxt[1],colorTxt[2],colorTxt[3],26)
 
 	local min = math.abs(stats.GameplayTime / 60)
 	local sec = math.mod(stats.GameplayTime, 60)
@@ -723,17 +770,17 @@ function Hud_RenderLevelStats()
 	local diff = { TXT.Menu.Daydream, TXT.Menu.Insomnia, TXT.Menu.Nightmare, TXT.Menu.Trauma }
 
 	spos = sepPos - HUD.GetTextWidth( TXT.SPStats.GameplayTime )
-	HUD.PrintXY(spos,h/2-fh*5,TXT.SPStats.GameplayTime..": ","timesbd",colorTxt[1],colorTxt[2],colorTxt[3],26)
+	HUD.PrintXY(spos,h/2-fh*5,TXT.SPStats.GameplayTime..": ",Cfg.DefaultFont,colorTxt[1],colorTxt[2],colorTxt[3],26)
 	if min < 60 then
-		HUD.PrintXY(minPos,h/2-fh*5,string.format("%02d",min)..":"..string.format("%02d",sec),"timesbd",colorMin[1],colorMin[2],colorMin[3],26)
+		HUD.PrintXY(minPos,h/2-fh*5,string.format("%02d",min)..":"..string.format("%02d",sec),Cfg.DefaultFont,colorMin[1],colorMin[2],colorMin[3],26)
 	else
 		local hour = math.floor(min/60)
 		min = min - hour * 60
-		HUD.PrintXY(minPos,h/2-fh*5,string.format("%02d",hour)..":"..string.format("%02d",min)..":"..string.format("%02d",sec),"timesbd",colorMin[1],colorMin[2],colorMin[3],26)
+		HUD.PrintXY(minPos,h/2-fh*5,string.format("%02d",hour)..":"..string.format("%02d",min)..":"..string.format("%02d",sec),Cfg.DefaultFont,colorMin[1],colorMin[2],colorMin[3],26)
 	end
 
 	if diff[stats.TimeDiff+1] then
-		HUD.PrintXY(maxPos + HUD.GetTextWidth("000000000"),h/2-fh*5,string.format("(%s)",diff[stats.TimeDiff+1]),"timesbd",colorTxt[1],colorTxt[2],colorTxt[3],26)
+		HUD.PrintXY(maxPos + HUD.GetTextWidth("000000000"),h/2-fh*5,string.format("(%s)",diff[stats.TimeDiff+1]),Cfg.DefaultFont,colorTxt[1],colorTxt[2],colorTxt[3],26)
 	end
 
 	local show_stars = true
@@ -749,8 +796,8 @@ function Hud_RenderLevelStats()
 	Hud:DrawSingleStat2(8,TXT.SPStats.ObjectsDestroyed,stats.ObjectsDestroyed,stats.TotalObjects,nil,show_stars,diff[stats.ObjectsDiff+1])
 	Hud:DrawSingleStat2(9,TXT.SPStats.SecretsFound,stats.SecretsFound,stats.TotalSecrets,nil,show_stars,diff[stats.SecretsDiff+1])
 
-	HUD.PrintXY(-1,h/2+fh*6-8*w/768,TXT.SPStats.CardCondition..":","timesbd",colorTxt[1],colorTxt[2],colorTxt[3],26)
-	HUD.PrintXY(-1,h/2+fh*7-8*w/768,PMENU.MapGetCurrLevelCardCondition(),"timesbd",colorMax[1],colorMax[2],colorMax[3],26)
+	HUD.PrintXY(-1,h/2+fh*6-8*w/768,TXT.SPStats.CardCondition..":",Cfg.DefaultFont,colorTxt[1],colorTxt[2],colorTxt[3],26)
+	HUD.PrintXY(-1,h/2+fh*7-8*w/768,PMENU.MapGetCurrLevelCardCondition(),Cfg.DefaultFont,colorMax[1],colorMax[2],colorMax[3],26)
 
 	local cardStatus = Game.CardsAvailable[PMENU.MapGetCurrLevelCardIndex()]
 	local cardText = TXT.SPStats.Locked
@@ -759,8 +806,8 @@ function Hud_RenderLevelStats()
 	end
 
 	local statLen = HUD.GetTextWidth(TXT.SPStats.Status..": "..cardText)
-	HUD.PrintXY(w/2-statLen/2,h/2+fh*8-8*w/768,TXT.SPStats.Status..": ","timesbd",colorTxt[1],colorTxt[2],colorTxt[3],26)
-	HUD.PrintXY(w/2+statLen/2-HUD.GetTextWidth(cardText),h/2+fh*8-8*w/768,cardText,"timesbd",colorMin[1],colorMin[2],colorMin[3],26)
+	HUD.PrintXY(w/2-statLen/2,h/2+fh*8-8*w/768,TXT.SPStats.Status..": ",Cfg.DefaultFont,colorTxt[1],colorTxt[2],colorTxt[3],26)
+	HUD.PrintXY(w/2+statLen/2-HUD.GetTextWidth(cardText),h/2+fh*8-8*w/768,cardText,Cfg.DefaultFont,colorMin[1],colorMin[2],colorMin[3],26)
 end
 --============================================================================
 function Hud:RenderCompass()
@@ -896,86 +943,86 @@ function Hud:UpdateCompass()
 end
 --============================================================================
 function Hud:QuadSlice(mat,mw,mh,x,y,u1,v1,u2,v2)
-    if u1 > 0 then
+	if u1 > 0 then
 		mw = mw * (1 - u1)
-    end
-    if v1 > 0 then
+	end
+	if v1 > 0 then
 		mh = mh * (1 - v1)
-    end
+	end
 
-    if u2 > 0 then
+	if u2 > 0 then
 		mw = mw * (u2)
-    end
-    if v2 > 0 then
+	end
+	if v2 > 0 then
 		mh = mh * (v2)
-    end
-    HUD.DrawQuad(mat,x,y,mw,mh,color,u1,v1,u2,v2)
+	end
+	HUD.DrawQuad(mat,x,y,mw,mh,color,u1,v1,u2,v2)
 end
 
 
 --============================================================================
 function Hud:Quad(mat,x,y,size,center)
-    local mw,mh = MATERIAL.Size(mat)
-    if mw == -1 then
-        Game:Print('Hud:Quad - material: '.. mat.." not found!")
-        return
-    end
-    local w,h = R3D.ScreenSize()
-    mw = mw * size * w / 1024
-    mh = mh * size * h / 768
-    if center then
-        x = x - mw/2
-        y = y - mh/2
-    end
-    HUD.DrawQuad(mat,x,y,mw,mh)
+	local mw,mh = MATERIAL.Size(mat)
+	if mw == -1 then
+		Game:Print('Hud:Quad - material: '.. mat.." not found!")
+		return
+	end
+	local w,h = R3D.ScreenSize()
+	mw = mw * size * w / 1024
+	mh = mh * size * h / 768
+	if center then
+		x = x - mw/2
+		y = y - mh/2
+	end
+	HUD.DrawQuad(mat,x,y,mw,mh)
 end
 --============================================================================
 function Hud:QuadUV(mat,x,y,size,center,u,v,u1,v1)
-    local mw,mh = MATERIAL.Size(mat)
-    local w,h = R3D.ScreenSize()
-    mw = mw * size * w / 1024
-    mh = mh * size * h / 768
-    if center then
-        x = x - mw/2
-        y = y - mh/2
-    end
-    HUD.DrawQuad(mat,x,y,mw,mh,R3D.RGB(255,255,255),u,v,u1,v1)
+	local mw,mh = MATERIAL.Size(mat)
+	local w,h = R3D.ScreenSize()
+	mw = mw * size * w / 1024
+	mh = mh * size * h / 768
+	if center then
+		x = x - mw/2
+		y = y - mh/2
+	end
+	HUD.DrawQuad(mat,x,y,mw,mh,R3D.RGB(255,255,255),u,v,u1,v1)
 end
 --============================================================================
 function Hud:QuadTrans(mat,x,y,size,center,trans)
-    local mw,mh = MATERIAL.Size(mat)
-    local w,h = R3D.ScreenSize()
-    mw = mw * size * w /1024
-    mh = mh * size * h / 768
-    if center then
-        x = x - mw/2
-        y = y - mh/2
-    end
-    HUD.DrawQuadRGBA(mat,x,y,mw,mh,255,255,255,trans)
+	local mw,mh = MATERIAL.Size(mat)
+	local w,h = R3D.ScreenSize()
+	mw = mw * size * w /1024
+	mh = mh * size * h / 768
+	if center then
+		x = x - mw/2
+		y = y - mh/2
+	end
+	HUD.DrawQuadRGBA(mat,x,y,mw,mh,255,255,255,trans)
 end
 --============================================================================
 function Hud:QuadTransUV(mat,x,y,size,center,trans,u,v,u1,v1)
-    local mw,mh = MATERIAL.Size(mat)
-    local w,h = R3D.ScreenSize()
-    mw = mw * size * w /1024
-    mh = mh * size * h / 768
-    if center then
-        x = x - mw/2
-        y = y - mh/2
-    end
-    HUD.DrawQuadRGBA(mat,x,y,mw,mh,255,255,255,trans,u,v,u1,v1)
+	local mw,mh = MATERIAL.Size(mat)
+	local w,h = R3D.ScreenSize()
+	mw = mw * size * w /1024
+	mh = mh * size * h / 768
+	if center then
+		x = x - mw/2
+		y = y - mh/2
+	end
+	HUD.DrawQuadRGBA(mat,x,y,mw,mh,255,255,255,trans,u,v,u1,v1)
 end
 --============================================================================
 function Hud:QuadRGBA(mat,x,y,size,center,r,g,b,a)
-    local mw,mh = MATERIAL.Size(mat)
-    local w,h = R3D.ScreenSize()
-    mw = mw * size * w /1024
-    mh = mh * size * h / 768
-    if center then
-        x = x - mw/2
-        y = y - mh/2
-    end
-    HUD.DrawQuadRGBA(mat,x,y,mw,mh,r,g,b,a)
+	local mw,mh = MATERIAL.Size(mat)
+	local w,h = R3D.ScreenSize()
+	mw = mw * size * w /1024
+	mh = mh * size * h / 768
+	if center then
+		x = x - mw/2
+		y = y - mh/2
+	end
+	HUD.DrawQuadRGBA(mat,x,y,mw,mh,r,g,b,a)
 end
 --============================================================================
 function Hud:QuadRot(mat,x,y,size,angle,rotx,roty)
@@ -995,44 +1042,44 @@ function Hud:QuadRotTrans(mat,x,y,size,angle,rotx,roty,trans)
 end
 --============================================================================
 function Hud:DrawChar(x,y,chr,color,size)
-    --Log(chr.."\n")
-    local n = tonumber(chr)
-    if not n then return end
-    local cy = math.floor(n/4)
-    local cx = n - (cy*4)
-    local mw,mh = MATERIAL.Size(self._matNumbers)
-    HUD.DrawQuad(self._matNumbers,x,y,mw/4*size,mh/4*size,color,cx*0.25,cy*0.25,cx*0.25+0.25,cy*0.25+0.25)
+	--Log(chr.."\n")
+	local n = tonumber(chr)
+	if not n then return end
+	local cy = math.floor(n/4)
+	local cx = n - (cy*4)
+	local mw,mh = MATERIAL.Size(self._matNumbers)
+	HUD.DrawQuad(self._matNumbers,x,y,mw/4*size,mh/4*size,color,cx*0.25,cy*0.25,cx*0.25+0.25,cy*0.25+0.25)
 end
 --============================================================================
 function Hud:DrawText(x,y,txt,color,size)
-    --Log("DrawText: "..txt.."\n")
-    local l = string.len(txt)
-    local mw,mh = MATERIAL.Size(self._matNumbers)
-    for i=1,l do
-        self:DrawChar(x+(i-1)*mw/4*size*0.5,y,string.sub(txt,i,i),color,size)
-    end
+	--Log("DrawText: "..txt.."\n")
+	local l = string.len(txt)
+	local mw,mh = MATERIAL.Size(self._matNumbers)
+	for i=1,l do
+		self:DrawChar(x+(i-1)*mw/4*size*0.5,y,string.sub(txt,i,i),color,size)
+	end
 end
 --============================================================================
 function Hud:DrawDigit(x,y,chr,scale)
 	local w,h = R3D.ScreenSize()
 	local n = tonumber(chr)
-    if not n then return end
-    local mw,mh = MATERIAL.Size(self._matDigits[n+1])
-    HUD.DrawQuad(self._matDigits[n+1],x,y,mw*scale*w/1024,mh*scale*h/768)
+	if not n then return end
+	local mw,mh = MATERIAL.Size(self._matDigits[n+1])
+	HUD.DrawQuad(self._matDigits[n+1],x,y,mw*scale*w/1024,mh*scale*h/768)
 end
 --============================================================================
 function Hud:DrawDigitRed(x,y,chr,scale)
 	local w,h = R3D.ScreenSize()
 	local n = tonumber(chr)
-    if not n then return end
-    local mw,mh = MATERIAL.Size(self._matDigitsRed[n+1])
-    HUD.DrawQuad(self._matDigitsRed[n+1],x,y,mw*scale*w/1024,mh*scale*h/768)
+	if not n then return end
+	local mw,mh = MATERIAL.Size(self._matDigitsRed[n+1])
+	HUD.DrawQuad(self._matDigitsRed[n+1],x,y,mw*scale*w/1024,mh*scale*h/768)
 end
 --============================================================================
 function Hud:DrawDigitsText(x,y,txt,scale,warning)
 	local w,h = R3D.ScreenSize()
-    local l = string.len(txt)
-    local mw,mh = MATERIAL.Size(self._matDigits[5])
+	local l = string.len(txt)
+	local mw,mh = MATERIAL.Size(self._matDigits[5])
 
 	if warning == nil or ( warning >= 0 and warning < tonumber(txt) ) or ( warning < 0 and -warning > tonumber(txt) ) then
 		for i=1,l do
@@ -1054,13 +1101,13 @@ ConCommands =
 }
 --============================================================================
 function Hud_OnConsoleCommand(cmd)
-    Console:OnCommand(cmd)
---    local txt = string.lower(cmd)
---    if txt == "god 1" or txt == "god" then GOD = true; return end
---    if txt == "god 0" then GOD = false; return end
-    --dostring(cmd)
+	Console:OnCommand(cmd)
+	--    local txt = string.lower(cmd)
+	--    if txt == "god 1" or txt == "god" then GOD = true; return end
+	--    if txt == "god 0" then GOD = false; return end
+	--dostring(cmd)
 
---[[
+	--[[
 	local param = ""
 	local found = string.find( txt, " " )
 	if found then
@@ -1075,30 +1122,30 @@ function Hud_OnConsoleCommand(cmd)
 		end
 	end
 
-    if Player then
-        Game.SayToAll(Player.ClientID, cmd)
-    else
-        Game.SayToAll(ServerID, cmd)
-    end
-    --]]
+	if Player then
+		Game.SayToAll(Player.ClientID, cmd)
+	else
+		Game.SayToAll(ServerID, cmd)
+	end
+	--]]
 end
 --============================================================================
 function Hud_OnSayToAll(txt,color)
 	if Game.GMode == GModes.SingleGame then return end
 	txt = string.sub(txt,1,200)
 	if not color then color = R3D.RGB(255,0,0) end
-    Game.SayToAll(NET.GetClientID(), txt,color)
+	Game.SayToAll(NET.GetClientID(), txt,color)
 	CONSOLE.Activate(false)
 end
 --============================================================================
 function Hud_OnSayToTeam(txt,color)
 	if Game.GMode == GModes.SingleGame then return end
 	txt = string.sub(txt,1,200)
-    if Player then
+	if Player then
 		if not color then color = R3D.RGB(0,255,0) end
-        Game.SayToTeam(NET.GetClientID(), txt, color)
-    end
-    CONSOLE.Activate(false)
+		Game.SayToTeam(NET.GetClientID(), txt, color)
+	end
+	CONSOLE.Activate(false)
 end
 --============================================================================
 function Hud_OnSayTo(index)
@@ -1141,10 +1188,10 @@ function Hud:ExecConsoleCommand( i, param )
 end
 --============================================================================
 function Hud:OnConsoleTab(cmd)
-    Console:OnPrompt(cmd)
+	Console:OnPrompt(cmd)
 
-    --[[
-    local txt = string.lower(cmd)
+	--[[
+	local txt = string.lower(cmd)
 
 	for i=1,table.getn( ConCommands ) do
 		local found = string.find( ConCommands[i].cmd, txt )
@@ -1155,6 +1202,6 @@ function Hud:OnConsoleTab(cmd)
 			end
 		end
 	end
-    --]]
+	--]]
 end
 --============================================================================

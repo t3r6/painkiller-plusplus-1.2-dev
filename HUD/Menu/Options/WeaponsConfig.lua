@@ -8,8 +8,8 @@ WeaponsConfig =
 
 	menuWidth   = 880,
 	fontBigSize = 20,
-	fontBig		= "timesbd",
-	fontSmall	= "timesbd",
+	fontBig		= Cfg.DefaultFont,
+	fontSmall	= Cfg.DefaultFont,
 
 	items =
 	{

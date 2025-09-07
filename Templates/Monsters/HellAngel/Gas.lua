@@ -34,10 +34,10 @@ function Gas:OnUpdate()
 				end
 			end
 		end
-		if Player and Player.Health > 0 then
-			local dist = Dist3D(Player._groundx,Player._groundy,Player._groundz,self.Pos.X, self.Pos.Y, self.Pos.Z)
+		if self.ObjOwner == self.ObjOwner._AIBrain and self.ObjOwner._AIBrain.Target and self.ObjOwner._AIBrain.Target.Health > 0 then
+			local dist = Dist3D(self.ObjOwner._AIBrain.Target._groundx,self.ObjOwner._AIBrain.Target._groundy,self.ObjOwner._AIBrain.Target._groundz,self.Pos.X, self.Pos.Y, self.Pos.Z)
 			if dist < self.HPDrainDistance then
-				Player:OnDamage(FRand(self.HPDrain * 0.8, self.HPDrain * 1.2), self.ObjOwner, AttackTypes.Fire)
+				self.ObjOwner._AIBrain.Target:OnDamage(FRand(self.HPDrain * 0.8, self.HPDrain * 1.2), self.ObjOwner, AttackTypes.Fire)
 			end
 		end
 		if self.pfx then

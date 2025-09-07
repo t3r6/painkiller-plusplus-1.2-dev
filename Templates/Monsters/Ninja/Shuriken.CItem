@@ -25,7 +25,7 @@ function Shuriken:OnCollision(x,y,z,nx,ny,nz,e_other,h_me,h_other,vx,vy,vz,vl)
 					GObjects:ToKill(self)
 
 					if obj.OnDamage then
-						if obj == Player then 
+						if obj == self.ObjOwner._AIBrain.Target then 
 							PlaySound2D("actor/ninja/ninja_shuricane_hit")
 						end
 						obj:OnDamage(self.Damage, self.ObjOwner)
@@ -35,7 +35,7 @@ function Shuriken:OnCollision(x,y,z,nx,ny,nz,e_other,h_me,h_other,vx,vy,vz,vl)
 				end
 				
 				if self.ObjOwner and self.ObjOwner._AIBrain then
-					if obj == Player then
+					if obj == self.ObjOwner._AIBrain.Target then
 						self.ObjOwner._AIBrain._lastHitTime = self.ObjOwner._AIBrain._currentTime
 					else
 						self.ObjOwner._AIBrain._lastMissedTime = self.ObjOwner._AIBrain._currentTime

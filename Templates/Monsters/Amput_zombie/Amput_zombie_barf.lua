@@ -25,11 +25,11 @@ end
 function o:BarfDamageCheck()
     if self._canCheckDamageBarf then
        	local x,y,z = self:GetJointPos("k_szyja")
-		local distToPlayer = Dist2D(x,z,Player._groundx,Player._groundz)
+		local distToPlayer = Dist2D(x,z,self._AIBrain.Target._groundx,self._AIBrain.Target._groundz)
         if distToPlayer < self.AiParams.barfRange then
-			--Game:Print(">barf "..self._groundy.." "..Player._groundy)
-            if self._groundy > Player._groundy and Player._groundy + self.AiParams.barfRangeY > self._groundy then
-                Player:OnDamage(self.AiParams.barfDamage, self)
+			--Game:Print(">barf "..self._groundy.." "..self._AIBrain.Target._groundy)
+            if self._groundy > self._AIBrain.Target._groundy and self._AIBrain.Target._groundy + self.AiParams.barfRangeY > self._groundy then
+                self._AIBrain.Target:OnDamage(self.AiParams.barfDamage, self)
             end
         end	
         self._canBarf = false
@@ -55,9 +55,9 @@ function o._CustomAiStates.amputeeIdleBarf:OnUpdate(brain)
 	local aiParams = actor.AiParams
 	
 	local x,y,z = actor:GetJointPos("k_szyja")
-	local distToPlayer = Dist2D(x,z,Player._groundx,Player._groundz)
+	local distToPlayer = Dist2D(x,z,self._AIBrain.Target._groundx,self._AIBrain.Target._groundz)
 	if distToPlayer < aiParams.barfRange and not actor._canBarf then
-		if actor._groundy > Player._groundy and Player._groundy + actor.AiParams.barfRangeY > actor._groundy then
+		if actor._groundy > self._AIBrain.Target._groundy and self._AIBrain.Target._groundy + actor.AiParams.barfRangeY > actor._groundy then
 			if self._lastTimeBarf + aiParams.delayBetweetBarfs < brain._currentTime and actor.Animation == "idle_kolana" then
 				self._lastTimeBarf = brain._currentTime + FRand(0,aiParams.delayBetweetBarfs*0.2)
 				actor._canBarf = true

@@ -55,8 +55,8 @@ function EndGame:Render(delta)
 			HUD.PrintXY(-1,360,"Gameplay time: "..string.format("%02d",hour)..":"..string.format("%02d",min)..":"..string.format("%02d",sec), font, fontColor.R, fontColor.G, fontColor.B)
 		end
 
-        HUD.PrintXY(w/2-78,h-29,"Press 'Enter' to continue.","timesbd",15,15,15,22)
-        HUD.PrintXY(w/2-79,h-30,"Press 'Enter' to continue.","timesbd",225,65,68,22)
+        HUD.PrintXY(w/2-78,h-29,"Press 'Enter' to continue.",Cfg.DefaultFont,15,15,15,22)
+        HUD.PrintXY(w/2-79,h-30,"Press 'Enter' to continue.",Cfg.DefaultFont,225,65,68,22)
 	end
 end
 --============================================================================

@@ -8,7 +8,8 @@ MessagesConfig =
 
 	menuWidth   = 880,
 	fontBigSize = 26,
-
+			fontBig		= Cfg.DefaultFont,
+			fontSmall	= Cfg.DefaultFont,
 	items =
 	{
 		MessagesBorder =

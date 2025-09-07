@@ -1,5 +1,5 @@
 function Lucifer:OnInitTemplate()
-    self:SetAIBrain()
+	self:SetAIBrain()
 end
 
 function Lucifer:CustomUpdate()
@@ -9,10 +9,10 @@ function Lucifer:CustomUpdate()
 end
 
 function o:OnPrecache()
-    Cache:PrecacheParticleFX("AlastorchargeFX")
-    Cache:PrecacheParticleFX("lucyferhead_fx")
-    Cache:PrecacheParticleFX("sword")
-    Cache:PrecacheParticleFX("head")
+	Cache:PrecacheParticleFX("AlastorchargeFX")
+	Cache:PrecacheParticleFX("lucyferhead_fx")
+	Cache:PrecacheParticleFX("sword")
+	Cache:PrecacheParticleFX("head")
 end
 
 
@@ -63,19 +63,19 @@ end
 
 
 function Lucifer:OnCreateEntity()
-    self._disableHits = true
+	self._disableHits = true
 	self._MegaBossHealthMax = self.Health
-	Game.MegaBossHealth = self.Health	
-    self._delayExplTime = 10
-    self._lastTimeDamage = 0
-    if debugMarek then
+	Game.MegaBossHealth = self.Health
+	self._delayExplTime = 10
+	self._lastTimeDamage = 0
+	if debugMarek then
 		self._ABdo = true
 	end
 end
 
 --function Lucifer:OnApply()
-	--self:PlayRandomSound2D({"Lucifer_ambient-stereo1","Lucifer_ambient-stereo2","Lucifer_ambient-stereo3",})
-	--self._flySound = self:BindSound("actor/Lucifer/Lucifer_fly-loop",16, 60, true)
+--self:PlayRandomSound2D({"Lucifer_ambient-stereo1","Lucifer_ambient-stereo2","Lucifer_ambient-stereo3",})
+--self._flySound = self:BindSound("actor/Lucifer/Lucifer_fly-loop",16, 60, true)
 --end
 
 function Lucifer:CustomOnDeath()
@@ -83,22 +83,22 @@ function Lucifer:CustomOnDeath()
 	Game.MegaBossHealthMax = nil
 	Game.MegaBossHealth = nil
 	if debugMarek then Game:Print("lucifer death "..Lev._demonfx.TickCount) end
-	Game._EarthQuakeProc:Add(Player._groundx,Player._groundy,Player._groundz, self.demonFXTimeAfterDeath*30, 999, 0.27, 0.27, 1.0)	
+	Game._EarthQuakeProc:Add(brain.Target._groundx,brain.Target._groundy,brain.Target._groundz, self.demonFXTimeAfterDeath*30, 999, 0.27, 0.27, 1.0)
 
 	if Lev._demonfx then
 		Lev._demonfx.TickCount = Lev._demonfx.EffectTime - self.demonFXTimeAfterDeath		-- moze zle dzialac
 		Game:Print("Lev._demonfx.TickCount "..Lev._demonfx.TickCount.." "..Lev._demonfx.EffectTime)
 
 		--if self.bulletTimeAfterDeath and not Game.BulletTime then
-            --Game.BulletTime = true
-            --Game:Print("BTAIME")
-            --Game._BTimeProc = AddObject(PBulletTimeControler:New(self.bulletTimeAfterDeath,0.2,20.0,0.2),nil,nil,nil,true)
-            --WORLD.SetWorldSpeed(self.bulletTimeAfterDeath)
+		--Game.BulletTime = true
+		--Game:Print("BTAIME")
+		--Game._BTimeProc = AddObject(PBulletTimeControler:New(self.bulletTimeAfterDeath,0.2,20.0,0.2),nil,nil,nil,true)
+		--WORLD.SetWorldSpeed(self.bulletTimeAfterDeath)
 		--end
 
 	end
 	SOUND.Play2D("actor/alastor/alastor_death")
-    --ENTITY.SetVelocity(self._Entity, 0, self.velocityUpOnDeath, 0)
+	--ENTITY.SetVelocity(self._Entity, 0, self.velocityUpOnDeath, 0)
 end
 
 function Lucifer:CustomDelete()
@@ -113,7 +113,7 @@ function Lucifer:CustomOnDamage(he,x,y,z,obj,damage,type,nx,ny,nz)
 	if debugMarek then
 		return false
 	end
-	
+
 
 	if type == AttackTypes.Stone then
 		if not self._ABdo then
@@ -136,7 +136,7 @@ function Lucifer:CustomOnDamage(he,x,y,z,obj,damage,type,nx,ny,nz)
 	end
 	return true
 end
- 
+
 
 
 -----------------
@@ -157,7 +157,7 @@ end
 function Lucifer._CustomAiStates.idleLucifer:OnUpdate(brain)
 	local actor = brain._Objactor
 	local aiParams = actor.AiParams
-	
+
 	if self.lastAmbient + 1.0 < brain._currentTime then
 		local tabl = aiParams.actions
 		Game:Print("losowanie check "..brain._currentTime)
@@ -207,9 +207,10 @@ function Lucifer._CustomAiStates.attackLucifer:OnInit(brain)
 	local actor = brain._Objactor
 	brain._submode = nil
 	self.mode = -1
-	actor:RotateToVectorWithAnim(Player._groundx,0,Player._groundz)
-	Game:Print("czas demona... "..Lev._demonfx.TickCount.." "..Lev._demonfx.EffectTime)
-	if Lev._demonfx.TickCount > Lev._demonfx.EffectTime - 3.0 then
+	if not brain.Target then return end
+	actor:RotateToVectorWithAnim(brain.Target._groundx,0,brain.Target._groundz)
+	--Game:Print("czas demona... "..Lev._demonfx.TickCount.." "..Lev._demonfx.EffectTime)
+	if Lev._demonfx and Lev._demonfx.TickCount > Lev._demonfx.EffectTime - 3.0 then
 		Lev._demonfx.TickCount = Lev._demonfx.TickCount - 10.0
 	end
 	self.active = true
@@ -241,7 +242,7 @@ function Lucifer._CustomAiStates.attackLucifer:OnUpdate(brain)
 	if self.mode == 0 and not actor._isRotating then
 		if actor._ABdo then
 			self._anim = "atak_throw"
-			actor:RotateToVector(Player._groundx,0,Player._groundz)
+			actor:RotateToVector(brain.Target._groundx,0,brain.Target._groundz)
 		else
 			if math.random(100) < 60 then
 				self._anim = "atak_meteory"
@@ -323,7 +324,7 @@ function Lucifer._CustomAiStates.walkLucifer:OnInit(brain)
 		end
 	end
 	self.active = true
-	actor:RotateToVectorWithAnim(Player._groundx,Player._groundy,Player._groundz)
+	if brain.Target then actor:RotateToVectorWithAnim(brain.Target._groundx,brain.Target._groundy,brain.Target._groundz) end
 	self.canAttack = true
 	if math.random(100) < 70 then
 		self.canAttack = false
@@ -335,7 +336,7 @@ function Lucifer._CustomAiStates.walkLucifer:OnUpdate(brain)
 	if self.mode == 0 and not actor._isRotating then
 		Game:Print("distToEnemy = "..brain._distToNearestEnemy)
 
-		actor:RotateToVector(Player._groundx,Player._groundy,Player._groundz)
+		if brain.Target then actor:RotateToVector(brain.Target._groundx,brain.Target._groundy,brain.Target._groundz) end
 		local v = Vector:New(math.sin(actor._angleDest), 0, math.cos(actor._angleDest))
 		v:Normalize()
 		local backward = false
@@ -355,7 +356,7 @@ function Lucifer._CustomAiStates.walkLucifer:OnUpdate(brain)
 			actor.d1, actor.d2, actor.d3 = actor._groundx, actor._groundy + 18, actor._groundz
 			actor.d4, actor.d5, actor.d6 = actor._groundx + v.X*(dist+25), actor._groundy + 18, actor._groundz + v.Z*(dist+25)
 		end
-		
+
 		local b,d = WORLD.LineTraceFixedGeom(actor._groundx, actor._groundy + 18, actor._groundz, actor._groundx + v.X*(dist+25), actor._groundy + 18, actor._groundz + v.Z*(dist+25))
 		if d then
 			Game:Print("walk col! "..d)
@@ -388,22 +389,22 @@ function Lucifer._CustomAiStates.walkLucifer:OnUpdate(brain)
 			self.active = false
 			return
 		end
-		
+
 		if backward and dist < 0 then
 			dist = -dist
 		end
 		actor:WalkForward(dist,nil, nil, nil, nil, nil, nil, backward)
 		self.mode = 1
 	end
-	
-	if self.mode == 1 and not actor._isWalking then
-		actor:RotateToVectorWithAnim(Player._groundx,Player._groundy,Player._groundz)
+
+	if brain.Target and self.mode == 1 and not actor._isWalking then
+		actor:RotateToVectorWithAnim(brain.Target._groundx,brain.Target._groundy,brain.Target._groundz)
 		self.mode = 2
 	else
 		-- if dist to enemy, to close attack
 		if self.canAttack and brain._distToNearestEnemy > 28 and brain._distToNearestEnemy < 44 then
 			--Game:Print("w zas "..brain._distToNearestEnemy)
-			local v = Vector:New(Player._groundx - actor._groundx, 0, Player._groundz - actor._groundz)
+			local v = Vector:New(brain.Target._groundx - actor._groundx, 0, brain.Target._groundz - actor._groundz)
 			v:Normalize()
 			local angleToPlayer = math.atan2(v.X, v.Z)
 			local angDist = AngDist(actor.angle, angleToPlayer)
@@ -418,7 +419,7 @@ function Lucifer._CustomAiStates.walkLucifer:OnUpdate(brain)
 		end
 		--
 	end
-	
+
 	if self.mode == 2 and not actor._isRotating then
 		self.active = false
 		return
@@ -443,14 +444,14 @@ end
 -------------[[
 function Lucifer:OnTick(delta)
 
---- cheat ---
---	if INP.Key(Keys.PgUp) == 1 then 
---		self:OnDamage(1500, Player,nil,nil,nil,nil,AttackTypes.Rocket,nil,nil,0)
---		Game:Print("DAMAGE Lucifer")
---	end
--------------
-	
-	if self._isWalking or self._moveWithAnimation then	
+	--- cheat ---
+	--	if INP.Key(Keys.PgUp) == 1 then
+	--		self:OnDamage(1500, self._AIBrain.Target,nil,nil,nil,nil,AttackTypes.Rocket,nil,nil,0)
+	--		Game:Print("DAMAGE Lucifer")
+	--	end
+	-------------
+
+	if self._isWalking or self._moveWithAnimation then
 		self._delayExplTime = self._delayExplTime - 1
 		if self._delayExplTime < 0 then
 			if self._flying then
@@ -474,7 +475,7 @@ function Lucifer:OnTick(delta)
 			WORLD.Explosion2(x+v.X, y, z+v.Z, 5000, --[[range--]]8,nil,AttackTypes.Rocket,self.AiParams.walkDamage)
 		end
 	end
-	
+
 	if self._selfrotate then
 		self.angle = self.angle + self.fallingRotateSpeed * delta
 		self._angleDest = self.angle
@@ -500,9 +501,9 @@ function Lucifer:Stomp(joint, modif, disableExpl)
 		DebugSphereZ = z
 		DebugSphereRange = self.AiParams.walkDamageRange
 	end
-    local j = MDL.GetJointIndex(self._Entity, joint)
-    local x,y,z = MDL.TransformPointByJoint(self._Entity, j,0,0,0)
-    AddPFX('but',0.8,Vector:New(x,y,z))
+	local j = MDL.GetJointIndex(self._Entity, joint)
+	local x,y,z = MDL.TransformPointByJoint(self._Entity, j,0,0,0)
+	AddPFX('but',0.8,Vector:New(x,y,z))
 end
 
 
@@ -517,7 +518,7 @@ function Lucifer._CustomAiStates.closeAttackLucifer:OnInit(brain)
 	actor:SetAnim("atak_sword", false)
 	brain._submode = nil
 	self.active = true
-	actor:RotateToVector(Player._groundx,0,Player._groundz)
+	actor:RotateToVector(brain.Target._groundx,0,brain.Target._groundz)
 end
 
 function Lucifer._CustomAiStates.closeAttackLucifer:OnUpdate(brain)
@@ -527,7 +528,7 @@ function Lucifer._CustomAiStates.closeAttackLucifer:OnUpdate(brain)
 		self.active = false
 	else
 		if math.random(100) < 5 then
-			actor:RotateToVector(Player._groundx,0,Player._groundz)
+			actor:RotateToVector(brain.Target._groundx,0,brain.Target._groundz)
 		end
 	end
 end
@@ -550,12 +551,12 @@ function Lucifer:OnTick()
 				local x,y,z = self:GetJointPos("emiter_miecz_"..i)
 				--WORLD.Explosion2(x,y,z, --[[self.Explosion.ExplosionStrength--]]1000,--[[self.Explosion.ExplosionRange--]]5,
 				--nil,AttackTypes.Rocket,--[[self.Explosion.Damage--]]100)
-				local dist = Dist3D(x,y,z,Player._groundx,Player._groundy + FRand(0.5,1.5),Player._groundz)
+				local dist = Dist3D(x,y,z,brain.Target._groundx,brain.Target._groundy + FRand(0.5,1.5),brain.Target._groundz)
 				local range = self.AiParams.swordDamageRange
 				if dist < range then
 					self._lastTimeDamage = self._AIBrain._currentTime
 					--Game:Print("DDD dist to sword = "..dist)
-					Player:OnDamage(self.AiParams.swordDamage,self,AttackTypes.AIClose)
+					brain.Target:OnDamage(self.AiParams.swordDamage,self,AttackTypes.AIClose)
 					break
 				end
 			end
@@ -564,15 +565,15 @@ function Lucifer:OnTick()
 end
 
 --[[function Lucifer:CheckSwordDamage(joint)
-	local aiParams = self.AiParams
-	--Game.freezeUpdate = true
-	local range = aiParams.swordDamageRange
-	local x,y,z = self:GetJointPos(joint)
-	local dist = Dist3D(x,y,z,Player._groundx,Player._groundy,Player._groundz)
-	Game:Print("dist to sword = "..dist)
-	if dist < range then
-		Player:OnDamage(aiParams.swordDamage,self,AttackTypes.AIClose)
-	end
+local aiParams = self.AiParams
+--Game.freezeUpdate = true
+local range = aiParams.swordDamageRange
+local x,y,z = self:GetJointPos(joint)
+local dist = Dist3D(x,y,z,brain.Target._groundx,brain.Target._groundy,brain.Target._groundz)
+Game:Print("dist to sword = "..dist)
+if dist < range then
+	brain.Target:OnDamage(aiParams.swordDamage,self,AttackTypes.AIClose)
+end
 end
 --]]
 
@@ -594,42 +595,42 @@ end
 
 function Lucifer:CreateStonesGround()
 	local s = self.AiParams.stonesUp
-    local j = math.random(s.count*0.6, s.count)	
+	local j = math.random(s.count*0.6, s.count)
 	for i=1,j do
 		local angle = math.random(0,360)
 		local x = math.sin(angle) + math.cos(angle)
 		local z = math.cos(angle) - math.sin(angle)
 		local d = FRand(s.distMin, s.distMax)
-		x = Player._groundx + x * d
-		y = Player._groundy
-		z = Player._groundz + z * d
+		x = brain.Target._groundx + x * d
+		y = brain.Target._groundy
+		z = brain.Target._groundz + z * d
 		--Game:Print("createstonesground")
-		
-		local zn,idx = WPT.GetClosest(x,y,z)  
+
+		local zn,idx = WPT.GetClosest(x,y,z)
 		if idx > -1 then
-			local x,y,z = WPT.GetPosition(zn,idx)    
-  			--local speed = -Templates["LuciferStone.CItem"].FallSpeed		-- pozniej inna speed
-  			local speed = 100
-	  		
+			local x,y,z = WPT.GetPosition(zn,idx)
+			--local speed = -Templates["LuciferStone.CItem"].FallSpeed		-- pozniej inna speed
+			local speed = 100
+
 			local v = Vector:New(0,1,0)
 			v:Normalize()
 
 			local a = s.randomizeAngle * math.pi/180
-			
+
 			--local rnd = FRand(0.95,1.05)
 			local x1,y1,z1 = x,y - 5,z
 			local ke,obj = AddItem("LuciferStone.CItem",nil,Vector:New(x1,y1,z1),true)
-			local dist = Dist2D(x1,z1,Player._groundx,Player._groundz)
-			--local dist = Dist3D(x1,y1,z1,Player._groundx,Player._groundy,Player._groundz)
-			local angleXY = math.atan2(Player._groundz - z1,Player._groundx - x1) + FRand(-a, a)
-			local x2,y2,z2,v = CalcThrowVectorGivenAngle(dist, s.angle + FRand(-1,1), angleXY, 0--[[(Player._groundy+1.2) - y1--]])
+			local dist = Dist2D(x1,z1,brain.Target._groundx,brain.Target._groundz)
+			--local dist = Dist3D(x1,y1,z1,brain.Target._groundx,brain.Target._groundy,brain.Target._groundz)
+			local angleXY = math.atan2(brain.Target._groundz - z1,brain.Target._groundx - x1) + FRand(-a, a)
+			local x2,y2,z2,v = CalcThrowVectorGivenAngle(dist, s.angle + FRand(-1,1), angleXY, 0--[[(brain.Target._groundy+1.2) - y1--]])
 			-- Game:Print("vel = "..v.." "..(angleXY*180/math.pi))
 			obj._desiredVel = Vector:New(x2,y2,z2)
 			if v < 40 then
 				obj._desiredVel:Normalize()
 				obj._desiredVel:MulByFloat(40)
 			end
-			
+
 			obj._desiredVel:MulByFloat(FRand(s.velocityMin, s.velocityMax))
 			obj._enableGrav = true
 			obj.timer = 0
@@ -648,10 +649,10 @@ function Lucifer:CreateStones()
 		local x = math.sin(angle) + math.cos(angle)
 		local z = math.cos(angle) - math.sin(angle)
 		local d = FRand(s.distMin,s.distMax)
-		x = Player._groundx + x * d
+		x = self._AIBrain.Target._groundx + x * d
 		y = self._groundy + 300 + FRand(-15,15)
-		z = Player._groundz + z * d
-		local v = Vector:New(x - Player._groundx, y - Player._groundy, z - Player._groundz)
+		z = brain.Target._groundz + z * d
+		local v = Vector:New(x - self._AIBrain.Target._groundx, y - self._AIBrain.Target._groundy, z - self._AIBrain.Target._groundz)
 		v:Normalize()
 
 		local rnd = FRand(0.95,1.05)

@@ -91,22 +91,22 @@ function Military_Base_Gun:OnTick(delta)
 
 	self._lastAngleAttackX = self._angleAttackX
 
-	if self._AIBrain.r_closestEnemy and Player then
+	if self._AIBrain.r_closestEnemy and self._AIBrain.Target then
 		local joint = MDL.GetJointIndex(self._Entity, "lufa")
 		local x,y,z = MDL.TransformPointByJoint(self._Entity,joint,0,0,0)	--0,0.6,-5.6)
 		
 		local aiParams = self.AiParams
 		local pitch
-		local distToTarget = Dist3D(x,y,z, Player._groundx, Player._groundy + 1.2,Player._groundz)
+		local distToTarget = Dist3D(x,y,z, self._AIBrain.Target._groundx, self._AIBrain.Target._groundy + 1.2,self._AIBrain.Target._groundz)
 		
-		local v = Vector:New(Player._groundx - x, Player._groundy + 1.2 - y, Player._groundz - z)
+		local v = Vector:New(self._AIBrain.Target._groundx - x, self._AIBrain.Target._groundy + 1.2 - y, self._AIBrain.Target._groundz - z)
 		v:Normalize()
 		local angleToPlayer = math.atan2(v.Z, v.X)
 		local maxRotateSpeed = 0.5 * delta
 		local diff
 		if distToTarget > 4 and distToTarget < 260 then
 			local x2,y2,z2
-			x2,y2,z2,pitch = CalcThrowVectorGivenVelocity(distToTarget - aiParams.throwDistMinus, aiParams.throwVelocity, angleToPlayer, Player._groundy + 1.2 - y, math.pi)
+			x2,y2,z2,pitch = CalcThrowVectorGivenVelocity(distToTarget - aiParams.throwDistMinus, aiParams.throwVelocity, angleToPlayer, self._AIBrain.Target._groundy + 1.2 - y, math.pi)
 			if pitch < -0.1 then
 				pitch = -0.1
 			end

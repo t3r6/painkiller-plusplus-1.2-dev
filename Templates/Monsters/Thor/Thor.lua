@@ -3,9 +3,9 @@ function Thor:OnPrecache()
 end
 
 function Thor:FootFX(joint)
-    local j = MDL.GetJointIndex(self._Entity, joint)
-    local x,y,z = MDL.TransformPointByJoint(self._Entity, j,-2,1,0)
-    AddPFX('butthor',1.3,Vector:New(x,y,z))
+	local j = MDL.GetJointIndex(self._Entity, joint)
+	local x,y,z = MDL.TransformPointByJoint(self._Entity, j,-2,1,0)
+	AddPFX('butthor',1.3,Vector:New(x,y,z))
 end
 
 function Thor:CustomOnDeathUpdate()
@@ -16,7 +16,7 @@ function Thor:CustomOnDeathUpdate()
 			self._timerToDemon = nil
 		end
 	else
-		if self._demonfx and self._demonfx.TickCount > self._demonfx.EffectTime - 1.0 then
+		if Game.GMode == GModes.SingleGame and self._demonfx and self._demonfx.TickCount > self._demonfx.EffectTime - 1.0 then
 			self._demonfx = nil
 			GObjects:Add(TempObjName(),CloneTemplate("EndLevel.CProcess"))
 		end
@@ -39,42 +39,19 @@ function Thor:CustomOnDeath()		-- powinno byc delete Game:EnableCollisions
 	ENTITY.SetVelocity(self._Entity, rnd1, rnd2, rnd3)
 end
 
---Thor.CustomOnDeathAfterRagdoll = Thor.CustomOnDeath
 
 function Thor:OnCreateEntity()
-    --local pos = Clone(self.Pos)
-    --pos.X = pos.X + 5
-    --pos.Y = pos.Y + 8
-    
-    --if not debugColl then
-	--	debugColl = {}
-    --end
-    
-    
-    local pos = Vector:New(10,0,0)
-    local e
-    e,self._weaponE = AddItem("ThorMlot.CItem",self.Scale/10,pos,true)     
-
-    local r = Quaternion:New();r:FromEuler(0,0,-1.57);r:ToEntity(e) 
-	 
-    --PHYSICS.CreateRigidConstraintBetweenEntities(self._Entity,e,pos.X,pos.Y,pos.Z)
-    
-    local j = MDL.GetJointIndex(self._Entity,"mlot")
-    ENTITY.RegisterChild(self._Entity,e,true,j)
-    
-    --local brain = self._AIBrain
-    --brain._JointH = MDL.GetJointIndex(e, "mlot")
-    
+	local pos = Vector:New(10,0,0)
+	local e
+	e,self._weaponE = AddItem("ThorMlot.CItem",self.Scale/10,pos,true)
+	local r = Quaternion:New();r:FromEuler(0,0,-1.57);r:ToEntity(e)
+	local j = MDL.GetJointIndex(self._Entity,"mlot")
+	ENTITY.RegisterChild(self._Entity,e,true,j)
 	Lev.ObjBoss = self
 	self._ABdone = false
-
-	--(bool enable, float minimalDelay, float minimalStrength,
-	-- float minimalNonFixedDelay, float minimalMass, float maximalMass, float minProbability)
-
-    local count = ENTITY.EnableCollisionsToAll(true, self.StoneParams.collisionMinimumFrequency, self.StoneParams.collisionMinimumStrength,
-					 self.StoneParams.miminalMassReportingCollision,
-					 self.StoneParams.maximalMassReportingCollision, self.StoneParams.amountReportingCollisions * 100)
-	
+	local count = ENTITY.EnableCollisionsToAll(true, self.StoneParams.collisionMinimumFrequency, self.StoneParams.collisionMinimumStrength,
+	self.StoneParams.miminalMassReportingCollision,
+	self.StoneParams.maximalMassReportingCollision, self.StoneParams.amountReportingCollisions * 100)
 	Game:Print("enable collision to "..count.." meshes")
 	Game.MegaBossHealthMax = self._weaponE.Health
 	Game.MegaBossHealth = self._weaponE.Health
@@ -82,28 +59,13 @@ end
 
 
 function Thor:ParticleWhenRised()
-    --self:BindFX(self.Hammer.PFXwhenRised, 1.0,"mlot",self.Hammer.PFXwhenRised_Displace.X,FXwhenRised_Displace.Y,FXwhenRised_Displace.Z)
 	if not self._ABdone then
 		local j = MDL.GetJointIndex(self._Entity,"mlot")
-		--local x,y,z = MDL.TransformPointByJoint(self._Entity, j, self.Hammer.FXwhenRised_Displace.X,self.Hammer.FXwhenRised_Displace.Y,self.Hammer.FXwhenRised_Displace.Z)
-        local tmp
+		local tmp
 		tmp, self.eeffxx = AddObject(self.Hammer.FXwhenRised,1.0, self.Hammer.FXwhenRised_Displace)	--Vector:New(x, y, z))
 		ENTITY.RegisterChild(self._Entity, self.eeffxx, true, j)
 	end
 end
-
-
---[[
-function Thor:OnCollision(x,y,z,nx,ny,nz,e)			-- splat! wdepnal w kogos
-	if e then
-		local obj = EntityToObject[e]
-		if obj and obj.OnDamage and self.Health > 0 then
-			--Game:Print("THOR:OnCollision")
-			obj:OnDamage(FRand(self.CollisionDamage*0.5, self.CollisionDamage), self)
-		end
-	end
-end
---]]
 
 function Thor:atak1()
 	local j = MDL.GetJointIndex(self._Entity,"mlot")
@@ -128,9 +90,6 @@ function Thor:recharge()
 	Game._EarthQuakeProc:Add(v.X, v.Y, v.Z, 8, 60, self.CameraMov, self.CameraRot, 1.0)
 	if self.Hammer.HitDecal then
 		local b,d,x,y,z,nx,ny,nz,he,e = WORLD.LineTraceFixedGeom(v.X,v.Y + 2.0,v.Z,v.X,v.Y - 6.0,v.Z)
-		--self.DEBUG_P1 = v.X
-		--self.DEBUG_P2 = v.Y + 2.0
-		--self.DEBUG_P3 = v.Z
 		ENTITY.SpawnDecal(e,self.Hammer.HitDecal,v.X,v.Y,v.Z,0,1,0, 5)
 	end
 	if self._weaponE and not self._weaponE._died then
@@ -142,23 +101,23 @@ function Thor:recharge()
 		self._drawLightingOnce = true
 		self._drawLighting = 2.0
 	end
-	
+
 end
 
 
 function o:Render(delta)
 	if self._drawLighting and self._weaponE then
 		local t = Templates["DriverElectro.CWeapon"]
-        local j = MDL.GetJointIndex(self._weaponE._Entity, "mlot1") 
+		local j = MDL.GetJointIndex(self._weaponE._Entity, "mlot1")
 		local start = Vector:New(MDL.GetJointPos(self._weaponE._Entity,j))
 
 		if self._drawLightingOnce then
 			self._weaponE:BindFX("LighintgHitHammer")
-			
+
 			SOUND.Play2D("impacts/lightning_"..math.random(1,2))
 			WORLD.AmbientColor(210,210,255,Lev.GunAmbientMultiplier)
 			--WORLD.SetDirLight(d.Dir.X,d.Dir.Y,d.Dir.Z,Color:New(cl,cl,cl):Compose(),3)
-		
+
 			if Lev.Flash then
 				Lev:Flash(true)
 			end
@@ -170,7 +129,7 @@ function o:Render(delta)
 
 		--(points,parts,mode,size,color,pfx)
 		if (self._drawLighting > 1.95 and self._drawLighting <= 2.0) then
-			
+
 			for z=1,3 do
 
 				if not self._points[2] then
@@ -192,32 +151,13 @@ function o:Render(delta)
 						self._points[i] = Vector:New(self._points[i].X + FRand(-zakres,zakres),self._points[i].Y + FRand(-zakres,zakres),self._points[i].Z + FRand(-zakres,zakres))
 					end
 				end
-
 				t:DrawBezierLine(self._points,10,11, FRand(1.4, 1.5), R3D.RGB(FRand(75,85),FRand(85,105),FRand(200,255)))
-				--t:DrawBezierLine(self._points,10,12, FRand(1.4, 1.5), R3D.RGB(FRand(75,85),FRand(85,105),FRand(200,255)))
-
 			end
-
-			--[[for i=2,8 do
-				self._points[i] = Vector:New(self._points[i-1].X + FRand(-zakres,zakres),self._points[i-1].Y + FRand(3,6),self._points[i-1].Z + FRand(-zakres,zakres))
-			end
-			
-			t:DrawBezierLine(self._points,30,11, 1.4, R3D.RGB(FRand(75,85),FRand(85,105),FRand(200,255)))
-			t:DrawBezierLine(self._points,30,12, 1.4, R3D.RGB(FRand(75,85),FRand(85,105),FRand(200,255)))
---]]
-
-			
-			--[[local lv = Clone(self.points[1])
-			lv:Sub(self.points[2])
-			lv:Normalize()
-			ENTITY.SetPosition(self._light,ex+lv.X*0.5,ey+lv.Y*0.5+0.5,ez+lv.Z*0.5)    
-			LIGHT.Setup(self._light,2,R3D.RGBA(200,200,255,255),0,0,0,FRand(1,3))
-			LIGHT.SetFalloff(self._light,FRand(2,3),FRand(5,6))--]]
 			self._fin = false
 		end
 		if self._drawLighting < 1.86 and not self._fin then
-			 WORLD.AmbientColor(Lev.Ambient.R,Lev.Ambient.G,Lev.Ambient.B,Lev.GunAmbientMultiplier)
-			 self._fin = true
+			WORLD.AmbientColor(Lev.Ambient.R,Lev.Ambient.G,Lev.Ambient.B,Lev.GunAmbientMultiplier)
+			self._fin = true
 		end
 		self._drawLighting = self._drawLighting - delta
 		if self._drawLighting < 0 then
@@ -230,11 +170,9 @@ end
 
 
 function Thor:boom(x2,y2,z2)
---	self.debugHIT = {}
-
+	if not self._AIBrain.Target then return end
 	local v = Vector:New(self._groundx, self._groundy, self._groundz)
 	local v2 = Vector:New(math.sin(self.angle + self.Hammer.hitAngleDisplace*3.14/180), 0, math.cos(self.angle + self.Hammer.hitAngleDisplace*3.14/180))
-	--local v2 = Vector:New(math.sin(self.angle), 0, math.cos(self.angle))
 	v2:Normalize()
 
 	local dis = self.Hammer.hitPosDisplace
@@ -251,48 +189,45 @@ function Thor:boom(x2,y2,z2)
 		DEBUG3f = v.Z
 	end
 
-    AddObject(self.Hammer.FXwhenHit,1.0, v, nil, true) 
+	AddObject(self.Hammer.FXwhenHit,1.0, v, nil, true)
 
 	if not self._ABdone then
 		WORLD.ExplosionUp(v.X, v.Y, v.Z, self.Hammer.stren, self.Hammer.distance, self.Hammer.stren, self.Hammer.random)
 	else
-		WORLD.ExplosionParabolic(v.X, v.Y, v.Z, self.Fists.flightTime, self.Fists.radius, Player._groundx, Player._groundy, Player._groundz)
+		WORLD.ExplosionParabolic(v.X, v.Y, v.Z, self.Fists.flightTime, self.Fists.radius, self._AIBrain.Target._groundx, self._AIBrain.Target._groundy, self._AIBrain.Target._groundz)
 	end
 	Game._EarthQuakeProc:Add(v.X, v.Y, v.Z, 8, 60, self.CameraMov*10, self.CameraRot*10, 2.0)--, 10)
-	local dist = Dist3D(v.X,0,v.Z,Player._groundx, 0, Player._groundz) 
-	--Game:Print("dist="..Dist3D(v.X,v.Y,v.Z,Player._groundx, Player._groundy, Player._groundz))
-	
+	local dist = Dist3D(v.X,0,v.Z,self._AIBrain.Target._groundx, 0, self._AIBrain.Target._groundz)
+	--Game:Print("dist="..Dist3D(v.X,v.Y,v.Z,self._AIBrain.Target._groundx, self._AIBrain.Target._groundy, self._AIBrain.Target._groundz))
+
 	if self.Hammer.HitDecal then
 		local b,d,x,y,z,nx,ny,nz,he,e = WORLD.LineTraceFixedGeom(v.X,v.Y + 2.0,v.Z,v.X,v.Y - 6.0,v.Z)
-		--self.DEBUG_P1 = v.X
-		--self.DEBUG_P2 = v.Y + 2.0
-		--self.DEBUG_P3 = v.Z
 		ENTITY.SpawnDecal(e,self.Hammer.HitDecal,v.X,v.Y,v.Z,0,1,0, 10)
 	end
-	
+
 	if dist < self.Hammer.directHitDistance then
-		Player:OnDamage(self.Hammer.DamageWhenPlayerIsClose, self)
+		self._AIBrain.Target:OnDamage(self.Hammer.DamageWhenPlayerIsClose, self,AttackTypes.Flattened)
 		--Game:Print("direct hit")
 	else
-		if not ENTITY.PO_IsFlying(Player._Entity) then
-			ENTITY.PO_SetPlayerFlying(Player._Entity, 0.3)
+		if not ENTITY.PO_IsFlying(self._AIBrain.Target._Entity) then
+			ENTITY.PO_SetPlayerFlying(self._AIBrain.Target._Entity, 0.3)
 			--Game:Print("gracz na podlozu")
 			local maxDist = 300
 			if dist > maxDist then
 				dist = maxDist
 			end
-			
+
 			local maxDist = self.Hammer.DamageRange
 			if dist > maxDist then
 				dist = maxDist
 			end
 			--Game:Print("self.Hammer.PlayerThrowUpMax * dist / maxDist "..(self.Hammer.PlayerThrowUpMax * (1 - dist / maxDist)))
 			if not self._ABdone then
-				local x,y,z = ENTITY.GetVelocity(Player._Entity)
-				ENTITY.SetVelocity(Player._Entity, x, self.Hammer.PlayerThrowUpMax * (1 - dist / maxDist), z)
+				local x,y,z = ENTITY.GetVelocity(self._AIBrain.Target._Entity)
+				ENTITY.SetVelocity(self._AIBrain.Target._Entity, x, self.Hammer.PlayerThrowUpMax * (1 - dist / maxDist), z)
 			end
 			if self.Hammer.DamageWhenPlayerIsFar then
-				Player:OnDamage(self.Hammer.DamageWhenPlayerIsFar - dist / maxDist * self.Hammer.DamageWhenPlayerIsFar, self)
+				self._AIBrain.Target:OnDamage(self.Hammer.DamageWhenPlayerIsFar - dist / maxDist * self.Hammer.DamageWhenPlayerIsFar, self,AttackTypes.Flattened)
 			end
 		else
 			--Game:Print("gracz fruwa")
@@ -304,7 +239,6 @@ end
 function Thor:atak2()
 	Game._EarthQuakeProc:Add(self._groundx, self._groundy, self._groundz, 5, 50, self.CameraMov, self.CameraRot, 2.0, 10)
 	local j = MDL.GetJointIndex(self._Entity,"mlot")
-	--self:boom(MDL.TransformPointByJoint(self._Entity, j, 0,25,0))
 end
 
 
@@ -326,7 +260,7 @@ function Thor:Stomp(joint, modif)
 end
 
 function Thor:FootFX(x,y,z)
-    AddPFX('but',0.8,Vector:New(x,y,z))
+	AddPFX('but',0.8,Vector:New(x,y,z))
 end
 
 
@@ -339,29 +273,6 @@ function Thor:CustomUpdate()
 		end
 	end
 end
-
---[[
-function Thor:OnTick()
-	if debugMarek and INP.Key(Keys.RightShift) == 2 then
-		if INP.Key(Keys.K1) == 1 then
-			self:RotateWithAnim(46)
-		end
-		if INP.Key(Keys.K2) == 1 then
-			self:RotateWithAnim(-46)
-		end
-		if INP.Key(Keys.K3) == 1 then
-			self:RotateWithAnim(91)			-- pozniej 89
-		end
-		if INP.Key(Keys.K4) == 1 then
-			self:RotateWithAnim(-91)
-		end
-		if INP.Key(Keys.K5) == 1 then
-			self:WalkForward(30)
-		end
-
-	end
-end
---]]
 
 function Thor:CustomOnElectro()
 	if not self._ABdone then
@@ -414,59 +325,49 @@ function Thor._CustomAiStates.idleThor:OnUpdate(brain)
 
 	if not self.GuardStill then
 		if not actor._isWalking and not actor._isRotating then
-            if brain._currentTime < actor._lastCantMoveTime + 2/30  then
-                if debugMarek then Game:Print("obstacle detected by idle goal") end
-                local ang = math.random(45,60)
-                brain._walkStepLocal = brain._walkStepLocal * 0.65
-                if brain._walkStepLocal < aiParams.walkStep*0.4 then
-                    brain._walkStepLocal = aiParams.walkStep*0.4
-                end
-                if math.random(100) < 50 then
-                    ang = -ang
-                end
-                --local b = actor:Trace(actor._SphereSize * FRand(1.0, 1.3), ang)
-                --if b then
-                --    actor:RotateWithAnim(-ang)
-                --else
-                    --if debugMarek then Game:Print("idle.state -> normal rot") end
-                    --local b = actor:Trace(actor._SphereSize * FRand(1.0, 1.3), -ang)
-                    --if b then
-				--		actor:RotateWithAnim(ang)
-					--end
-                --end
-            else
-                if aiParams.stopAfterWalking and FRand(0.0, 1.0) <= aiParams.stopAfterWalking and self.walked then
-                    self.timeChangeStillToFalse = math.random(aiParams.stopAfterWalkingTime[1],aiParams.stopAfterWalkingTime[2])
-                    self.GuardStill = true
-                    self.walked = false
-                    if debugMarek then Game:Print("test czy nie patrzy sie w sciane") end
-                    --
-                    local cx,cy,cz = actor._groundx,actor._groundy + actor._SphereSize*6, actor._groundz
+			if brain._currentTime < actor._lastCantMoveTime + 2/30  then
+				if debugMarek then Game:Print("obstacle detected by idle goal") end
+				local ang = math.random(45,60)
+				brain._walkStepLocal = brain._walkStepLocal * 0.65
+				if brain._walkStepLocal < aiParams.walkStep*0.4 then
+					brain._walkStepLocal = aiParams.walkStep*0.4
+				end
+				if math.random(100) < 50 then
+					ang = -ang
+				end
+			else
+				if aiParams.stopAfterWalking and FRand(0.0, 1.0) <= aiParams.stopAfterWalking and self.walked then
+					self.timeChangeStillToFalse = math.random(aiParams.stopAfterWalkingTime[1],aiParams.stopAfterWalkingTime[2])
+					self.GuardStill = true
+					self.walked = false
+					if debugMarek then Game:Print("test czy nie patrzy sie w sciane") end
+					--
+					local cx,cy,cz = actor._groundx,actor._groundy + actor._SphereSize*6, actor._groundz
 
-                    local v = Vector:New(math.sin(actor.angle), 0, math.cos(actor.angle))
-                    v:Normalize()
+					local v = Vector:New(math.sin(actor.angle), 0, math.cos(actor.angle))
+					v:Normalize()
 
-                    local length = actor._SphereSize*4
-                    local fx = v.X*length + cx
-                    local fy = v.Y*length + cy
-                    local fz = v.Z*length + cz
+					local length = actor._SphereSize*4
+					local fx = v.X*length + cx
+					local fy = v.Y*length + cy
+					local fz = v.Z*length + cz
 
 					if debugMarek then
 						actor.yadebug1,actor.yadebug2,actor.yadebug3 = fx,fy,fz
 						actor.yadebug4,actor.yadebug5,actor.yadebug6 = cx,cy,cz
 					end
-					
-                    local b,d = WORLD.LineTraceFixedGeom(cx,cy,cz,fx,fy,fz)
-                    if d then
-                        actor:RotateWithAnim(math.random(100, 260))
-                        if debugMarek then Game:Print("to still: sciana!!!!!!!!!!!!!") end
-                    else
-                        if debugMarek then Game:Print("to still: no sciana") end
-                    end
-                    --
-                    return
-                else
-                    if math.random(100) < 25 and self.lastAmbient + 1.0 < brain._currentTime then
+
+					local b,d = WORLD.LineTraceFixedGeom(cx,cy,cz,fx,fy,fz)
+					if d then
+						actor:RotateWithAnim(math.random(100, 260))
+						if debugMarek then Game:Print("to still: sciana!!!!!!!!!!!!!") end
+					else
+						if debugMarek then Game:Print("to still: no sciana") end
+					end
+					--
+					return
+				else
+					if math.random(100) < 25 and self.lastAmbient + 1.0 < brain._currentTime then
 						self.lastAmbient = brain._currentTime
 
 						local tabl = aiParams.actions
@@ -493,60 +394,49 @@ function Thor._CustomAiStates.idleThor:OnUpdate(brain)
 						end
 					end
 
-                    brain._walkStepLocal = brain._walkStepLocal * 1.1
-                    if brain._walkStepLocal > aiParams.walkStep then
-                        brain._walkStepLocal = aiParams.walkStep
-                    end
+					brain._walkStepLocal = brain._walkStepLocal * 1.1
+					if brain._walkStepLocal > aiParams.walkStep then
+						brain._walkStepLocal = aiParams.walkStep
+					end
 
-                    local maxDist
-                    
-                    local movement = FRand(brain._walkStepLocal, brain._walkStepLocal * 2)
-                    local ang = FRand(-30,30)
+					local maxDist
 
-                    --[[local b,d = actor:Trace(movement + actor._SphereSize, ang)
-                    if b then
-						Game:Print("trace w bok? "..d)
-                        ang = math.random(45,60)
-                        local b = actor:Trace(movement, ang)
-                        if b then
-                            ang = -ang
-                        end
-                    end--]]
-                    
-                    local xd,yd,zd = actor._groundx,actor._groundy,actor._groundz
-                    local angle = actor.angle + ang * math.pi/180				-- czy angle
-                    local v = Vector:New(math.sin(angle), 0, math.cos(angle))
-                    v:Normalize()
-                    local xd2 = xd + v.X*(movement + actor._SphereSize * 3)
-                    local zd2 = zd + v.Z*(movement + actor._SphereSize * 3)
-                    xd = xd + v.X*movement
-                    zd = zd + v.Z*movement
-                    
-                    local yTest = actor.StoneParams.minYwhenPFXandSound + 10
+					local movement = FRand(brain._walkStepLocal, brain._walkStepLocal * 2)
+					local ang = FRand(-30,30)
+
+					local xd,yd,zd = actor._groundx,actor._groundy,actor._groundz
+					local angle = actor.angle + ang * math.pi/180				-- czy angle
+					local v = Vector:New(math.sin(angle), 0, math.cos(angle))
+					v:Normalize()
+					local xd2 = xd + v.X*(movement + actor._SphereSize * 3)
+					local zd2 = zd + v.Z*(movement + actor._SphereSize * 3)
+					xd = xd + v.X*movement
+					zd = zd + v.Z*movement
+
+					local yTest = actor.StoneParams.minYwhenPFXandSound + 10
 
 					if debugMarek then
 						actor.yadebug1,actor.yadebug2,actor.yadebug3,actor.yadebug4,actor.yadebug5,actor.yadebug6 = xd,actor.StoneParams.minYwhenPFXandSound,zd,xd,actor.StoneParams.minYwhenPFXandSound - 20,zd
 						actor.yaadebug1,actor.yaadebug2,actor.yaadebug3,actor.yaadebug4,actor.yaadebug5,actor.yaadebug6 = xd2,actor.StoneParams.minYwhenPFXandSound,zd2,xd2,actor.StoneParams.minYwhenPFXandSound - 20,zd2
 					end
 
-                    local b2 = WORLD.LineTraceFixedGeom(xd,actor.StoneParams.minYwhenPFXandSound,zd,xd,actor.StoneParams.minYwhenPFXandSound - 20,zd)
-                    local b3 = WORLD.LineTraceFixedGeom(xd2,actor.StoneParams.minYwhenPFXandSound,zd2,xd2,actor.StoneParams.minYwhenPFXandSound - 20,zd2)
-                    if b2 and b3 then
-                        actor:WalkTo(xd, yd, zd, false, maxDist)
-                    else
-                        --Game:Print("scianaa")
-                        --Game.freezeUpdate = true
-                        if math.random(100) < 30 then
+					local b2 = WORLD.LineTraceFixedGeom(xd,actor.StoneParams.minYwhenPFXandSound,zd,xd,actor.StoneParams.minYwhenPFXandSound - 20,zd)
+					local b3 = WORLD.LineTraceFixedGeom(xd2,actor.StoneParams.minYwhenPFXandSound,zd2,xd2,actor.StoneParams.minYwhenPFXandSound - 20,zd2)
+					if b2 and b3 then
+						actor:WalkTo(xd, yd, zd, false, maxDist)
+					else
+						self._AIBrain = brain
+						if self._AIBrain.Target and math.random(100) < 30 then
 							if debugMarek then Game:Print("rotate po prostu") end
-                            actor:RotateToVectorWithAnim(Player._groundx, Player._groundy, Player._groundz)
-                        else
+							actor:RotateToVectorWithAnim(self._AIBrain.Target._groundx, self._AIBrain.Target._groundy, self._AIBrain.Target._groundz)
+						else
 							local v = Vector:New(xd2 - actor._groundx,0,zd2 - actor._groundz)
 							local dist = v:Len() + actor._SphereSize * 3
 							v:Normalize()
 							x,y,z = VectorRotate(v.X, v.Y, v.Z, 0, 35*math.pi/180,0)
 
 							actor.yaaadebug1,actor.yaaadebug2,actor.yaaadebug3,actor.yaaadebug4,actor.yaaadebug5,actor.yaaadebug6 = actor._groundx,yTest, actor._groundz,actor._groundx + x * dist,yTest,actor._groundz + z * dist
-	                        local b = WORLD.LineTraceFixedGeom(actor._groundx,yTest, actor._groundz,actor._groundx + x * dist,yTest,actor._groundz + z * dist)
+							local b = WORLD.LineTraceFixedGeom(actor._groundx,yTest, actor._groundz,actor._groundx + x * dist,yTest,actor._groundz + z * dist)
 							if b then
 								if debugMarek then Game:Print("scianaa 1 false") end
 								x,y,z = VectorRotate(v.X, v.Y, v.Z, 0, -35*math.pi/180,0)
@@ -554,7 +444,7 @@ function Thor._CustomAiStates.idleThor:OnUpdate(brain)
 								local b = WORLD.LineTraceFixedGeom(actor._groundx,yTest, actor._groundz,actor._groundx + x * dist,yTest,actor._groundz + z * dist)
 								if b then
 									if debugMarek then Game:Print("scianaa 2 false") end
-									--actor:RotateToVectorWithAnim(Player._groundx, Player._groundy, Player._groundz)
+									--actor:RotateToVectorWithAnim(self._AIBrain.Target._groundx, self._AIBrain.Target._groundy, self._AIBrain.Target._groundz)
 									brain._submode = "walkToPlayerAndStrike"
 								else
 									actor:WalkTo(actor._groundx + x*dist, y, actor._groundz + z*dist, false, maxDist)
@@ -562,13 +452,13 @@ function Thor._CustomAiStates.idleThor:OnUpdate(brain)
 							else
 								actor:WalkTo(actor._groundx + x*dist, y, actor._groundz + z*dist, false, maxDist)
 							end
-                        end
-                        return
-                    end
+						end
+						return
+					end
 
-                    self.walked = true
-                end
-            end
+					self.walked = true
+				end
+			end
 		end
 	else
 		if not actor._isRotating and not actor._isWalking then
@@ -598,24 +488,15 @@ function Thor._CustomAiStates.idleThor:OnUpdate(brain)
 					return
 				end
 			end
-			--if self.delay then
-			--	self.delay = self.delay - 1
-			--	if self.delay <= 0 then
-			--		self.delay = nil
-			--	end
-			--else
-                actor:RotateWithAnim(math.random(-60,60))
-                self.GuardStill = false
-			--end
+			actor:RotateWithAnim(math.random(-60,60))
+			self.GuardStill = false
 		end
 	end
 end
 
 function Thor._CustomAiStates.idleThor:OnRelease(brain)
 	local actor = brain._Objactor
-	--if actor._state == "ANIMATING" then
-	--	actor:SetIdle()
-	--end
+
 	brain._rotate180AfterEndWalking = nil
 	actor.onlyWPmove = self.OLDonlyWPmove
 end
@@ -634,15 +515,17 @@ Thor._CustomAiStates.strikeThor = {
 
 function Thor._CustomAiStates.strikeThor:OnInit(brain)
 	local actor = brain._Objactor
+	self._AIBrain = brain
 	brain._submode = nil
 	self.active = true
 	self.done = nil
 	actor:Stop()
-	actor:RotateToVectorWithAnim(Player._groundx, Player._groundy, Player._groundz)
+	if not self._AIBrain.Target then return end
+	actor:RotateToVectorWithAnim(self._AIBrain.Target._groundx, self._AIBrain.Target._groundy, self._AIBrain.Target._groundz)
 	actor._angleDest = math.mod(actor._angleDest - actor.Hammer.hitAngleDisplace * math.pi/180, math.pi*2)		-- tweak
-	DEBUG1g = Player._groundx
-	DEBUG2g = Player._groundy
-	DEBUG3g = Player._groundz
+	DEBUG1g = self._AIBrain.Target._groundx
+	DEBUG2g = self._AIBrain.Target._groundy
+	DEBUG3g = self._AIBrain.Target._groundz
 	--Game:Print("strikethor oninit")
 	self.delay = 15
 end
@@ -713,6 +596,7 @@ Thor._CustomAiStates.walkAndStrikeThor = {
 
 function Thor._CustomAiStates.walkAndStrikeThor:OnInit(brain)
 	local actor = brain._Objactor
+	self._AIBrain = brain
 	brain._submode = nil
 	self.distanceToPlayerStd = actor.Hammer.hitPosDisplace
 	if actor._ABdone then
@@ -721,21 +605,22 @@ function Thor._CustomAiStates.walkAndStrikeThor:OnInit(brain)
 	actor:Stop()
 	self.mode = 0
 	self.active = true
-	actor:RotateToVectorWithAnim(Player._groundx,Player._groundy,Player._groundz)
+	if self._AIBrain.Target then actor:RotateToVectorWithAnim(self._AIBrain.Target._groundx,self._AIBrain.Target._groundy,self._AIBrain.Target._groundz) end
 end
 
 function Thor._CustomAiStates.walkAndStrikeThor:OnUpdate(brain)
 	local actor = brain._Objactor
+	if not self._AIBrain.Target then return end
 	if self.mode == 0 then
 		if not actor._isRotating then
 			if brain._distToNearestEnemy > self.distanceToPlayerStd then
 				if debugMarek then Game:Print("walkandstrike Far") end
-				actor:WalkTo(Player._groundx,Player._groundy,Player._groundz)
+				actor:WalkTo(self._AIBrain.Target._groundx,self._AIBrain.Target._groundy,self._AIBrain.Target._groundz)
 				self.mode = 1
 			else
 				if debugMarek then Game:Print("walkandstrike close") end
 				self.active = nil
-				actor:WalkTo(Player._groundx,Player._groundy,Player._groundz)
+				actor:WalkTo(self._AIBrain.Target._groundx,self._AIBrain.Target._groundy,self._AIBrain.Target._groundz)
 				return
 			end
 		end
@@ -750,7 +635,7 @@ function Thor._CustomAiStates.walkAndStrikeThor:OnUpdate(brain)
 		else
 			if math.random(100) < 75 then
 				if debugMarek then Game:Print("retry walkandstrike") end
-				actor:RotateToVectorWithAnim(Player._groundx,Player._groundy,Player._groundz)
+				actor:RotateToVectorWithAnim(self._AIBrain.Target._groundx,self._AIBrain.Target._groundy,self._AIBrain.Target._groundz)
 				self.mode = 0
 			else
 				if debugMarek then Game:Print("cancel walkandstrike") end
@@ -819,7 +704,7 @@ function Thor._CustomAiStates.dropHammer:OnInit(brain)
 
 	GObjects:ToKill(actor._weaponE)
 	actor._weaponE = nil
-	
+
 	actor.s_SubClass = Clone(actor.s_SubClass)
 	actor.s_SubClass.Ambients = {"idle1_nohammer"}
 	actor.s_SubClass.walk = {"walk_nohammer"}
@@ -827,18 +712,18 @@ function Thor._CustomAiStates.dropHammer:OnInit(brain)
 	--actor.s_SubClass.run = {"walk_nohammer"}
 	--actor._runAltAnim = "walk_nohammer"
 
-   	actor.s_SubClass.rotate45L = "rot45Lnh"
+	actor.s_SubClass.rotate45L = "rot45Lnh"
 	actor.s_SubClass.rotate45R = "rot45Pnh"
 	actor.s_SubClass.rotate90L = "rot90Lnh"
 	actor.s_SubClass.rotate90R = "rot90Pnh"
 
 	actor:Stop()
 	actor:SetAnim("idle2_nohammer", false)
-	
-    ENTITY.UnregisterAllChildren(actor._Entity)
-    
-    self.active = true
-    self.mode = 0
+
+	ENTITY.UnregisterAllChildren(actor._Entity)
+
+	self.active = true
+	self.mode = 0
 end
 
 function Thor._CustomAiStates.dropHammer:OnUpdate(brain)
@@ -846,7 +731,7 @@ function Thor._CustomAiStates.dropHammer:OnUpdate(brain)
 	if self.mode == 0 then
 		if not actor._isAnimating or actor.Animation ~= "idle2_nohammer" then
 			self.mode = 1
-			actor:RotateToVectorWithAnim(Player._groundx,Player._groundy,Player._groundz)
+			actor:RotateToVectorWithAnim(self._AIBrain.Target._groundx,self._AIBrain.Target._groundy,self._AIBrain.Target._groundz)
 		end
 	else
 		if not actor._isRotating then
@@ -878,11 +763,12 @@ Thor._CustomAiStates.idleAnimThor = {
 
 function Thor._CustomAiStates.idleAnimThor:OnInit(brain)
 	local actor = brain._Objactor
+	self._AIBrain = brain
 	brain._submode = nil
 	self.done = false
 	self.active = true
 	actor:Stop()
-	actor:RotateToVectorWithAnim(Player._groundx, Player._groundy, Player._groundz)
+	if self._AIBrain.Target then actor:RotateToVectorWithAnim(self._AIBrain.Target._groundx, self._AIBrain.Target._groundy, self._AIBrain.Target._groundz) end
 	actor._angleDest = math.mod(actor._angleDest - math.random(-30,30) * math.pi/180, math.pi*2)		-- tweak
 end
 
@@ -917,6 +803,6 @@ end
 -------------
 
 function Thor:OnInitTemplate()
-    self:SetAIBrain()
+	self:SetAIBrain()
 end
 

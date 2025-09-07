@@ -13,7 +13,8 @@ GameMenu =
 	descColor	= R3D.RGB( 255, 255, 255 ),
 
 	useItemBG = true,
-
+			fontBig		= Cfg.DefaultFont,
+			fontSmall	= Cfg.DefaultFont,
 	backAction = "PainMenu:ActivateScreen(MainMenu)",
 
 	items		=
@@ -36,7 +37,7 @@ GameMenu =
 			action = "",
 			useItemBG = false,
 			fontBigSize = 26,
-			fontBigTex = "",
+			fontBigTex = Cfg.DefaultFont,
 			textColor	= R3D.RGBA( 255, 186, 122, 255 ),
 		},
 

@@ -4,8 +4,8 @@ CreateServerMenu =
 	bgEndFrame   = { 180, 267, 291 },
 
 	fontBigSize = 26,
-	fontBig		= "timesbd",
-	fontSmall	= "timesbd",
+	fontBig		= Cfg.DefaultFont,
+	fontSmall	= Cfg.DefaultFont,
 
 	backAction = "PainMenu:ApplySettings(); PainMenu:SaveMapsOnServer(); PainMenu:ActivateScreen(MultiplayerMenu)",
 
@@ -68,8 +68,8 @@ CreateServerMenu =
 					text = TXT.Menu.Mode,
 					desc = TXT.MenuDesc.Mode,
 					option = "GameMode",
-					values = { "Free For All", "Team Deathmatch", "Voosh", "The Light Bearer", "People Can Fly", "Capture The Flag", "Duel", "Last Man Standing"}, --  , "Clan Arena"
-					visible = { TXT.Menu.FreeForAll, TXT.Menu.TeamDeathmatch, TXT.Menu.Voosh, TXT.Menu.TheLightBearer, TXT.Menu.PeopleCanFly, TXT.Menu.CaptureTheFlag, TXT.Menu.Duel, TXT.Menu.LastManStanding}, -- , "Clan Area"
+					values = { "Free For All", "Team Deathmatch", "Voosh", "The Light Bearer", "People Can Fly", "Capture The Flag", "Duel", "Last Man Standing", "Clan Arena", "COOP"}, --  , "Clan Arena"
+					visible = { TXT.Menu.FreeForAll, TXT.Menu.TeamDeathmatch, TXT.Menu.Voosh, TXT.Menu.TheLightBearer, TXT.Menu.PeopleCanFly, TXT.Menu.CaptureTheFlag, TXT.Menu.Duel, TXT.Menu.LastManStanding, "Clan Arena", "COOP"}, -- , "Clan Area"
 					x	 = -1,
 					y	 = 280,
 					action = "",

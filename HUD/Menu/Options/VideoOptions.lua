@@ -4,10 +4,13 @@ VideoOptions =
 	bgEndFrame   = { 180, 267, 291 },
 
 	fontBigSize = 32,
-
+	fontSmallSize = 12,
+	
 	backAction = "PainMenu:ApplySettings(false); PainMenu:SetWarpEffects(); PainMenu:SetBloom(); Cfg:Save(); PainMenu:ActivateScreen(OptionsMenu)",
 	applyAction = "PainMenu:ApplySettings(true); PainMenu:ReloadWeaponsTextures(); PainMenu:SetWaterQuality(); PainMenu:SetWarpEffects(); PainMenu:SetBloom(); PainMenu:SetShadowsQuality(); PainMenu:ApplyVideoSettings(); PMENU.SetItemVisibility('ApplyButton',false)",
-	
+	fontBig		= Cfg.DefaultFont,
+	fontSmall	= Cfg.DefaultFont,
+				
 --	sliderWidth = 180,
 
 	items =
@@ -38,7 +41,7 @@ VideoOptions =
 					applyRequired = true,
 --					align = MenuAlign.Left,
 				},
---[[				
+				
 				Fullscreen =
 				{
 					type = MenuItemTypes.Checkbox,
@@ -54,7 +57,7 @@ VideoOptions =
 					disabled = 1,
 					align = MenuAlign.Right,
 				},
-]]--
+
 				GraphicsQuality =
 				{
 					type = MenuItemTypes.TextButtonEx,

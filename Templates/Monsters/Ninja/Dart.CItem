@@ -15,13 +15,13 @@ function Dart:OnCollision(x,y,z,nx,ny,nz,e_other,h_me,h_other)
 		local obj = EntityToObject[e_other]
 		if obj then
             if obj.OnDamage then
-                if obj == Player then
+                if obj == self.ObjOwner._AIBrain.Target then
                     PlaySound2D("actor/ninja/ninja_dart_hit")
                 end
                 obj:OnDamage(self.Damage, self.ObjOwner)
             end
             if self.ObjOwner and self.ObjOwner._AIBrain then
-                if obj == Player then
+                if obj == self.ObjOwner._AIBrain.Target then
                     --Game:Print("last hit DART")
                     self.ObjOwner._AIBrain._lastHitTime = self.ObjOwner._AIBrain._currentTime
                 else

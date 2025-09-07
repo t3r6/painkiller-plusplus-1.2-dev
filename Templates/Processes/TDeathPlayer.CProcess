@@ -89,32 +89,32 @@ function TDeathPlayer:PostRender(delta)
     HUD.DrawQuad(0,0,0,w,h,R3D.RGBA(210,0,0,alpha))
     Hud:Quad(Hud._matGameOver,w/2,h/2,1,true)        
 
-	HUD.SetFont("timesbd",22)
+	HUD.SetFont(Cfg.DefaultFont,22)
 
     if self.TimeOut > 2 and Game.GMode == GModes.SingleGame then
 		local y = h/2+60*h/768
 		
 --		if self.CheckPoint and self.CheckPoint ~= "" then
 			local width = HUD.GetTextWidth(TXT.SPStats.PressFireCheckpt)
-			HUD.PrintXY(w/2-width/2+1,y+1,TXT.SPStats.PressFireCheckpt,"timesbd",0,0,0,22)
-			HUD.PrintXY(w/2-width/2,y,TXT.SPStats.PressFireCheckpt,"timesbd",255,186,122,22)
+			HUD.PrintXY(w/2-width/2+1,y+1,TXT.SPStats.PressFireCheckpt,Cfg.DefaultFont,0,0,0,22)
+			HUD.PrintXY(w/2-width/2,y,TXT.SPStats.PressFireCheckpt,Cfg.DefaultFont,255,186,122,22)
 			y = y + 30 * h/768
 --		end
 
 		if self.QuickSave and self.QuickSave ~= "" then
 			width = HUD.GetTextWidth(TXT.SPStats.PressAltFire)
-			HUD.PrintXY(w/2-width/2+1,y+1,TXT.SPStats.PressAltFire,"timesbd",0,0,0,22)
-			HUD.PrintXY(w/2-width/2,y,TXT.SPStats.PressAltFire,"timesbd",255,186,122,22)
+			HUD.PrintXY(w/2-width/2+1,y+1,TXT.SPStats.PressAltFire,Cfg.DefaultFont,0,0,0,22)
+			HUD.PrintXY(w/2-width/2,y,TXT.SPStats.PressAltFire,Cfg.DefaultFont,255,186,122,22)
 			y = y + 30 * h/768
 		end
 
         width = HUD.GetTextWidth(TXT.SPStats.PressEscape)
-        HUD.PrintXY(w/2-width/2+1,y+1,TXT.SPStats.PressEscape,"timesbd",0,0,0,22)
-        HUD.PrintXY(w/2-width/2,y,TXT.SPStats.PressEscape,"timesbd",255,186,122,22)
+        HUD.PrintXY(w/2-width/2+1,y+1,TXT.SPStats.PressEscape,Cfg.DefaultFont,0,0,0,22)
+        HUD.PrintXY(w/2-width/2,y,TXT.SPStats.PressEscape,Cfg.DefaultFont,255,186,122,22)
     elseif self.TimeOut > 2 then
 		local width = HUD.GetTextWidth(TXT.SPStats.PressFire)
-		HUD.PrintXY(w/2-width/2+1,h/2+60*h/768+1,TXT.SPStats.PressFire,"timesbd",0,0,0,22)
-		HUD.PrintXY(w/2-width/2,h/2+60*h/768,TXT.SPStats.PressFire,"timesbd",255,186,122,22)
+		HUD.PrintXY(w/2-width/2+1,h/2+60*h/768+1,TXT.SPStats.PressFire,Cfg.DefaultFont,0,0,0,22)
+		HUD.PrintXY(w/2-width/2,h/2+60*h/768,TXT.SPStats.PressFire,Cfg.DefaultFont,255,186,122,22)
     end
 end
 --============================================================================

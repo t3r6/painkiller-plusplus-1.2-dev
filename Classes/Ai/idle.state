@@ -54,8 +54,8 @@ function AiStates.idle:OnUpdate(brain)
 		end
 	end
 	if aiParams.alwaysSee and self.GuardStill and not actor._isWalking then
-		if math.random(100) < 20 then
-			actor:RotateToVector(Player._groundx, Player._groundy, Player._groundz)
+		if brain.Target and math.random(100) < 20 then
+			actor:RotateToVector(brain.Target._groundx, brain.Target._groundy, brain.Target._groundz)
 		end
 		return
 	end

@@ -101,7 +101,7 @@ function o:PinokioOnCollision(x,y,z,nx,ny,nz,e_other,h_me,h_other,vx,vy,vz,vl, v
 				end
 			end
 		else
-			local dist = Dist3D(Player._groundx,Player._groundy,Player._groundz, x,y,z)
+			local dist = Dist3D(self._AIBrain.Target._groundx,self._AIBrain.Target._groundy,self._AIBrain.Target._groundz, x,y,z)
 			if dist < 1.5 and not self._ABdo then
 				self._ABdo = 1
 				ENTITY.EnableCollisions(self._Entity,false)

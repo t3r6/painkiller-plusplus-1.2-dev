@@ -23,7 +23,7 @@ function o:CustomUpdate()
 	end
 
 	if self._flameFX then
-		self:CheckDamageFromFlame()
+		self:CheckDamageFromFlame(self._AIBrain)
 	end
 end
 
@@ -35,7 +35,7 @@ function o:CustomOnDeathUpdate()
 			self._timerToDemon = nil
 		end
 	else
-		if self._demonfx and self._demonfx.TickCount > self._demonfx.EffectTime - 1.0 then
+		if Game.GMode == GModes.SingleGame and self._demonfx and self._demonfx.TickCount > self._demonfx.EffectTime - 1.0 then
 			self._demonfx = nil
 			GObjects:Add(TempObjName(),CloneTemplate("EndLevel.CProcess"))
 		end
@@ -85,7 +85,7 @@ function o:CustomOnDamage(he,x,y,z,obj,damage,type,nx,ny,nz)
 		self._disableDemonic = true
 		Game.MegaBossHealth = nil
 		self._deathTimer = self.DeathTimer
-		GObjects:Add(TempObjName(),CloneTemplate("EndLevel.CProcess"))
+		if Game.GMode == GModes.SingleGame then GObjects:Add(TempObjName(),CloneTemplate("EndLevel.CProcess")) end
 		Game.MegaBossHealthMax = nil
 		Game:Print("ERROR: ALASTOR POZA LEVELEM")
 		return true
@@ -114,16 +114,6 @@ end
 
 -------------
 function o:OnTick(delta)
---[[- cheat ---
-    if not IsFinalBuild() then
-            if INP.Key(Keys.PgUp) == 1 then 
-			local obj = {}
-			obj.Model = "stonegolem"
-            self:OnDamage(1500, obj)
-            Game:Print("DAMAGE alastor")
-        end
-	end
---]]
 
 	if self._flameFX then
 	
@@ -194,9 +184,9 @@ function o:Throw()
 	obj:Apply()
 	obj:Synchronize()
 	self._objTakenToThrow = obj
-	brain._enemyLastSeenPoint.X = Player._groundx
-	brain._enemyLastSeenPoint.Y = Player._groundy
-	brain._enemyLastSeenPoint.Z = Player._groundz
+	brain._enemyLastSeenPoint.X = self._AIBrain.Target._groundx
+	brain._enemyLastSeenPoint.Y = self._AIBrain.Target._groundy
+	brain._enemyLastSeenPoint.Z = self._AIBrain.Target._groundz
 	self:ThrowTaken(nil, true)
 end
 
@@ -282,8 +272,10 @@ function o._CustomAiStates.groundAttackAlastorB:OnInit(brain)
 	--self.mode = 0
 	self.active = true
 	actor:SetAnim("idle1",false)
-	actor:RotateToVectorWithAnim(Player._groundx,Player._groundy,Player._groundz)
-	--actor:RotateToVector(Player._groundx,Player._groundy,Player._groundz)
+	if brain.Target then
+		actor:RotateToVectorWithAnim(brain.Target._groundx,brain.Target._groundy,brain.Target._groundz)
+	end
+	--actor:RotateToVector(self._AIBrain.Target._groundx,self._AIBrain.Target._groundy,self._AIBrain.Target._groundz)
 	self.attackMode = false
 	self.lastTimeOnAttack = brain._currentTime + FRand(0, 0.5)
 	actor._pissedOffRatio = 0
@@ -369,6 +361,7 @@ function o._CustomAiStates.groundAttackAlastorB:CanShock(brain)
 	end
 	return false
 end
+
 function o._CustomAiStates.groundAttackAlastorB:CanFireball(brain)
 	if self.lastTimeFireball + self.TimeBetweenFireball < brain._currentTime then
 		brain._Objactor:FullStop()
@@ -387,7 +380,7 @@ function o._CustomAiStates.groundAttackAlastorB:OnUpdate(brain)
 	
     if self._mode then
 		if actor._canRotate then
-			actor:RotateToVector(Player._groundx,Player._groundy,Player._groundz)
+			actor:RotateToVector(brain.Target._groundx,brain.Target._groundy,brain.Target._groundz)
 		else
 			if actor._isRotating then
 				actor:FullStop()
@@ -399,7 +392,7 @@ function o._CustomAiStates.groundAttackAlastorB:OnUpdate(brain)
 			Game:Print("end self._mode "..actor.Animation)
 
 			actor._moveWithAnimationDoNotUpdateAngle = true
-			if (Player._lastTimeHit + 120 > Game.currentTime or math.random(100) < 20) 
+			if brain.Target and (brain.Target._lastTimeHit + 120 > Game.currentTime or math.random(100) < 20) 
 				 and self._mode ~= "stuned" and self._mode ~= "laugh" and not actor._gotDamage then
 				if self.lastTimeLaugh + 5.0 < brain._currentTime then
 					if math.random(100) < 80 then
@@ -434,7 +427,8 @@ function o._CustomAiStates.groundAttackAlastorB:OnUpdate(brain)
 	local aDist = math.abs(AngDist(actor.angle, angleToPlayer) * 180/math.pi)
 	local dist = brain._distToNearestEnemy
 	local distPlayerToWP = 19
-    local centre = arenaCentre.Points[1]
+	-- BFEDIT DUNNO WHAT THIS IS??
+  local centre = brain._enemyLastSeenPoint --arenaCentre.Points[1]
     
 	local zn,idx = WPT.GetClosest(x,y,z)  
 	local x2,y2,z2
@@ -667,7 +661,7 @@ function o:CustomOnDeathUpdate()
 			self._timerToDemon = nil
 		end
 	else
-		if self._demonfx and self._demonfx.TickCount > self._demonfx.EffectTime - 1.0 then
+		if Game.GMode == GModes.SingleGame and self._demonfx and self._demonfx.TickCount > self._demonfx.EffectTime - 1.0 then
 			self._demonfx = nil
 			GObjects:Add(TempObjName(),CloneTemplate("EndLevel.CProcess"))
 		end
@@ -781,7 +775,7 @@ function o:FireballsThrow()
 	end
 	if self._fireballs then
 		for i,v in self._fireballs do
-			v._target = Player
+			v._target = self._AIBrain.Target
 			v._enabled = true
 		end
 		self._fireballs = nil
@@ -859,7 +853,7 @@ function o:Shockwave()
     AddObject(s.FXwhenHit,s.FXwhenHitScale, v, nil, true) 
 
     Game._EarthQuakeProc:Add(v.X,v.Y,v.Z, s.eqTimeOut, s.eqRange, s.eqCameraMove, s.eqCameraMove, 1.0)
-	local dist = Dist3D(v.X,v.Y,v.Z,Player._groundx, Player._groundy, Player._groundz) 
+	local dist = Dist3D(v.X,v.Y,v.Z,self._AIBrain.Target._groundx, self._AIBrain.Target._groundy, self._AIBrain.Target._groundz) 
 	
     local b,d,x,y,z,nx,ny,nz,he,e
 	if s.HitDecal then
@@ -874,15 +868,15 @@ function o:Shockwave()
 
 	--Game:Print("SHOCK "..dist)	
 	if dist < s.range then
-		if not ENTITY.PO_IsFlying(Player._Entity) then
-			ENTITY.PO_SetPlayerFlying(Player._Entity, 0.3)
-			--ENTITY.SetVelocity(Player._Entity, v2.X, v2.Y, v2.Z)
-			--Player:OnDamage(s.damage - s.damage * dist / s.range, self)
-			local v2 = Vector:New(Player._groundx - v.X,0,Player._groundz - v.Z)
+		if not ENTITY.PO_IsFlying(self._AIBrain.Target._Entity) then
+			ENTITY.PO_SetPlayerFlying(self._AIBrain.Target._Entity, 0.3)
+			--ENTITY.SetVelocity(self._AIBrain.Target._Entity, v2.X, v2.Y, v2.Z)
+			--self._AIBrain.Target:OnDamage(s.damage - s.damage * dist / s.range, self)
+			local v2 = Vector:New(self._AIBrain.Target._groundx - v.X,0,self._AIBrain.Target._groundz - v.Z)
 			v2:Normalize()
 			v2.Y = 1.2
 			v2:MulByFloat(s.playerHitStr * FRand(0.9,1.1))
-			ENTITY.SetVelocity(Player._Entity, v2.X, v2.Y, v2.Z)
+			ENTITY.SetVelocity(self._AIBrain.Target._Entity, v2.X, v2.Y, v2.Z)
 		end
 	end
 	
@@ -905,7 +899,7 @@ end
 
 
 
-function o:CheckDamageFromFlame()
+function o:CheckDamageFromFlame(brain)
 	-- dodac min. time between attacks
 	local x2,y2,z2,x3,y3,z3 = self:FlamePos()		
 	
@@ -939,11 +933,11 @@ function o:CheckDamageFromFlame()
 			a.Size = size
 			table.insert(DebugSpheres, a)
 		end
-		local dist = Dist3D(x,y,z, Player._groundx, Player._groundy + 1.5, Player._groundz)
+		local dist = Dist3D(x,y,z, self._AIBrain.Target._groundx, self._AIBrain.Target._groundy + 1.5, self._AIBrain.Target._groundz)
 		if dist < size then
 			if self._lastDamageFromFire + 10 < self._AIBrain._currentTime then
 				self._lastDamageFromFire = self._AIBrain._currentTime
-				Player:OnDamage(self.flameDamage, self)
+				self._AIBrain.Target:OnDamage(self.flameDamage, self)
 			end
 			break
 		end

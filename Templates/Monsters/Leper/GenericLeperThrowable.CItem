@@ -28,7 +28,7 @@ function GenericLeperThrowable:OnCollision(x,y,z,nx,ny,nz,e)
 	if e then
 		local obj = EntityToObject[e]
 		if obj and not self.deathTimer then
-			if obj.OnDamage and obj == Player then
+			if obj.OnDamage and obj == self.ObjOwner._AIBrain.Target then
 				PlaySound2D("actor/leper_monk/lepperm-stick-hit")
 				obj:OnDamage(self.Damage, self.ObjOwner)
 				isPlayer = true

@@ -40,7 +40,7 @@ function o:OnCollision(x,y,z,nx,ny,nz,e)
     local obj = EntityToObject[e]
     if obj and not self.deathTimer then
         if obj.OnDamage then
-            if obj == Player then
+            if obj == self.ObjOwner._AIBrain.Target then
                 PlaySound2D("actor/corn/corn-damage")
             end
             obj:OnDamage(self.Damage, self.ObjOwner)

@@ -28,7 +28,7 @@ function Can:OnUpdate()
 		--if self.mode == 0 then
 			if math.random(100) < 15 then
                 local x,y,z = self.Pos.X,self.Pos.Y,self.Pos.Z
-				local dist = Dist3D(Player._groundx, Player._groundy, Player._groundz, x,y,z)
+				local dist = Dist3D(self.ObjOwner._AIBrain.Target._groundx, self.ObjOwner._AIBrain.Target._groundy, self.ObjOwner._AIBrain.Target._groundz, x,y,z)
 				if dist < self.Poison.Range then
 	                if not SOUND2D.IsPlaying(Player._oldSND) then
 		                Player._oldSND = PlaySound2D("hero/hero_poison"..math.random(1,3),nil,nil,true)

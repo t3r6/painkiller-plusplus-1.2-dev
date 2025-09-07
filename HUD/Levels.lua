@@ -26,7 +26,7 @@ LevelsMain =
 		{ "C3L3_Military_Base", Languages.Texts[296], "sketch_baza", Languages.Texts[409], 20, 0, nil },
 		{ "C3L5_Ruins", Languages.Texts[297], "sketch_ruins", Languages.Texts[410], 7, 0, "end_of_chapter_3.bik" },
 	},
-	
+
 	{
 		-- map directory, name, sketch
 		{ "C3L4_Castle", Languages.Texts[298], "sketch_zamek", Languages.Texts[411], 4, 0, nil },
@@ -43,38 +43,38 @@ LevelsMain =
 		{ "C5L3_Monastery", Languages.Texts[305], "sketch_opactwo", Languages.Texts[418], 15, 0, nil },
 		{ "C5L4_Hell", Languages.Texts[306], "sketch_pieklo", Languages.Texts[419], 22, 0, "end_of_chapter_5.bik" },
 	},
---[[
--- Setup for demo
+	--[[
+	-- Setup for demo
 
 	{
 		{ "", "", "", "", 0, 0, nil },
 	},
-	
+
 	{
 		{ "", "", "", "", 0, 0, nil },
 	},
-	
+
 	{
 		{ "C3L3_Military_Base", Languages.Texts[296], "sketch_baza", Languages.Texts[409], 20, 0, nil },
 	},
-	
+
 	{
 		{ "", "", "", "", 0, 0, nil },
 	},
 
 	{
 		{ "", "", "", "", 0, 0, nil },
---		{ "C5L1_City_On_Water", Languages.Texts[303], "sketch_wenecja", Languages.Texts[416], 24, 0, nil },
+		--		{ "C5L1_City_On_Water", Languages.Texts[303], "sketch_wenecja", Languages.Texts[416], 24, 0, nil },
 	},
 
 	{
---		{ "C2L5_Town", Languages.Texts[292], "sketch_town", Languages.Texts[405] },
---		{ "", "", "", "" },
---		{ "C4L1_Oriental_Castle", Languages.Texts[299], "sketch_arabski", Languages.Texts[412] },
+		--		{ "C2L5_Town", Languages.Texts[292], "sketch_town", Languages.Texts[405] },
+		--		{ "", "", "", "" },
+		--		{ "C4L1_Oriental_Castle", Languages.Texts[299], "sketch_arabski", Languages.Texts[412] },
 		{ "", "", "", "" },
---		{ "C3L5_Ruins", Languages.Texts[297], "sketch_ruins", Languages.Texts[410] },
+		--		{ "C3L5_Ruins", Languages.Texts[297], "sketch_ruins", Languages.Texts[410] },
 	},
-]]--
+	]]--
 }
 
 
@@ -101,13 +101,13 @@ Levels = LevelsMain
 
 function Levels_FillMap()
 	if not Game then return end
-	
+
 	if Game.AddOn then
 		Levels = LevelsAddOn
 	else
 		Levels = LevelsMain
 	end
-	
+
 	local current_set = false
 
 	for i=1,table.getn(Levels) do
@@ -141,9 +141,9 @@ function Levels_FillMap()
 					end
 				end
 
---				if Game.AddOn then
---					status = 2
---				end
+				--				if Game.AddOn then
+				--					status = 2
+				--				end
 
 				if current_set then
 					status = 0
@@ -152,7 +152,7 @@ function Levels_FillMap()
 				end
 
 				-- DEMO !!!
---				status = 1
+				--				status = 1
 
 				if status == 1 or status == 2 then
 					PMENU.AddLevelToMap( i, Levels[i][j][1], Levels[i][j][2], "HUD/Map/"..Levels[i][j][3], Levels[i][j][4], Levels[i][j][5], status )
@@ -165,14 +165,14 @@ function Levels_FillMap()
 				end
 			end
 		end
-    end
+	end
 end
 
 function Levels_GetNextLevel(name)
 	if name == nil then return nil end
 
 	if not Game then return end
-	
+
 	if Game.AddOn then
 		Levels = LevelsAddOn
 	else
@@ -193,14 +193,14 @@ function Levels_GetNextLevel(name)
 
 	if ret then return Levels[1][1][1] end
 
---	if ret then return Levels[5][1][1] end
+	--	if ret then return Levels[5][1][1] end
 end
 
 function Levels_GetLevelName(dir)
 	if dir == nil then return nil end
 
 	if not Game then return end
-	
+
 	if Game.AddOn then
 		Levels = LevelsAddOn
 	else
@@ -230,7 +230,7 @@ function Levels_GetLevelByDir(dir)
 			end
 		end
 	end
-	
+
 	for i=1,table.getn(LevelsMain) do
 		for j=1,table.getn(LevelsMain[i]) do
 			if LevelsMain[i][j][1] == dir then
@@ -250,7 +250,7 @@ function Levels_GetSketchByDir(dir)
 			end
 		end
 	end
-	
+
 	for i=1,table.getn(LevelsMain) do
 		for j=1,table.getn(LevelsMain[i]) do
 			if LevelsMain[i][j][1] == dir then
@@ -270,7 +270,6 @@ function Levels_GetSketchByDir(dir)
 	end
 
 	local ldir = string.lower(dir)
-	if string.find(ldir,string.lower("DM_")) or string.find(dir,"DMPCF_") or string.find(dir,"CTF_") then
 	if(string.find(ldir,string.lower("ctf_chaos-a")))then return "../PKPlusData/Maps/ctf_chaos-a" end
 	if(string.find(ldir,string.lower("ctf_chaos-b")))then return "../PKPlusData/Maps/ctf_chaos-b" end
 	if(string.find(ldir,string.lower("ctf_chaos-c")))then return "../PKPlusData/Maps/ctf_chaos-c" end
@@ -283,8 +282,18 @@ function Levels_GetSketchByDir(dir)
 	if(string.find(ldir,string.lower("ctf_trainstation-b")))then return "../PKPlusData/Maps/ctf_trainstation-b" end
 	if(string.find(ldir,string.lower("ctf_trainstation-c")))then return "../PKPlusData/Maps/ctf_trainstation-c" end
 	if(string.find(ldir,string.lower("ctf_trainstation")))then return "../PKPlusData/Maps/ctf_trainstation" end
+	if(string.find(ldir,string.lower("dmpcf_tower-a")))then return "../PKPlusData/Maps/dmpcf_tower-a" end
+	if(string.find(ldir,string.lower("dmpcf_tower-b")))then return "../PKPlusData/Maps/dmpcf_tower-b" end
+	if(string.find(ldir,string.lower("dmpcf_tower-c")))then return "../PKPlusData/Maps/dmpcf_tower-c" end
 	if(string.find(ldir,string.lower("dmpcf_tower")))then return "../PKPlusData/Maps/dmpcf_tower" end
+	if(string.find(ldir,string.lower("dmpcf_warehouse-a")))then return "../PKPlusData/Maps/dmpcf_warehouse-a" end
+	if(string.find(ldir,string.lower("dmpcf_warehouse-b")))then return "../PKPlusData/Maps/dmpcf_warehouse-b" end
+	if(string.find(ldir,string.lower("dmpcf_warehouse-c")))then return "../PKPlusData/Maps/dmpcf_warehouse-c" end
 	if(string.find(ldir,string.lower("dmpcf_warehouse")))then return "../PKPlusData/Maps/dmpcf_warehouse" end
+	if(string.find(ldir,string.lower("dm_1v1_meatless-a")))then return "../PKPlusData/Maps/dm_1v1_meatless-a" end
+	if(string.find(ldir,string.lower("dm_1v1_meatless-b")))then return "../PKPlusData/Maps/dm_1v1_meatless-b" end
+	if(string.find(ldir,string.lower("dm_1v1_meatless-c")))then return "../PKPlusData/Maps/dm_1v1_meatless-c" end
+	if(string.find(ldir,string.lower("dm_1v1_meatless")))then return "../PKPlusData/Maps/dm_1v1_meatless" end
 	if(string.find(ldir,string.lower("dm_5quid01-a")))then return "../PKPlusData/Maps/dm_5quid01-a" end
 	if(string.find(ldir,string.lower("dm_5quid01-b")))then return "../PKPlusData/Maps/dm_5quid01-b" end
 	if(string.find(ldir,string.lower("dm_5quid01-c")))then return "../PKPlusData/Maps/dm_5quid01-c" end
@@ -348,8 +357,163 @@ function Levels_GetSketchByDir(dir)
 	if(string.find(ldir,string.lower("dm_unseen-a")))then return "../PKPlusData/Maps/dm_unseen-a" end
 	if(string.find(ldir,string.lower("dm_unseen-b")))then return "../PKPlusData/Maps/dm_unseen-b" end
 	if(string.find(ldir,string.lower("dm_unseen-c")))then return "../PKPlusData/Maps/dm_unseen-c" end
-		return "HUD/Map/sketch_mp"
-	end
+	if(string.find(ldir,string.lower("dm_unseen")))then return "../PKPlusData/Maps/dm_unseen" end
+	if(string.find(ldir,string.lower("C1L1_Cathedral-a")))then return "../PKPlusData/Maps/C1L1_Cathedral-a" end
+	if(string.find(ldir,string.lower("C1L1_Cathedral-b")))then return "../PKPlusData/Maps/C1L1_Cathedral-b" end
+	if(string.find(ldir,string.lower("C1L1_Cathedral-c")))then return "../PKPlusData/Maps/C1L1_Cathedral-c" end
+	if(string.find(ldir,string.lower("C1L1_Cathedral")))then return "../PKPlusData/Maps/C1L1_Cathedral" end
+	if(string.find(ldir,string.lower("C1L2_Atrium_Complex-a")))then return "../PKPlusData/Maps/C1L2_Atrium_Complex-a" end
+	if(string.find(ldir,string.lower("C1L2_Atrium_Complex-b")))then return "../PKPlusData/Maps/C1L2_Atrium_Complex-b" end
+	if(string.find(ldir,string.lower("C1L2_Atrium_Complex-c")))then return "../PKPlusData/Maps/C1L2_Atrium_Complex-c" end
+	if(string.find(ldir,string.lower("C1L2_Atrium_Complex")))then return "../PKPlusData/Maps/C1L2_Atrium_Complex" end
+	if(string.find(ldir,string.lower("C1L3_Catacombs-a")))then return "../PKPlusData/Maps/C1L3_Catacombs-a" end
+	if(string.find(ldir,string.lower("C1L3_Catacombs-b")))then return "../PKPlusData/Maps/C1L3_Catacombs-b" end
+	if(string.find(ldir,string.lower("C1L3_Catacombs-c")))then return "../PKPlusData/Maps/C1L3_Catacombs-c" end
+	if(string.find(ldir,string.lower("C1L3_Catacombs")))then return "../PKPlusData/Maps/C1L3_Catacombs" end
+	if(string.find(ldir,string.lower("C1L4_Cemetery-a")))then return "../PKPlusData/Maps/C1L4_Cemetery-a" end
+	if(string.find(ldir,string.lower("C1L4_Cemetery-b")))then return "../PKPlusData/Maps/C1L4_Cemetery-b" end
+	if(string.find(ldir,string.lower("C1L4_Cemetery-c")))then return "../PKPlusData/Maps/C1L4_Cemetery-c" end
+	if(string.find(ldir,string.lower("C1L4_Cemetery")))then return "../PKPlusData/Maps/C1L4_Cemetery" end
+	if(string.find(ldir,string.lower("C1L5_Enclave-a")))then return "../PKPlusData/Maps/C1L5_Enclave-a" end
+	if(string.find(ldir,string.lower("C1L5_Enclave-b")))then return "../PKPlusData/Maps/C1L5_Enclave-b" end
+	if(string.find(ldir,string.lower("C1L5_Enclave-c")))then return "../PKPlusData/Maps/C1L5_Enclave-c" end
+	if(string.find(ldir,string.lower("C1L5_Enclave")))then return "../PKPlusData/Maps/C1L5_Enclave" end
+	if(string.find(ldir,string.lower("C2L1_Bridge-a")))then return "../PKPlusData/Maps/C2L1_Bridge-a" end
+	if(string.find(ldir,string.lower("C2L1_Bridge-b")))then return "../PKPlusData/Maps/C2L1_Bridge-b" end
+	if(string.find(ldir,string.lower("C2L1_Bridge-c")))then return "../PKPlusData/Maps/C2L1_Bridge-c" end
+	if(string.find(ldir,string.lower("C2L1_Bridge")))then return "../PKPlusData/Maps/C2L1_Bridge" end
+	if(string.find(ldir,string.lower("C2L2_Prison-a")))then return "../PKPlusData/Maps/C2L2_Prison-a" end
+	if(string.find(ldir,string.lower("C2L2_Prison-b")))then return "../PKPlusData/Maps/C2L2_Prison-b" end
+	if(string.find(ldir,string.lower("C2L2_Prison-c")))then return "../PKPlusData/Maps/C2L2_Prison-c" end
+	if(string.find(ldir,string.lower("C2L2_Prison")))then return "../PKPlusData/Maps/C2L2_Prison" end
+	if(string.find(ldir,string.lower("C2L3_Opera-a")))then return "../PKPlusData/Maps/C2L3_Opera-a" end
+	if(string.find(ldir,string.lower("C2L3_Opera-b")))then return "../PKPlusData/Maps/C2L3_Opera-b" end
+	if(string.find(ldir,string.lower("C2L3_Opera-c")))then return "../PKPlusData/Maps/C2L3_Opera-c" end
+	if(string.find(ldir,string.lower("C2L3_Opera")))then return "../PKPlusData/Maps/C2L3_Opera" end
+	if(string.find(ldir,string.lower("C2L4_Asylum-a")))then return "../PKPlusData/Maps/C2L4_Asylum-a" end
+	if(string.find(ldir,string.lower("C2L4_Asylum-b")))then return "../PKPlusData/Maps/C2L4_Asylum-b" end
+	if(string.find(ldir,string.lower("C2L4_Asylum-c")))then return "../PKPlusData/Maps/C2L4_Asylum-c" end
+	if(string.find(ldir,string.lower("C2L4_Asylum")))then return "../PKPlusData/Maps/C2L4_Asylum" end
+	if(string.find(ldir,string.lower("C2L5_Town-a")))then return "../PKPlusData/Maps/C2L5_Town-a" end
+	if(string.find(ldir,string.lower("C2L5_Town-b")))then return "../PKPlusData/Maps/C2L5_Town-b" end
+	if(string.find(ldir,string.lower("C2L5_Town-c")))then return "../PKPlusData/Maps/C2L5_Town-c" end
+	if(string.find(ldir,string.lower("C2L5_Town")))then return "../PKPlusData/Maps/C2L5_Town" end
+	if(string.find(ldir,string.lower("C2L6_Swamp-a")))then return "../PKPlusData/Maps/C2L6_Swamp-a" end
+	if(string.find(ldir,string.lower("C2L6_Swamp-b")))then return "../PKPlusData/Maps/C2L6_Swamp-b" end
+	if(string.find(ldir,string.lower("C2L6_Swamp-c")))then return "../PKPlusData/Maps/C2L6_Swamp-c" end
+	if(string.find(ldir,string.lower("C2L6_Swamp")))then return "../PKPlusData/Maps/C2L6_Swamp" end
+	if(string.find(ldir,string.lower("C3L1_Train_Station-a")))then return "../PKPlusData/Maps/C3L1_Train_Station-a" end
+	if(string.find(ldir,string.lower("C3L1_Train_Station-b")))then return "../PKPlusData/Maps/C3L1_Train_Station-b" end
+	if(string.find(ldir,string.lower("C3L1_Train_Station-c")))then return "../PKPlusData/Maps/C3L1_Train_Station-c" end
+	if(string.find(ldir,string.lower("C3L1_Train_Station")))then return "../PKPlusData/Maps/C3L1_Train_Station" end
+	if(string.find(ldir,string.lower("C3L2_Factory-a")))then return "HUD/Map/sketch_fabryka-a" end
+	if(string.find(ldir,string.lower("C3L2_Factory-b")))then return "/HUD/Map/sketch_fabryka-b" end
+	if(string.find(ldir,string.lower("C3L2_Factory-c")))then return "HUD/Map/sketch_fabryka-c" end
+	if(string.find(ldir,string.lower("C3L2_Factory")))then return "HUD/Map/sketch_fabryka" end
+	if(string.find(ldir,string.lower("C3L3_Military_Base-a")))then return "HUD/Map/sketch_baza-a" end
+	if(string.find(ldir,string.lower("C3L3_Military_Base-b")))then return "/HUD/Map/sketch_baza-b" end
+	if(string.find(ldir,string.lower("C3L3_Military_Base-c")))then return "HUD/Map/sketch_baza-c" end
+	if(string.find(ldir,string.lower("C3L3_Military_Base")))then return "HUD/Map/sketch_baza" end
+	if(string.find(ldir,string.lower("C3L4_Castle-a")))then return "HUD/Map/sketch_zamek-a" end
+	if(string.find(ldir,string.lower("C3L4_Castle-b")))then return "/HUD/Map/sketch_zamek-b" end
+	if(string.find(ldir,string.lower("C3L4_Castle-c")))then return "HUD/Map/sketch_zamek-c" end
+	if(string.find(ldir,string.lower("C3L4_Castle")))then return "HUD/Map/sketch_zamek" end
+	if(string.find(ldir,string.lower("C3L5_Ruins-a")))then return "HUD/Map/sketch_ruins-a" end
+	if(string.find(ldir,string.lower("C3L5_Ruins-b")))then return "/HUD/Map/sketch_ruins-b" end
+	if(string.find(ldir,string.lower("C3L5_Ruins-c")))then return "HUD/Map/sketch_ruins-c" end
+	if(string.find(ldir,string.lower("C3L5_Ruins")))then return "HUD/Map/sketch_ruins" end
+	if(string.find(ldir,string.lower("C3L6_Forest-a")))then return "HUD/Map/sketch_forest-a" end
+	if(string.find(ldir,string.lower("C3L6_Forest-b")))then return "/HUD/Map/sketch_forest-b" end
+	if(string.find(ldir,string.lower("C3L6_Forest-c")))then return "HUD/Map/sketch_forest-c" end
+	if(string.find(ldir,string.lower("C3L6_Forest")))then return "HUD/Map/sketch_forest" end
+	if(string.find(ldir,string.lower("C4L1_Oriental_Castle-a")))then return "HUD/Map/sketch_arabski-a" end
+	if(string.find(ldir,string.lower("C4L1_Oriental_Castle-b")))then return "/HUD/Map/sketch_arabski-b" end
+	if(string.find(ldir,string.lower("C4L1_Oriental_Castle-c")))then return "HUD/Map/sketch_arabski-c" end
+	if(string.find(ldir,string.lower("C4L1_Oriental_Castle")))then return "HUD/Map/sketch_arabski" end
+	if(string.find(ldir,string.lower("C4L2_Babel-a")))then return "HUD/Map/sketch_babel-a" end
+	if(string.find(ldir,string.lower("C4L2_Babel-b")))then return "/HUD/Map/sketch_babel-b" end
+	if(string.find(ldir,string.lower("C4L2_Babel-c")))then return "HUD/Map/sketch_babel-c" end
+	if(string.find(ldir,string.lower("C4L2_Babel")))then return "HUD/Map/sketch_babel" end
+	if(string.find(ldir,string.lower("C4L4_Alastor-a")))then return "HUD/Map/sketch_alastor-a" end
+	if(string.find(ldir,string.lower("C4L4_Alastor-b")))then return "/HUD/Map/sketch_alastor-b" end
+	if(string.find(ldir,string.lower("C4L4_Alastor-c")))then return "HUD/Map/sketch_alastor-c" end
+	if(string.find(ldir,string.lower("C4L4_Alastor")))then return "HUD/Map/sketch_alastor" end
+	if(string.find(ldir,string.lower("C5L1_Benchmark-a")))then return "HUD/Map/sketch_wenecja-a" end
+	if(string.find(ldir,string.lower("C5L1_Benchmark-b")))then return "/HUD/Map/sketch_wenecja-b" end
+	if(string.find(ldir,string.lower("C5L1_Benchmark-c")))then return "HUD/Map/sketch_wenecja-c" end
+	if(string.find(ldir,string.lower("C5L1_Benchmark")))then return "HUD/Map/sketch_wenecja" end
+	if(string.find(ldir,string.lower("C5L1_City_On_Water-a")))then return "HUD/Map/sketch_wenecja-a" end
+	if(string.find(ldir,string.lower("C5L1_City_On_Water-b")))then return "/HUD/Map/sketch_wenecja-b" end
+	if(string.find(ldir,string.lower("C5L1_City_On_Water-c")))then return "HUD/Map/sketch_wenecja-c" end
+	if(string.find(ldir,string.lower("C5L1_City_On_Water")))then return "HUD/Map/sketch_wenecja" end
+	if(string.find(ldir,string.lower("C5L2_Benchmark-a")))then return "HUD/Map/sketch_doki-a" end
+	if(string.find(ldir,string.lower("C5L2_Benchmark-b")))then return "/HUD/Map/sketch_doki-b" end
+	if(string.find(ldir,string.lower("C5L2_Benchmark-c")))then return "HUD/Map/sketch_doki-c" end
+	if(string.find(ldir,string.lower("C5L2_Benchmark")))then return "HUD/Map/sketch_doki" end
+	if(string.find(ldir,string.lower("C5L2_Docks-a")))then return "HUD/Map/sketch_doki-a" end
+	if(string.find(ldir,string.lower("C5L2_Docks-b")))then return "/HUD/Map/sketch_doki-b" end
+	if(string.find(ldir,string.lower("C5L2_Docks-c")))then return "HUD/Map/sketch_doki-c" end
+	if(string.find(ldir,string.lower("C5L2_Docks")))then return "HUD/Map/sketch_doki" end
+	if(string.find(ldir,string.lower("C5L3_Monastery-a")))then return "HUD/Map/sketch_opactwo-a" end
+	if(string.find(ldir,string.lower("C5L3_Monastery-b")))then return "/HUD/Map/sketch_opactwo-b" end
+	if(string.find(ldir,string.lower("C5L3_Monastery-c")))then return "HUD/Map/sketch_opactwo-c" end
+	if(string.find(ldir,string.lower("C5L3_Monastery")))then return "HUD/Map/sketch_opactwo" end
+	if(string.find(ldir,string.lower("C5L4_Hell-a")))then return "HUD/Map/sketch_pieklo-a" end
+	if(string.find(ldir,string.lower("C5L4_Hell-b")))then return "/HUD/Map/sketch_pieklo-b" end
+	if(string.find(ldir,string.lower("C5L4_Hell-c")))then return "HUD/Map/sketch_pieklo-c" end
+	if(string.find(ldir,string.lower("C5L4_Hell")))then return "HUD/Map/sketch_pieklo" end
+	if(string.find(ldir,string.lower("C6L0_PCFHQ-a")))then return "HUD/Map/sketch_question-a" end
+	if(string.find(ldir,string.lower("C6L0_PCFHQ-b")))then return "/HUD/Map/sketch_question-b" end
+	if(string.find(ldir,string.lower("C6L0_PCFHQ-c")))then return "HUD/Map/sketch_question-c" end
+	if(string.find(ldir,string.lower("C6L0_PCFHQ")))then return "HUD/Map/sketch_question" end
+	if(string.find(ldir,string.lower("C6L1_Orphanage-a")))then return "HUD/Map/sketch_orphanage-a" end
+	if(string.find(ldir,string.lower("C6L1_Orphanage-b")))then return "/HUD/Map/sketch_orphanage-b" end
+	if(string.find(ldir,string.lower("C6L1_Orphanage-c")))then return "HUD/Map/sketch_orphanage-c" end
+	if(string.find(ldir,string.lower("C6L1_Orphanage")))then return "HUD/Map/sketch_orphanage" end
+	if(string.find(ldir,string.lower("C6L2_LoonyPark-a")))then return "HUD/Map/sketch_loony-a" end
+	if(string.find(ldir,string.lower("C6L2_LoonyPark-b")))then return "/HUD/Map/sketch_loony-b" end
+	if(string.find(ldir,string.lower("C6L2_LoonyPark-c")))then return "HUD/Map/sketch_loony-c" end
+	if(string.find(ldir,string.lower("C6L2_LoonyPark")))then return "HUD/Map/sketch_loony" end
+	if(string.find(ldir,string.lower("C6L3_Lab-a")))then return "HUD/Map/sketch_lab-a" end
+	if(string.find(ldir,string.lower("C6L3_Lab-b")))then return "/HUD/Map/sketch_lab-b" end
+	if(string.find(ldir,string.lower("C6L3_Lab-c")))then return "HUD/Map/sketch_lab-c" end
+	if(string.find(ldir,string.lower("C6L3_Lab")))then return "HUD/Map/sketch_lab" end
+	if(string.find(ldir,string.lower("C6L4_City-a")))then return "HUD/Map/sketch_city-a" end
+	if(string.find(ldir,string.lower("C6L4_City-b")))then return "/HUD/Map/sketch_city-b" end
+	if(string.find(ldir,string.lower("C6L4_City-c")))then return "HUD/Map/sketch_city-c" end
+	if(string.find(ldir,string.lower("C6L4_City")))then return "HUD/Map/sketch_city" end
+	if(string.find(ldir,string.lower("C6L4_Pentagon-a")))then return "HUD/Map/sketch_pentagon-a" end
+	if(string.find(ldir,string.lower("C6L4_Pentagon-b")))then return "/HUD/Map/sketch_pentagon-b" end
+	if(string.find(ldir,string.lower("C6L4_Pentagon-c")))then return "HUD/Map/sketch_pentagon-c" end
+	if(string.find(ldir,string.lower("C6L4_Pentagon")))then return "HUD/Map/sketch_pentagon" end
+	if(string.find(ldir,string.lower("C6L5_Leningrad-a")))then return "HUD/Map/sketch_leningrad-a" end
+	if(string.find(ldir,string.lower("C6L5_Leningrad-b")))then return "/HUD/Map/sketch_leningrad-b" end
+	if(string.find(ldir,string.lower("C6L5_Leningrad-c")))then return "HUD/Map/sketch_leningrad-c" end
+	if(string.find(ldir,string.lower("C6L5_Leningrad")))then return "HUD/Map/sketch_leningrad" end
+	if(string.find(ldir,string.lower("C6L6_Colloseum-a")))then return "HUD/Map/sketch_colloseum-a" end
+	if(string.find(ldir,string.lower("C6L6_Colloseum-b")))then return "/HUD/Map/sketch_colloseum-b" end
+	if(string.find(ldir,string.lower("C6L6_Colloseum-c")))then return "HUD/Map/sketch_colloseum-c" end
+	if(string.find(ldir,string.lower("C6L6_Colloseum")))then return "HUD/Map/sketch_colloseum" end
+	if(string.find(ldir,string.lower("C6L7_IceWallow-a")))then return "HUD/Map/sketch_question-a" end
+	if(string.find(ldir,string.lower("C6L7_IceWallow-b")))then return "/HUD/Map/sketch_question-b" end
+	if(string.find(ldir,string.lower("C6L7_IceWallow-c")))then return "HUD/Map/sketch_question-c" end
+	if(string.find(ldir,string.lower("C6L7_IceWallow")))then return "HUD/Map/sketch_question" end
+	if(string.find(ldir,string.lower("C6L8_Galleon-a")))then return "HUD/Map/sketch_question-a" end
+	if(string.find(ldir,string.lower("C6L8_Galleon-b")))then return "/HUD/Map/sketch_question-b" end
+	if(string.find(ldir,string.lower("C6L8_Galleon-c")))then return "HUD/Map/sketch_question-c" end
+	if(string.find(ldir,string.lower("C6L8_Galleon")))then return "HUD/Map/sketch_question" end
+	if(string.find(ldir,string.lower("C6L8_Mines-a")))then return "HUD/Map/sketch_underworld-a" end
+	if(string.find(ldir,string.lower("C6L8_Mines-b")))then return "/HUD/Map/sketch_underworld-b" end
+	if(string.find(ldir,string.lower("C6L8_Mines-c")))then return "HUD/Map/sketch_underworld-c" end
+	if(string.find(ldir,string.lower("C6L8_Mines")))then return "HUD/Map/sketch_underworld" end
+	if(string.find(ldir,string.lower("C6L9_Mine-a")))then return "HUD/Map/sketch_stonepit-a" end
+	if(string.find(ldir,string.lower("C6L9_Mine-b")))then return "/HUD/Map/sketch_stonepit-b" end
+	if(string.find(ldir,string.lower("C6L9_Mine-c")))then return "HUD/Map/sketch_stonepit-c" end
+	if(string.find(ldir,string.lower("C6L9_Mine")))then return "HUD/Map/sketch_stonepit" end
+	if(string.find(ldir,string.lower("C6L10_Shadowland-a")))then return "HUD/Map/sketch_shadowland-a" end
+	if(string.find(ldir,string.lower("C6L10_Shadowland-b")))then return "/HUD/Map/sketch_shadowland-b" end
+	if(string.find(ldir,string.lower("C6L10_Shadowland-c")))then return "HUD/Map/sketch_shadowland-c" end
+	if(string.find(ldir,string.lower("C6L10_Shadowland")))then return "HUD/Map/sketch_shadowland" end
 	return "HUD/Map/sketch_mp"
 end
 
@@ -361,7 +525,7 @@ ProgressIcons =
 	{ 275, 92, "HUD/loading/s_1" },
 	{ 300, 98, "HUD/loading/s_2" },
 	{ 323, 109, "HUD/loading/s_3" },
---	{ 307, 92, "HUD/loading/s_3" },
+	--	{ 307, 92, "HUD/loading/s_3" },
 	{ 347, 124, "HUD/loading/s_4" },
 	{ 367, 142, "HUD/loading/s_5" },
 

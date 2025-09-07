@@ -672,6 +672,8 @@ Languages.English =
             [AttackTypes.Rifle]      = {Languages.Texts[847]},
             [AttackTypes.BoltStick]  = {Languages.Texts[848]},
             [AttackTypes.HeaterBomb] = {Languages.Texts[849]},
+            [AttackTypes.Flattened] = {"$PLAYER was flattened."},
+            [AttackTypes.AIFar] = {"$PLAYER got killed by a monster."},
         }
     },
     

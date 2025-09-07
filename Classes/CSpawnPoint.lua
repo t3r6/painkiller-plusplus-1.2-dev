@@ -152,7 +152,11 @@ function CSpawnPoint:Spawn()
             obj.Rot:FromEuler(0,-self.SpawnAngle.Value,0)
         end
     else
-        obj.angle = math.atan2(Player.Pos.X - obj.Pos.X,Player.Pos.Z - obj.Pos.Z) -- front to player
+        if Player then
+        	obj.angle = math.atan2(Player.Pos.X - obj.Pos.X,Player.Pos.Z - obj.Pos.Z) -- front to player
+    		else
+    			obj.angle = 0
+    		end
     end
     if obj.angle then
         obj.angleDest = obj.angle

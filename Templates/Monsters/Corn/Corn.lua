@@ -22,7 +22,7 @@ function o:CustomUpdate()
 	end
 	
 	
-	if math.random(100) < 20 and Player and self._PosPoisonTime > 0 and not Player._poisoned then
+	if math.random(100) < 20 and self._AIBrain.Target and self._PosPoisonTime > 0 and not self._AIBrain.Target._poisoned then
         self._PosPoisonTime = self._PosPoisonTime - 1
 		--self._checkSpeed = 30/self.Poison.checkSpeed 
 		local x,y,z = self._PosPoison.X, self._PosPoison.Y, self._PosPoison.Z
@@ -66,20 +66,20 @@ end
 
 function o:CustomOnDeathUpdate()
 	if self._fx2 and not self._gibbed then
-		if math.random(100) < 20 and Player then
+		if math.random(100) < 20 and self._AIBrain.Target then
 			self._checkSpeed = 30/self.Poison.checkSpeed 
 			local x,y,z = ENTITY.GetPosition(self._fx2)
-			local dist = Dist3D(x,y,z, Player._groundx,Player._groundy, Player._groundz)
+			local dist = Dist3D(x,y,z, self._AIBrain.Target._groundx,self._AIBrain.Target._groundy, self._AIBrain.Target._groundz)
 			local distLast = 9999
 			if self._fx_lastx then
-				distLast = Dist3D(self._fx_lastx,self._fx_lasty,self._fx_lastz, Player._groundx,Player._groundy, Player._groundz)
+				distLast = Dist3D(self._fx_lastx,self._fx_lasty,self._fx_lastz, self._AIBrain.Target._groundx,self._AIBrain.Target._groundy, self._AIBrain.Target._groundz)
 			end
 			if dist < self.Poison.Range or distLast < self.Poison.Range then
 				--Game:Print("PLAYER poisoned")
                 --Player:PlaySoundHit2D("hero/hero_poison"..math.random(1,3))
                 
                 if not SOUND2D.IsPlaying(Player._oldSND) then
-	                Player._oldSND = PlaySound2D("hero/hero_poison"..math.random(1,3),nil,nil,true)
+	                self._AIBrain.Target._oldSND = PlaySound2D("hero/hero_poison"..math.random(1,3),nil,nil,true)
 	            end
                 
 				Player._poisoned = self.Poison.TimeOut

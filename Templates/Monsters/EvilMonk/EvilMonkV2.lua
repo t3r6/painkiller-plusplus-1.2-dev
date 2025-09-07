@@ -28,7 +28,7 @@ end
 
 function EvilMonkV2:Throw()
 	if self._AIBrain and self._AIBrain._enemyLastSeenTime > 0 then
-		local player = Player
+		local player = self._AIBrain.Target
 		if self._AIBrain.r_closestEnemy then
 			player = self._AIBrain.r_closestEnemy
 		end
@@ -86,7 +86,7 @@ function EvilMonkV2:ThrowLeftAxe()
 		local obj = GObjects:Add(TempObjName(),CloneTemplate(self.AiParams.ThrowableItem))
 		MDL.SetMeshVisibility(self._Entity, "polySurfaceShape926", false)	-- 
 
-		local player = Player
+		local player = self._AIBrain.Target
 		if self._AIBrain.r_closestEnemy then
 			player = self._AIBrain.r_closestEnemy
 		end
@@ -162,7 +162,8 @@ end
 function o._CustomAiStates.throwImmid:OnUpdate(brain)
 	local actor = brain._Objactor
     local aiParams = actor.AiParams
-	local player = Player
+    if not brain.Target then return end
+	local player = brain.Target
 	if brain.r_closestEnemy then
 		player = brain.r_closestEnemy
 	end

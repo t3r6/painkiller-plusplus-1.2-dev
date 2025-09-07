@@ -26,13 +26,13 @@ function GiantStake:Tick(delta)
 			self.currentMoving = self.currentMoving + delta * self.MoveUpSpeed
 			self.Pos.Y = self.currentMoving
 			if not self.playerHurt then		-- tylko raz dostaje od kolka
-				local dist = Dist3D(Player._groundx, Player.Pos.Y, Player._groundz, self.Pos.X, self.Pos.Y + self.MoveUp * 0.5 + self.initialPosY , self.Pos.Z)
+				local dist = Dist3D(self.ObjOwner._AIBrain.Target._groundx, self.ObjOwner._AIBrain.Target.Pos.Y, self.ObjOwner._AIBrain.Target._groundz, self.Pos.X, self.Pos.Y + self.MoveUp * 0.5 + self.initialPosY , self.Pos.Z)
 				if dist < 1.2 then
                     --MsgBox("damage")
 					self.playerHurt = true
-                    --ENTITY.PO_SetPlayerFlying(Player._Entity)
-					Player:OnDamage(self.Damage, self.ObjOwner)
-					ENTITY.PO_Hit(Player._Entity, Player._groundx,Player.Pos.Y,Player._groundz, 0, FRand(600, 800), 0)
+                    --ENTITY.PO_SetPlayerFlying(self.ObjOwner._AIBrain.Target._Entity)
+					self.ObjOwner._AIBrain.Target:OnDamage(self.Damage, self.ObjOwner)
+					ENTITY.PO_Hit(self.ObjOwner._AIBrain.Target._Entity, self.ObjOwner._AIBrain.Target._groundx,Player.Pos.Y,self.ObjOwner._AIBrain.Target._groundz, 0, FRand(600, 800), 0)
 				end
 			end
     

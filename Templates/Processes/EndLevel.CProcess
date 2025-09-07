@@ -278,7 +278,7 @@ function EndLevel:PostRender(delta)
 		else
 			HUD.DrawBorder(100,318,824,160)
 		end
-		HUD.SetFont("timesbd",22)
+		HUD.SetFont(Cfg.DefaultFont,22)
 		local pressWidth = HUD.GetTextWidth(TXT.SPStats.PressFire)
 		local incSpeed = 100.0
 
@@ -289,10 +289,10 @@ function EndLevel:PostRender(delta)
 
 			local w,h = R3D.ScreenSize()
 
-			HUD.SetFont("timesbd",26)
+			HUD.SetFont(Cfg.DefaultFont,26)
 			local fh = HUD.GetTextHeight() + 8 * h/768
 
-			HUD.PrintXY(-1,h/2-fh*7,TXT.SPStats.YourScore,"timesbd",colorTxt[1],colorTxt[2],colorTxt[3],26)
+			HUD.PrintXY(-1,h/2-fh*7,TXT.SPStats.YourScore,Cfg.DefaultFont,colorTxt[1],colorTxt[2],colorTxt[3],26)
 
 			local min = math.abs(self.time / 60)
 			local sec = math.mod(self.time, 60)
@@ -318,15 +318,15 @@ function EndLevel:PostRender(delta)
 
 			if self.statStep > 0 then
 				spos = sepPos - HUD.GetTextWidth( TXT.SPStats.GameplayTime )
-				HUD.PrintXY(spos,h/2-fh*5,TXT.SPStats.GameplayTime..": ","timesbd",colorTxt[1],colorTxt[2],colorTxt[3],26)
+				HUD.PrintXY(spos,h/2-fh*5,TXT.SPStats.GameplayTime..": ",Cfg.DefaultFont,colorTxt[1],colorTxt[2],colorTxt[3],26)
 
 				if self.statStep ~= 1 or timeDiff > 0.5 then
 					if min < 60 then
-						HUD.PrintXY(minPos,h/2-fh*5,string.format("%02d",min)..":"..string.format("%02d",sec),"timesbd",colorMin[1],colorMin[2],colorMin[3],26)
+						HUD.PrintXY(minPos,h/2-fh*5,string.format("%02d",min)..":"..string.format("%02d",sec),Cfg.DefaultFont,colorMin[1],colorMin[2],colorMin[3],26)
 					else
 						local hour = math.floor(min/60)
 						min = min - hour * 60
-						HUD.PrintXY(minPos,h/2-fh*5,string.format("%02d",hour)..":"..string.format("%02d",min)..":"..string.format("%02d",sec),"timesbd",colorMin[1],colorMin[2],colorMin[3],26)
+						HUD.PrintXY(minPos,h/2-fh*5,string.format("%02d",hour)..":"..string.format("%02d",min)..":"..string.format("%02d",sec),Cfg.DefaultFont,colorMin[1],colorMin[2],colorMin[3],26)
 					end
 				end
 				if self.statStep == 1 and timeDiff > 1.0 then
@@ -341,10 +341,10 @@ function EndLevel:PostRender(delta)
 				local diff = { TXT.Menu.Daydream, TXT.Menu.Insomnia, TXT.Menu.Nightmare, TXT.Menu.Trauma }
 
 				spos = sepPos - HUD.GetTextWidth( TXT.SPStats.Difficulty )
-				HUD.PrintXY(spos,h/2-fh*4,TXT.SPStats.Difficulty..": ","timesbd",colorTxt[1],colorTxt[2],colorTxt[3],26)
+				HUD.PrintXY(spos,h/2-fh*4,TXT.SPStats.Difficulty..": ",Cfg.DefaultFont,colorTxt[1],colorTxt[2],colorTxt[3],26)
 
 				if self.statStep ~= 2 or timeDiff > 1.5 then
-					HUD.PrintXY(minPos,h/2-fh*4,diff[Game.Difficulty+1],"timesbd",colorMin[1],colorMin[2],colorMin[3],26)
+					HUD.PrintXY(minPos,h/2-fh*4,diff[Game.Difficulty+1],Cfg.DefaultFont,colorMin[1],colorMin[2],colorMin[3],26)
 				end
 
 				if self.statStep == 2 and timeDiff > 2 then
@@ -569,8 +569,8 @@ function EndLevel:PostRender(delta)
 			end
 
 			if self.statStep > 10 then
-				HUD.PrintXY(-1,h/2+fh*6-10*w/768,TXT.SPStats.CardCondition..":","timesbd",colorTxt[1],colorTxt[2],colorTxt[3],26)
-				HUD.PrintXY(-1,h/2+fh*7-10*w/768,Lev._CardTask,"timesbd",colorMax[1],colorMax[2],colorMax[3],26)
+				HUD.PrintXY(-1,h/2+fh*6-10*w/768,TXT.SPStats.CardCondition..":",Cfg.DefaultFont,colorTxt[1],colorTxt[2],colorTxt[3],26)
+				HUD.PrintXY(-1,h/2+fh*7-10*w/768,Lev._CardTask,Cfg.DefaultFont,colorMax[1],colorMax[2],colorMax[3],26)
 
 				local cardStatus = Lev:GetCardStatus()
 				local cardText = TXT.SPStats.Unlocked
@@ -583,54 +583,54 @@ function EndLevel:PostRender(delta)
 				end
 
 				local statLen = HUD.GetTextWidth(TXT.SPStats.Status..": "..cardText)
-				HUD.PrintXY(w/2-statLen/2,h/2+fh*8-10*w/768,TXT.SPStats.Status..": ","timesbd",colorTxt[1],colorTxt[2],colorTxt[3],26)
-				HUD.PrintXY(w/2+statLen/2-HUD.GetTextWidth(cardText),h/2+fh*8-10*w/768,cardText,"timesbd",colorMin[1],colorMin[2],colorMin[3],26)
+				HUD.PrintXY(w/2-statLen/2,h/2+fh*8-10*w/768,TXT.SPStats.Status..": ",Cfg.DefaultFont,colorTxt[1],colorTxt[2],colorTxt[3],26)
+				HUD.PrintXY(w/2+statLen/2-HUD.GetTextWidth(cardText),h/2+fh*8-10*w/768,cardText,Cfg.DefaultFont,colorMin[1],colorMin[2],colorMin[3],26)
 			end
 
-			HUD.PrintXY((w-pressWidth)/2+1,h-29,TXT.SPStats.PressFire,"timesbd",15,15,15,22)
-			HUD.PrintXY((w-pressWidth)/2,h-30,TXT.SPStats.PressFire,"timesbd",225,65,68,22)
+			HUD.PrintXY((w-pressWidth)/2+1,h-29,TXT.SPStats.PressFire,Cfg.DefaultFont,15,15,15,22)
+			HUD.PrintXY((w-pressWidth)/2,h-30,TXT.SPStats.PressFire,Cfg.DefaultFont,225,65,68,22)
 		elseif self.mode == 1 then
 --			HUD.DrawQuad(self.bigCard,256*w/1024,128*h/768,512*w/1024,512*h/768)
 			if self.bigCard then
 				HUD.DrawQuad(self.bigCard,52*w/1024,146*h/768,512*w/1024,512*h/768)
 			end
-			HUD.SetFont("timesbd",28)
+			HUD.SetFont(Cfg.DefaultFont,28)
 			local posx = 490
-			HUD.PrintXY(posx*w/1024+212*w/1024-HUD.GetTextWidth(Languages.Texts[455])/2,200*h/768,Languages.Texts[455],"timesbd",230,161,97,28)
-			HUD.PrintXY(posx*w/1024+212*w/1024-HUD.GetTextWidth(Languages.Texts[456])/2,240*h/768,Languages.Texts[456],"timesbd",230,161,97,28)
-			HUD.PrintXY(posx*w/1024+212*w/1024-HUD.GetTextWidth(Languages.Texts[457])/2,280*h/768,Languages.Texts[457],"timesbd",230,161,97,28)
+			HUD.PrintXY(posx*w/1024+212*w/1024-HUD.GetTextWidth(Languages.Texts[455])/2,200*h/768,Languages.Texts[455],Cfg.DefaultFont,230,161,97,28)
+			HUD.PrintXY(posx*w/1024+212*w/1024-HUD.GetTextWidth(Languages.Texts[456])/2,240*h/768,Languages.Texts[456],Cfg.DefaultFont,230,161,97,28)
+			HUD.PrintXY(posx*w/1024+212*w/1024-HUD.GetTextWidth(Languages.Texts[457])/2,280*h/768,Languages.Texts[457],Cfg.DefaultFont,230,161,97,28)
 			HUD.DrawQuadRGBA(nil,520*w/1024,340*h/768,360*w/1024,1,230,161,97,255)
-			HUD.SetFont("timesbd",36)
+			HUD.SetFont(Cfg.DefaultFont,36)
 			local name,desc,cost = Lev:GetCardName()
-			HUD.PrintXY(posx*w/1024+212*w/1024-HUD.GetTextWidth(name)/2,370*h/768,name,"timesbd",235,25,28,36)
-			HUD.SetFont("timesbd",22)
+			HUD.PrintXY(posx*w/1024+212*w/1024-HUD.GetTextWidth(name)/2,370*h/768,name,Cfg.DefaultFont,235,25,28,36)
+			HUD.SetFont(Cfg.DefaultFont,22)
 			
 			local d1 = string.find(desc,"\\n")
 			if d1 == nil then
-				HUD.PrintXY(posx*w/1024+212*w/1024-HUD.GetTextWidth(desc)/2,430*h/768,desc,"timesbd",230,161,97,22)
-				HUD.PrintXY(posx*w/1024+212*w/1024-HUD.GetTextWidth(TXT.Board.Cost..": 0000")/2,500*h/768,TXT.Board.Cost..": ","timesbd",230,161,97,22)
+				HUD.PrintXY(posx*w/1024+212*w/1024-HUD.GetTextWidth(desc)/2,430*h/768,desc,Cfg.DefaultFont,230,161,97,22)
+				HUD.PrintXY(posx*w/1024+212*w/1024-HUD.GetTextWidth(TXT.Board.Cost..": 0000")/2,500*h/768,TXT.Board.Cost..": ",Cfg.DefaultFont,230,161,97,22)
 				HUD.DrawQuadRGBA(nil,520*w/1024,480*h/768,360*w/1024,1,230,161,97,255)
-				HUD.PrintXY(posx*w/1024+212*w/1024-HUD.GetTextWidth(string.format("%d",cost))+HUD.GetTextWidth(TXT.Board.Cost..": 0000")/2,500*h/768,string.format("%d",cost),"timesbd",235,25,28,22)
+				HUD.PrintXY(posx*w/1024+212*w/1024-HUD.GetTextWidth(string.format("%d",cost))+HUD.GetTextWidth(TXT.Board.Cost..": 0000")/2,500*h/768,string.format("%d",cost),Cfg.DefaultFont,235,25,28,22)
 			else
 				local p1 = string.sub(desc,0,d1-1)
 				local p2 = string.sub(desc,d1+2)
-				HUD.PrintXY(posx*w/1024+212*w/1024-HUD.GetTextWidth(p1)/2,430*h/768,p1,"timesbd",230,161,97,22)
-				HUD.PrintXY(posx*w/1024+212*w/1024-HUD.GetTextWidth(p2)/2,470*h/768,p2,"timesbd",230,161,97,22)
-				HUD.PrintXY(posx*w/1024+212*w/1024-HUD.GetTextWidth(TXT.Board.Cost..": 0000")/2,540*h/768,TXT.Board.Cost..": ","timesbd",230,161,97,22)
-				HUD.PrintXY(posx*w/1024+212*w/1024-HUD.GetTextWidth(string.format("%d",cost))+HUD.GetTextWidth(TXT.Board.Cost..": 0000")/2,540*h/768,string.format("%d",cost),"timesbd",235,25,28,22)
+				HUD.PrintXY(posx*w/1024+212*w/1024-HUD.GetTextWidth(p1)/2,430*h/768,p1,Cfg.DefaultFont,230,161,97,22)
+				HUD.PrintXY(posx*w/1024+212*w/1024-HUD.GetTextWidth(p2)/2,470*h/768,p2,Cfg.DefaultFont,230,161,97,22)
+				HUD.PrintXY(posx*w/1024+212*w/1024-HUD.GetTextWidth(TXT.Board.Cost..": 0000")/2,540*h/768,TXT.Board.Cost..": ",Cfg.DefaultFont,230,161,97,22)
+				HUD.PrintXY(posx*w/1024+212*w/1024-HUD.GetTextWidth(string.format("%d",cost))+HUD.GetTextWidth(TXT.Board.Cost..": 0000")/2,540*h/768,string.format("%d",cost),Cfg.DefaultFont,235,25,28,22)
 				HUD.DrawQuadRGBA(nil,520*w/1024,510*h/768,360*w/1024,1,230,161,97,255)
 			end
 
-			HUD.PrintXY((w-pressWidth)/2+1,h-29,TXT.SPStats.PressFire,"timesbd",15,15,15,22)
-			HUD.PrintXY((w-pressWidth)/2,h-30,TXT.SPStats.PressFire,"timesbd",225,65,68,22)
+			HUD.PrintXY((w-pressWidth)/2+1,h-29,TXT.SPStats.PressFire,Cfg.DefaultFont,15,15,15,22)
+			HUD.PrintXY((w-pressWidth)/2,h-30,TXT.SPStats.PressFire,Cfg.DefaultFont,225,65,68,22)
 		elseif self.mode == 2 then
-			HUD.PrintXY(-1,h/2,Languages.Texts[577],"timesbd",230,161,97,26)
-			HUD.PrintXY((w-pressWidth)/2+1,h-29,TXT.SPStats.PressFire,"timesbd",15,15,15,22)
-			HUD.PrintXY((w-pressWidth)/2,h-30,TXT.SPStats.PressFire,"timesbd",225,65,68,22)
+			HUD.PrintXY(-1,h/2,Languages.Texts[577],Cfg.DefaultFont,230,161,97,26)
+			HUD.PrintXY((w-pressWidth)/2+1,h-29,TXT.SPStats.PressFire,Cfg.DefaultFont,15,15,15,22)
+			HUD.PrintXY((w-pressWidth)/2,h-30,TXT.SPStats.PressFire,Cfg.DefaultFont,225,65,68,22)
 		elseif self.mode == 3 then
-			HUD.PrintXY(-1,h/2,Languages.Texts[578],"timesbd",230,161,97,26)
-			HUD.PrintXY((w-pressWidth)/2+1,h-29,TXT.SPStats.PressFire,"timesbd",15,15,15,22)
-			HUD.PrintXY((w-pressWidth)/2,h-30,TXT.SPStats.PressFire,"timesbd",225,65,68,22)
+			HUD.PrintXY(-1,h/2,Languages.Texts[578],Cfg.DefaultFont,230,161,97,26)
+			HUD.PrintXY((w-pressWidth)/2+1,h-29,TXT.SPStats.PressFire,Cfg.DefaultFont,15,15,15,22)
+			HUD.PrintXY((w-pressWidth)/2,h-30,TXT.SPStats.PressFire,Cfg.DefaultFont,225,65,68,22)
 		end
 	end
 end

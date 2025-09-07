@@ -1,0 +1,301 @@
+Monsterlist (CActor):
+---------------------
+---------------------
+
+
+1.)    Alastor
+
+2.)    AlastorKing
+
+3.)    Amput_zombie
+4.)    Amput_zombie_barf
+
+5.)    Amputee
+6.)    Amputee_Agressive
+7.)    Amputee_AgressiveJumper
+8.)    Amputee_AgressiveJumperV2
+9.)    Amputee_AgressiveV2
+10.)   Amputee_ceiling
+11.)   AmputeeV2
+
+12.)   Apoc_M
+13.)   Apoc_M_Hunt
+14.)   Apoc_M_Hunt_Sm
+15.)   Apoc_zombie
+16.)   Apoc_zombie_never_move
+17.)   Apoc_zombie_V2
+18.)   Apoc_zombie_V2_FastDissapear
+19.)   Apoc_zombie_V2_FastDissapear2
+20.)   Apoc_zombie_V2_FastDissapear3
+
+21.)   Bagbaby
+
+22.)   Banshee
+23.)   Banshee_CemeteryBoss
+24.)   Banshee_NoMoveScreamer
+25.)   Banshee_NoScream
+26.)   Banshee_NoScreamShortSight
+
+27.)   Bat
+28.)   Bat_Adrian
+29.)   Bat_Attacker
+
+30.)   Beast
+31.)   Beast_agrresive
+32.)   Beast_agrresive_NoJump
+33.)   Beast_agrresive_NoJumpHunter
+34.)   Beast_V2
+
+35.)   BlackDemon
+36.)   TemplarBoss
+37.)   WhiteDemon
+
+38.)   Bones
+39.)   Bones_Hunter
+40.)   Bones_OnSight
+41.)   Bones_OnSight_Bigger
+42.)   Bones_OnSight2
+
+43.)   Boy
+44.)   BreakBoy
+45.)   BreakBoyTransformed
+
+46.)   Clown
+
+47.)   Corn
+48.)   Corn_NotMoveable
+49.)   Corn_ThrowsStraight
+
+50.)   dead_body
+
+51.)   Deto
+
+52.)   DevilMonk
+53.)   DevilMonk_Adrian
+54.)   DevilMonk_AdrianRunOnly
+55.)   DevilMonk_Slowdown
+56.)   DevilMonkV3
+
+57.)   DocDeath
+
+58.)   dzialko
+
+59.)   EvilMonk
+60.)   EvilMonk_AdrianDumbPatroler
+61.)   EvilMonk_AdrianRunOnly
+62.)   EvilMonk_AdrianRunOnlyBigger
+63.)   EvilMonk_AdrianWalkOnly
+64.)   EvilMonk_SmallDumbPatrolerWalk
+65.)   EvilMonk_ThrowAndDie
+66.)   EvilMonk_ThrowAndDieShortsighted
+67.)   EvilMonk_ThrowAndDieUp
+68.)   EvilMonkV2
+69.)   EvilMonkV2_DumbPatroler
+70.)   EvilMonkV2_RunOnlyBigger
+71.)   EvilMonkV2_ThrowAndDie
+72.)   EvilMonkV2_ThrowAndDieShortsighted
+73.)   EvilMonkV2_WalkOnlyHunter
+74.)   EvilMonkV2_WalkOnlyNoThrow
+75.)   EvilMonkV3
+
+76.)   Executioner
+77.)   Executioner_V3
+78.)   Spider
+
+79.)   Flying_Nun
+80.)   Flying_Nun_NoAttack
+
+81.)   Ghost
+
+82.)   Giant
+
+83.)   Girl
+
+84.)   Gladiator
+85.)   Gladiator2
+86.)   Gladiator3
+87.)   Gladiator3_Atak2
+88.)   Gladiator4
+
+89.)   HellAngel
+90.)   HellAngel_Area
+91.)   HellAngel_AreaThrower
+92.)   HellAngel_MoveableThrower
+93.)   HellAngel_NoThrow
+94.)   HellAngel_NoThrowHunter
+95.)   HellAngel_NotMoveableThrower
+96.)   HellAngel_V2
+97.)   HellAngel_V3
+
+98.)   HellBiker
+99.)   HellBiker_Area
+100.)  HellBiker_AreaV2
+101.)  HellBiker_Malo_ruchliwy
+102.)  HellBiker_NotMoveable
+103.)  HellBiker_V2
+104.)  HellBiker_V3
+105.)  HellBiker_V4
+106.)  HellBiker_VeniceRunOnlyHunter
+107.)  HellBiker_VeniceWalkOnly
+
+108.)  Krusty
+109.)  KrustyFlying
+110.)  KrustyFlying_NotMoveableFastShooter
+
+111.)  LabCommandos
+
+112.)  Leper
+113.)  Leper_NotMoveable
+
+114.)  Leper_monk
+
+115.)  Loki
+116.)  Loki_NeverChange
+117.)  Loki_NeverChangeNoJump
+118.)  Loki_Small
+119.)  Loki_Small_v2
+120.)  Loki_Small_v3
+
+121.)  Lucifer
+
+122.)  Maso
+123.)  Maso_FlameOnly
+124.)  Maso_GrenadeOnly
+125.)  Maso_GrenadeOnly_Area
+126.)  Maso_GrenadeOnlyNonMoveable
+127.)  Maso_NonMoveable
+
+128.)  Military_Base_Gun
+
+129.)  MutaNemo
+
+130.)  Ninja1
+131.)  Ninja1_SmallSpitOnly
+132.)  Ninja1_SpitOnly
+133.)  Ninja1_SpitOnlyClose
+134.)  Ninja1_SpitOnlyHunter
+135.)  Ninja1_SpitOnlyNotMove
+136.)  Ninja2
+137.)  Ninja2_1AttackOnlyGuard
+138.)  Ninja2_1AttackOnlyHunter
+139.)  Ninja2_2AttackOnlyHunter
+140.)  Ninja2_4AttackOnlyHunter
+141.)  Ninja2_Area
+142.)  Ninja2_AreaFast
+143.)  Ninja2_ShurikenNoMove
+
+144.)  Nun_Adrian
+145.)  Nun1
+146.)  Nun1_Hunter
+147.)  Nun2
+
+148.)  Nurse
+
+149.)  Officer
+
+150.)  Panzer_Demon
+151.)  Panzer_Spider
+
+152.)  Pinokio
+
+153.)  Pirat_zombie
+
+154.)  Pirate_bossman
+155.)  Pirate_bossman_V2
+156.)  Pirate_v1
+157.)  Pirate_v2
+158.)  Pirate_v3
+
+159.)  Preacher
+160.)  Preacher_RunOnly
+161.)  PreacherAttackOnly
+
+162.)  Psycho_elektro
+163.)  Psycho_elektro_explode
+164.)  Psycho_elektro_ghost
+
+165.)  Raven
+166.)  Raven_Corpse
+167.)  Raven_EscapeAfterCreate
+
+168.)  Sado
+169.)  Sado_1gun
+170.)  Sado_1gun_Area
+171.)  Sado_1gun_CloseUZI
+172.)  Sado_1gun_NonMoveable
+173.)  Sado_1gun_RunOnlyHunter
+
+174.)  Samurai
+175.)  Samurai_FireballOnly
+176.)  Samurai_NoFireball
+177.)  SamuraiV2
+178.)  SamuraiV2_Area
+179.)  SamuraiV2_Hunter
+180.)  SamuraiV2_NoXHunter
+181.)  SamuraiV2_XOnlyNoMove
+
+182.)  Skeleton_Soldier
+183.)  Skeleton_Soldier_BayonetOnlyHunterSmall
+184.)  Skeleton_Soldier_ShootOnlyHunter
+185.)  Skeleton_SoldierV2
+
+186.)  Skull
+187.)  Skull_Area
+188.)  Skull_Catcher
+189.)  Skull_V2
+
+190.)  Slave
+
+191.)  Germ_soldier
+192.)  Russ_soldier
+
+193.)  StoneGolem
+
+194.)  Swamp
+195.)  SwampTentacle
+
+196.)  Tank
+197.)  Tank_germ
+198.)  Tank_russ
+
+199.)  Templar
+200.)  Templar_Arabian
+201.)  Templar_Area
+202.)  Templar_NonMoveable
+203.)  TemplarV2
+
+204.)  Thor
+
+205.)  Vamp
+
+206.)  Vamp_Big
+207.)  Vamp_Big_Barrel
+208.)  Vamp_Big_BarrelSuizide
+209.)  Vamp_Big_Masta
+
+210.)  Vamp_Small
+211.)  Vamp_SmallThrowerNoMove
+
+212.)  Voodoo
+
+213.)  Winged_Demon
+
+214.)  Witch
+
+215.)  Zombie
+216.)  Zombie_2
+217.)  Zombie_2_Hunter
+218.)  Zombie_2_HunterRunner
+219.)  Zombie_2_HuntOnce
+220.)  Zombie_2_WalkOnlyDontBehead
+221.)  Zombie_2_WalkOnlyHunter
+
+222.)  Zombie_Soldier
+223.)  Zombie_Soldier_MStar
+224.)  Zombie_Soldier_MStar_forGiant
+225.)  Zombie_Soldier_MStar_HunterRunner
+226.)  Zombie_Soldier_MStar_WalkOnly
+227.)  Zombie_Soldier_RunOnlyHunter
+228.)  Zombie_Soldier_V3
+229.)  Zombie_Soldier_V3_Hunter
+230.)  Zombie_Soldier_WalkOnly

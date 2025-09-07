@@ -59,7 +59,7 @@ function Executioner_V3_Spike:OnCollision(x,y,z,nx,ny,nz,e_other,h_me,h_other,vx
 					end
 				end
 				if obj.OnDamage then
-					if obj == Player then
+					if obj == self.ObjOwner._AIBrain.Target then
 						PlaySound2D("actor/vamp_small/svamp-knife-hit")
 					end
 					obj:OnDamage(self.Damage, self.ObjOwner)
@@ -167,7 +167,7 @@ function Executioner_V3_Spike:OnUpdate()
 		if e then
 			local obj = EntityToObject[e]
 			if obj and obj.OnDamage then
-				if obj == Player then
+				if obj == self.ObjOwner._AIBrain.Target then
 					self._lastTimeDamage = Game.currentTime
 					PlaySound2D('actor/executioner/exe-electricity-hit')
 				end

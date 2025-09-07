@@ -39,7 +39,7 @@ function DevilMonkV3:lighting()
 	self._s6 = PZ	--z + v.Z
 
 	--ENTITY.RemoveRagdollFromIntersectionSolver(self._Entity)
-	local b,d,xcol,ycol,zcol,nx,ny,nz,he,e = WORLD.LineTraceHitPlayerBalls(x,y,z, Player.Pos.X,Player.Pos.Y + 1.0,Player.Pos.Z)
+	local b,d,xcol,ycol,zcol,nx,ny,nz,he,e = WORLD.LineTraceHitPlayerBalls(x,y,z, self._AIBrain.Target.Pos.X,self._AIBrain.Target.Pos.Y + 1.0,self._AIBrain.Target.Pos.Z)
 	--ENTITY.AddRagdollToIntersectionSolver(self._Entity)
 	if b and e then
     	CheckStartGlass(he,xcol,ycol,zcol,0.4, xcol, ycol, zcol)
@@ -72,8 +72,8 @@ function DevilMonkV3:lighting()
 end
 
 function DevilMonkV3:lockTarget()
-	self._targetX = Player._groundx
-	self._targetY = Player._groundy + 1.6
-	self._targetZ = Player._groundz
+	self._targetX = self._AIBrain.Target._groundx
+	self._targetY = self._AIBrain.Target._groundy + 1.6
+	self._targetZ = self._AIBrain.Target._groundz
 	self:RotateToVector(self._targetX, self._targetY, self._targetZ)
 end

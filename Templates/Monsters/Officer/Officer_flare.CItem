@@ -233,7 +233,7 @@ function o:CreateBombs()
             Game:Print("create bomb "..y)
         end
 		
---		local v = Vector:New(x - Player._groundx, y - Player._groundy, z - Player._groundz)
+--		local v = Vector:New(x - self.ObjOwner._AIBrain.Target._groundx, y - self.ObjOwner._AIBrain.Target._groundy, z - self.ObjOwner._AIBrain.Target._groundz)
 --		v:Normalize()
 
 --		local rnd = FRand(0.95,1.05)

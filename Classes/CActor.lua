@@ -2,19 +2,19 @@
 --============================================================================
 -- Actor class (with model and pathfinding)
 --============================================================================
-CActor = 
+CActor =
 {
 	_notIsWalkingTimerAmount = 3,	-- czas po ktorym wylacza animacje chodzenia, gdy _isWalking jest flase
 	CollisionDetect = 0.4,		-- jesli o tyle spadnie predkosc potwora to wykrywa kolizje
-    Model = "raven",
-	
-    Scale = 1,
+	Model = "raven",
+
+	Scale = 1,
 	_checkRadius = 0.2,
-    AIenabled = true,
-    enableAIin = nil,
-    _DontCheckFloors = false,
-    
-    Health = 100,
+	AIenabled = true,
+	enableAIin = nil,
+	_DontCheckFloors = false,
+
+	Health = 100,
 	onlyWPmove = false,			-- if true, actor will walk only to WayPoints,
 	walkArea = nil,
 	WalkSpeed = 1.0,
@@ -28,25 +28,25 @@ CActor =
 	DeathTimer = 100,
 	shadow = 0,
 	smoothFly = 1.0,			-- max zmiana kata w czasie (pitch), zeby za szybko nie zmienial kata latania (tylko gora/dol)
-	
+
 	_randomizedParams = {
 		WalkSpeed = nil,
 		FlySpeed = nil,
 		RunSpeed = nil,
 		RotateSpeed = nil,
 	},
-	
--- prive    
-    _SoundDirectory = "",
-    _CurAnimIndex = 0,
-    _CurAnimLength = 0,
-    _CurAnimTime = 0,
-    _LastAnimTime = -1,
-    _Path = nil,
-    _Class = "CActor",
+
+	-- prive
+	_SoundDirectory = "",
+	_CurAnimIndex = 0,
+	_CurAnimLength = 0,
+	_CurAnimTime = 0,
+	_LastAnimTime = -1,
+	_Path = nil,
+	_Class = "CActor",
 
 
--- rotating
+	-- rotating
 	angle = 0,
 	_angleDest = 0,
 	_distToAngle = 0,
@@ -54,10 +54,10 @@ CActor =
 	_angleVel = 0,
 	_lastVel = 0,
 	_lastAngle = 0,
---
+	--
 	_rotatingWithAnim = nil,
 
--- walking
+	-- walking
 	_isWalking = nil,
 	_Point = Vector:New(0,0,0),
 	_Speed = 0.2,
@@ -76,20 +76,20 @@ CActor =
 	_runAltAnim = nil,
 
 	_lastPitch = nil,
--- position
-    Pos = Vector:New(0,0,0),
+	-- position
+	Pos = Vector:New(0,0,0),
 	_groundx = 0,
 	_groundy = 0,
 	_groundz = 0,
 
--- animation
-    Animation = "idle",
-    --_AnimationEvents = {},
+	-- animation
+	Animation = "idle",
+	--_AnimationEvents = {},
 	_isAnimating = nil,
 	_noAnimTimer = 1,
 
---
-    _AIBrain = nil,
+	--
+	_AIBrain = nil,
 	_lastEventCheck = 1,
 	_died = nil,
 	_notIsWalkingTimer = nil,
@@ -102,23 +102,23 @@ CActor =
 	_OrygHealth = -1,
 	doNotUseWP = false,
 	state = nil,
-    
-    _disableHits = nil,
-    _disableDeathSounds = nil,
-    _lastHitAnim = nil,
+
+	_disableHits = nil,
+	_disableDeathSounds = nil,
+	_lastHitAnim = nil,
 	_forceWalkAnim = nil,
 
 	_sndHitId = nil,
 	_sndStoppableID_CBinded = nil,
 	_sndStoppableID_CBindedName = nil,
-	
+
 	_enabledRD = false,
 	_raggDollPrecomputedCollData = {},
 	_lastBlood = 0,
 
 	_lastD = 0,
-    s_SubClass = {		-- ###
-        SoundsDefinitions = {},
+	s_SubClass = {		-- ###
+		SoundsDefinitions = {},
 	},
 
 	IsBoss = false,
@@ -127,31 +127,31 @@ Inherit(CActor,CObject)
 
 --============================================================================
 function CActor:RestoreFromSave()
-    if self._AIBrain then
-        for i,o in self._AIBrain._goals do
-            if AiStates[o.name] then
-                InheritFunctionsAndStatics(o,AiStates[o.name])
-            else
-                if self._CustomAiStates and self._CustomAiStates[o.name] then
-                    InheritFunctionsAndStatics(o,self._CustomAiStates[o.name])
-                else
+	if self._AIBrain then
+		for i,o in self._AIBrain._goals do
+			if AiStates[o.name] then
+				InheritFunctionsAndStatics(o,AiStates[o.name])
+			else
+				if self._CustomAiStates and self._CustomAiStates[o.name] then
+					InheritFunctionsAndStatics(o,self._CustomAiStates[o.name])
+				else
 					DoFile(path.."Classes/Ai/"..o.name..".state")
 					if not AiStates[o.name] then
 						MsgBox(self._Name.." rfs%ERROR: no goal "..o.name)
 					else
 						InheritFunctionsAndStatics(o,AiStates[o.name])
 					end
-                end
-            end            
-        end
-    end
+				end
+			end
+		end
+	end
 	if self.s_SubClass.xchgTextures then
 		for i,v in self.s_SubClass.xchgTextures do
 			MDL.SetTexture(self._Entity, v[1], v[2])
 		end
 	end
 
-    self._CurAnimLength = MDL.GetAnimLength(self._Entity, self._CurAnimIndex)
+	self._CurAnimLength = MDL.GetAnimLength(self._Entity, self._CurAnimIndex)
 end
 --============================================================================
 function CActor:Delete()
@@ -186,10 +186,10 @@ function CActor:Delete()
 		self._procBind = nil
 	end
 
-    PATH.Release(self._Path)
-    ENTITY.Release(self._Entity)
-    self._Entity = nil
-    self._Path = nil
+	PATH.Release(self._Path)
+	ENTITY.Release(self._Entity)
+	self._Entity = nil
+	self._Path = nil
 end
 --============================================================================
 function CActor:PreUpdate()
@@ -211,7 +211,7 @@ function CActor:Update()
 	local aiParams = self.AiParams
 	if aiParams then
 		local br = self._AIBrain
-		
+
 		if debug then
 			if Game.freezeUpdate and not self._animStopped then
 				self._animStopped = MDL.GetAnimTimeScale(self._Entity, self._CurAnimIndex)
@@ -294,7 +294,7 @@ function CActor:Update()
 			self._angleAttackX = 0
 			self._angleAttackY = 0
 		end
-		
+
 		if not self._died then
 			-- get Events
 			local animSpeed = MDL.GetAnimTimeScale(self._Entity, self._CurAnimIndex)
@@ -306,7 +306,7 @@ function CActor:Update()
 
 					while self._AnimationEvents[i] do
 						local ev = self._AnimationEvents[i]
-						if ev[1] > curAnimTime or self._died then	
+						if ev[1] > curAnimTime or self._died then
 							break
 						end
 						if ev[1] <= curAnimTime and ev[2] then
@@ -329,7 +329,7 @@ function CActor:Update()
 					self._lastEventCheck = i
 				end
 			end
-		end    
+		end
 
 
 		--
@@ -341,7 +341,7 @@ function CActor:Update()
 			end
 		end
 	end
-    if self.TimeToDelete then
+	if self.TimeToDelete then
 		if self.TimeToDelete > 0 then
 			self.TimeToDelete = self.TimeToDelete - 1
 		else
@@ -369,7 +369,7 @@ function CActor:damage(par3, par4, damageSound)
 		local dist = Dist3D(self._groundx, self._groundy, self._groundz, br.r_closestEnemy._groundx, br.r_closestEnemy._groundy, br.r_closestEnemy._groundz)
 		local angleAttack = math.atan2(br.r_closestEnemy._groundx - self._groundx, br.r_closestEnemy._groundz - self._groundz)
 		local aDist = AngDist(self.angle, angleAttack)
-		
+
 		local angleRange = aiParams.attackRangeAngle
 		if not angleRange then
 			--if debugMarek then Game:Print(self._Name.." nie ma aiParams.attackRangeAngle!!") end
@@ -419,54 +419,54 @@ function CActor:damage(par3, par4, damageSound)
 		end
 	end
 end
-	
+
 --============================================================================
 function CActor:OnClone(old)
-	--self.Pos = Clone(self.Pos)        
-    if old == CActor then 
-        self.Pos = OppositeToCamera() 
-    else
-        self.Pos.X = old.Pos.X - 0.5
-        self.Pos.Z = old.Pos.Z - 0.5
-    end
+	--self.Pos = Clone(self.Pos)
+	if old == CActor then
+		self.Pos = OppositeToCamera()
+	else
+		self.Pos.X = old.Pos.X - 0.5
+		self.Pos.Z = old.Pos.Z - 0.5
+	end
 
-    self._Entity = nil
-    self._Path = nil
-    
-    local x,y,z = CAM.GetAng() 
+	self._Entity = nil
+	self._Path = nil
+
+	local x,y,z = CAM.GetAng()
 	self.angle = -x * 3.14/180
 	self._angleDest = self.angle
 	self._lastAngle = self.angle
 end
 --============================================================================
 function CActor:Apply(old)
-    if not old or old.Model ~= self.Model or old.Scale ~= self.Scale then 
-        ENTITY.Release(self._Entity)
+	if not old or old.Model ~= self.Model or old.Scale ~= self.Scale then
+		ENTITY.Release(self._Entity)
 		self._Entity = ENTITY.Create(ETypes.Model,self.Model,self._Name..":Script",self.Scale*0.1)
 		WORLD.AddEntity(self._Entity,not self.Visible)
 		EntityToObject[self._Entity] = self
-        
-        if self._AIBrain then
-            ENTITY.EnableNetworkSynchronization(self._Entity)
-        end
-        
-        if self.CreatePO then
-            self:PO_Create()
-            self._SphereSize = ENTITY.PO_GetMaxSphereRay(self._Entity)
-            ENTITY.EnableDeathZoneTest(self._Entity,true)
-        else
-			self._SphereSize = 0.8
-        end
-        self._checkRadius = 0.5 * self._SphereSize
 
-        if self.Synchronize then self:Synchronize() end
-        if self._Synchronize then self:_Synchronize() end
-        
+		if self._AIBrain then
+			ENTITY.EnableNetworkSynchronization(self._Entity,true,true)
+		end
+
+		if self.CreatePO then
+			self:PO_Create()
+			self._SphereSize = ENTITY.PO_GetMaxSphereRay(self._Entity)
+			ENTITY.EnableDeathZoneTest(self._Entity,true)
+		else
+			self._SphereSize = 0.8
+		end
+		self._checkRadius = 0.5 * self._SphereSize
+
+		if self.Synchronize then self:Synchronize() end
+		if self._Synchronize then self:_Synchronize() end
+
 		if self.s_SubClass.bindFX then
-       		for i,v in self.s_SubClass.bindFX do
-       			if self.s_SubClass.bindFXkeepScale then
-       				self:BindFX(v[1], v[2]*self.Scale*self.s_SubClass.bindFXkeepScale, v[3], v[4], v[5], v[6])
-       			else
+			for i,v in self.s_SubClass.bindFX do
+				if self.s_SubClass.bindFXkeepScale then
+					self:BindFX(v[1], v[2]*self.Scale*self.s_SubClass.bindFXkeepScale, v[3], v[4], v[5], v[6])
+				else
 					self:BindFX(v[1], v[2], v[3], v[4], v[5], v[6])
 				end
 			end
@@ -484,21 +484,21 @@ function CActor:Apply(old)
 		local l = self.s_SubClass.BindLight
 		if l then
 			local obj = CloneTemplate(l.template)
-		    obj.Pos:Set(0,0,0)
-		    obj:Apply()
-		    ENTITY.RegisterChild(self._Entity,obj._Entity,true,MDL.GetJointIndex(self._Entity, l.joint))
+			obj.Pos:Set(0,0,0)
+			obj:Apply()
+			ENTITY.RegisterChild(self._Entity,obj._Entity,true,MDL.GetJointIndex(self._Entity, l.joint))
 		end
 
-        if self.waterImpJoint and not self._objWaterImpactMain then		-- pozniej nie tu
+		if self.waterImpJoint and not self._objWaterImpactMain then		-- pozniej nie tu
 			local e = self._Entity
 			local j  = MDL.GetJointIndex(e,self.waterImpJoint)
 			local x,y,z = MDL.GetJointPos(e,j)
 
-   			local ke,obj = AddItem("StoneX.CItem",nil,Vector:New(x,y,z),true)
+			local ke,obj = AddItem("StoneX.CItem",nil,Vector:New(x,y,z),true)
 			obj.ObjOwner = self
 			ENTITY.ComputeChildMatrix(ke,e,j)
 			ENTITY.RegisterChild(e,ke,true,j)
-						
+
 			obj.speedUp = 0
 			obj.speedDown = 0
 			obj._no = 3
@@ -509,129 +509,129 @@ function CActor:Apply(old)
 			obj.impSpeed = self.waterImpSpeed
 
 			self._objWaterImpactMain = obj
-        end
-
-        --[[if self.BindRagdoll then
-			local b = self.BindRagdoll
-			local obj = CloneTemplate(b[2])
-			if b[3] and obj then
-				obj:Apply()
-				local jChild = MDL.GetJointIndex(obj._Entity, b[3])
-				--Game:Print("bind "..jChild.." "..b[3])
-				MDL.SetPinnedJoint(obj._Entity, jChild, true)
-				if b[7] then
-	   				MDL.SetRagdollLinearDamping(obj._Entity, b[7])
-					MDL.SetRagdollAngularDamping(obj._Entity, b[7])
-				end
-
-				self._procBind = Templates["PBindJointToJoint.CProcess"]:New(self._Entity, self, b[1], jChild, obj._Entity)
-				--self._procBind._holdJointPos = aiParams.holdJointDisplaceSword      
-				self._procBind._holdJointPos = Vector:New(b[4], b[5], b[6])
-				self._procBind.CopyWholeMatrix = true
-				self._procBind:Tick(0, true)
-				GObjects:Add(TempObjName(), self._procBind)
-				obj.NotSaveable = true
-			end
-        end--]]
-        if self.s_SubClass.xchgTextures then
-			for i,v in self.s_SubClass.xchgTextures do
-				MDL.SetTexture(self._Entity, v[1], v[2])
-			end
 		end
 
-		self._AnimEVENTS = {}
-	
-		if self.s_SubClass.Animations then
-			for i, v in self.s_SubClass.Animations do
-				self._AnimEVENTS[i] = {}
-				if v[3] then		-- sa eventy
-					for ii,vv in v[3] do
-						table.insert(self._AnimEVENTS[i], vv)
-						--Game:Print(self._Name.. " add "..vv[2])
+		--[[if self.BindRagdoll then
+		local b = self.BindRagdoll
+		local obj = CloneTemplate(b[2])
+		if b[3] and obj then
+			obj:Apply()
+			local jChild = MDL.GetJointIndex(obj._Entity, b[3])
+			--Game:Print("bind "..jChild.." "..b[3])
+			MDL.SetPinnedJoint(obj._Entity, jChild, true)
+			if b[7] then
+				MDL.SetRagdollLinearDamping(obj._Entity, b[7])
+				MDL.SetRagdollAngularDamping(obj._Entity, b[7])
+			end
+
+			self._procBind = Templates["PBindJointToJoint.CProcess"]:New(self._Entity, self, b[1], jChild, obj._Entity)
+			--self._procBind._holdJointPos = aiParams.holdJointDisplaceSword
+			self._procBind._holdJointPos = Vector:New(b[4], b[5], b[6])
+			self._procBind.CopyWholeMatrix = true
+			self._procBind:Tick(0, true)
+			GObjects:Add(TempObjName(), self._procBind)
+			obj.NotSaveable = true
+		end
+	end--]]
+	if self.s_SubClass.xchgTextures then
+		for i,v in self.s_SubClass.xchgTextures do
+			MDL.SetTexture(self._Entity, v[1], v[2])
+		end
+	end
+
+	self._AnimEVENTS = {}
+
+	if self.s_SubClass.Animations then
+		for i, v in self.s_SubClass.Animations do
+			self._AnimEVENTS[i] = {}
+			if v[3] then		-- sa eventy
+				for ii,vv in v[3] do
+					table.insert(self._AnimEVENTS[i], vv)
+					--Game:Print(self._Name.. " add "..vv[2])
+				end
+			end
+		end
+	end
+
+	if self.s_SubClass.SoundsDefinitionsBindings then
+		for i,v in self.s_SubClass.SoundsDefinitionsBindings do
+			if table.getn(v) ~= 0 then
+				if self._AnimEVENTS[i] then
+					for ii,vv in v do
+						table.insert(self._AnimEVENTS[i],vv)
+						--Game:Print(self._Name.. " aDd "..vv[2])
 					end
+				else
+					Game:Print(self._Name.." SoundsDefinitionsBindings nie ma "..i)
 				end
 			end
 		end
-
-		if self.s_SubClass.SoundsDefinitionsBindings then
-			for i,v in self.s_SubClass.SoundsDefinitionsBindings do
-				if table.getn(v) ~= 0 then
-					if self._AnimEVENTS[i] then
-						for ii,vv in v do
-							table.insert(self._AnimEVENTS[i],vv)
-							--Game:Print(self._Name.. " aDd "..vv[2])
-						end
-					else
-						Game:Print(self._Name.." SoundsDefinitionsBindings nie ma "..i)
-					end
-				end
-			end
-		end
-	    
-		self:SortEvents()
-
-		if self.OnCreateEntity then self:OnCreateEntity() end
-		
-		if Game.FearCard then self.Health = self.Health * 0.9 end
-    end
-
-	ENTITY.PO_Move(self._Entity,0,0,0)
-	MDL.CreateShadowMap(self._Entity, self.shadow)
-    
-    if self.havokInfluenceInMonsterMovement then
-		ENTITY.PO_SetMonsterMovementConst(self._Entity, self.havokInfluenceInMonsterMovement, self._DontCheckFloors)
-    else
-		ENTITY.PO_SetMonsterMovementConst(self._Entity, havokInfluenceInMonsterMovement, self._DontCheckFloors)
-    end
-
-	ENTITY.PO_SetMovedByExplosions(self._Entity, false)
-	
-	local brain = self._AIBrain
-	if brain then
-		brain:OnApply()
-		brain._GuardAng = ENTITY.GetOrientation(self._Entity)
-		local aiParams = self.AiParams
-		if aiParams.alwaysSee then
-			--Game:Print(self._Name.." always see")
-			ENTITY.PO_SetSightParams(self._Entity, 150, 150, 360)
-		else
-			ENTITY.PO_SetSightParams(self._Entity, aiParams.viewDistance, aiParams.viewDistance360, aiParams.viewAngle, aiParams.viewAnglePitch);
-		end
-		for i,v in aiParams.aiGoals do
-			if not brain:AddState(v) then
-				Game:Print(v.." state not found")
-			end
-		end
-	end
-	
-    self:ApplySpecular()
-    self:ApplyFresnel()
-
-   	self:ForceAnim(self.Animation,not self.AnimationLoop)
-
-   	if debugMarek and Game.freezeUpdate and self._CurAnimIndex then
-		self._animStopped = MDL.GetAnimTimeScale(self._Entity, self._CurAnimIndex)
-		MDL.SetAnimTimeScale(self._Entity, self._CurAnimIndex, 0)
 	end
 
-    
-    self._groundx,self._groundy,self._groundz = ENTITY.PO_GetPawnFloorPos(self._Entity)
-    self._angleDest = self.angle
-    self._lastAngle = self.angle
-    if Game.Difficulty == 0 and not self._HealthMax then
-		if self.enableGibWhenHPBelow then
-			self._enableGibWhenHPBonusHP = self.Health * 0.25
-		end
-		self.Health = self.Health * 0.75
-    end
-    self._HealthMax = self.Health
-    self._HealthAfterDeath = 0
-	self._SoundDirectory = "actor/"..self.Model.."/"
-	
-	if self.s_SubClass.SoundDir then
-		self._SoundDirectory = "actor/"..self.s_SubClass.SoundDir.."/"
+	self:SortEvents()
+
+	if self.OnCreateEntity then self:OnCreateEntity() end
+
+	if Game.FearCard then self.Health = self.Health * 0.9 end
+end
+
+ENTITY.PO_Move(self._Entity,0,0,0)
+MDL.CreateShadowMap(self._Entity, self.shadow)
+
+if self.havokInfluenceInMonsterMovement then
+	ENTITY.PO_SetMonsterMovementConst(self._Entity, self.havokInfluenceInMonsterMovement, self._DontCheckFloors)
+else
+	ENTITY.PO_SetMonsterMovementConst(self._Entity, havokInfluenceInMonsterMovement, self._DontCheckFloors)
+end
+
+ENTITY.PO_SetMovedByExplosions(self._Entity, false)
+
+local brain = self._AIBrain
+if brain then
+	brain:OnApply()
+	brain._GuardAng = ENTITY.GetOrientation(self._Entity)
+	local aiParams = self.AiParams
+	if aiParams.alwaysSee then
+		--Game:Print(self._Name.." always see")
+		ENTITY.PO_SetSightParams(self._Entity, 150, 150, 360)
+	else
+		ENTITY.PO_SetSightParams(self._Entity, aiParams.viewDistance, aiParams.viewDistance360, aiParams.viewAngle, aiParams.viewAnglePitch);
 	end
-	if self.OnApply then self:OnApply() end
+	for i,v in aiParams.aiGoals do
+		if not brain:AddState(v) then
+			Game:Print(v.." state not found")
+		end
+	end
+end
+
+self:ApplySpecular()
+self:ApplyFresnel()
+
+self:ForceAnim(self.Animation,not self.AnimationLoop)
+
+if debugMarek and Game.freezeUpdate and self._CurAnimIndex then
+	self._animStopped = MDL.GetAnimTimeScale(self._Entity, self._CurAnimIndex)
+	MDL.SetAnimTimeScale(self._Entity, self._CurAnimIndex, 0)
+end
+
+
+self._groundx,self._groundy,self._groundz = ENTITY.PO_GetPawnFloorPos(self._Entity)
+self._angleDest = self.angle
+self._lastAngle = self.angle
+if Game.Difficulty == 0 and not self._HealthMax then
+	if self.enableGibWhenHPBelow then
+		self._enableGibWhenHPBonusHP = self.Health * 0.25
+	end
+	self.Health = self.Health * 0.75
+end
+self._HealthMax = self.Health
+self._HealthAfterDeath = 0
+self._SoundDirectory = "actor/"..self.Model.."/"
+
+if self.s_SubClass.SoundDir then
+	self._SoundDirectory = "actor/"..self.s_SubClass.SoundDir.."/"
+end
+if self.OnApply then self:OnApply() end
 end
 --============================================================================
 function CActor:SortEvents()
@@ -643,11 +643,11 @@ function CActor:SortEvents()
 		end
 	end
 
-	
+
 	for i, v in self._AnimEVENTS do
 		table.sort(v,c)
 	end
---[[	
+	--[[
 	for i, v in self._AnimEVENTS do
 		for i2,v2 in v do
 			Game:Print(self._Name.." "..i.." "..v2[1].." "..v2[2])
@@ -666,9 +666,9 @@ function CActor:SetAIBrain()
 		if self.randomizeWalks then
 			r = self.randomizeWalks
 		end
-        if self.FlySpeed then
-            self._randomizedParams.FlySpeed = FRand(self.FlySpeed * (1 - r), self.FlySpeed * (1 + r))
-        end
+		if self.FlySpeed then
+			self._randomizedParams.FlySpeed = FRand(self.FlySpeed * (1 - r), self.FlySpeed * (1 + r))
+		end
 		self._randomizedParams.WalkSpeed = FRand(self.WalkSpeed * (1 - r), self.WalkSpeed * (1 + r))
 		self._randomizedParams.RunSpeed = FRand(self.RunSpeed * (1 - r), self.RunSpeed * (1 + r))
 		self._randomizedParams.RotateSpeed = FRand(self.RotateSpeed * (1 - r), self.RotateSpeed * (1 + r))
@@ -678,18 +678,18 @@ function CActor:SetAIBrain()
 end
 --============================================================================
 function CActor:ForceAnim(anim,loop,speed, blendTime)
-    self._isAnimating = false
-    return self:SetAnim(anim,loop,speed,blendTime)
+	self._isAnimating = false
+	return self:SetAnim(anim,loop,speed,blendTime)
 end
 --============================================================================
 --[[function CActor:SeesObject(obj)
-    return ENTITY.SeesPlayer(self._Entity,Player._Entity)
-    --return ENTITY.SeesEntity(self._Entity,obj._Entity)
-    --return ENTITY.SeesPoint(self._Entity,obj.Pos.X,obj.Pos.Y,obj.Pos.Z)
+return ENTITY.SeesPlayer(self._Entity,Player._Entity)
+--return ENTITY.SeesEntity(self._Entity,obj._Entity)
+--return ENTITY.SeesPoint(self._Entity,obj.Pos.X,obj.Pos.Y,obj.Pos.Z)
 end--]]
 --============================================================================
 function CActor:SetAnim(anim,loop,animSpeed, blendTime)
-    if self._isAnimating and anim == self.Animation and self._animLoop == loop then      -- and not force
+	if self._isAnimating and anim == self.Animation and self._animLoop == loop then      -- and not force
 		--Game:Print(self._Name.." Skip anim "..anim)
 		return true
 	end
@@ -704,67 +704,68 @@ function CActor:SetAnim(anim,loop,animSpeed, blendTime)
 		self:EndTrailSword2()
 	end
 
-    if self.OnSetAnim then self:OnSetAnim(anim) end
-    
-    self._CurAnimTime = 0
-    self._CurAnimIndex = -1
+	if self.OnSetAnim then self:OnSetAnim(anim) end
+
+	self._CurAnimTime = 0
+	self._CurAnimIndex = -1
 
 	local blend = blendTime
 	local speed = animSpeed
-	
-    if self.s_SubClass.Animations and self.s_SubClass.Animations[anim] then 
+
+	if self.s_SubClass.Animations and self.s_SubClass.Animations[anim] then
 		if not speed then
 			speed = self.s_SubClass.Animations[anim][1]
 		end
 		if not blend then
 			blend = self.s_SubClass.Animations[anim][4]
 		end
-    end
+	end
 
-    if not blend then
-        blend = 0.201
-    end
+	if not blend then
+		blend = 0.201
+	end
 	if not speed then
 		speed = 1.0
 	end
 
-    self._HasMovingCurve = false
-    self._moveWithAnimation = false
-    local mcurve = 0
-    if self.s_SubClass.Animations and self.s_SubClass.Animations[anim] then
-        -- reset movement curve
-        mcurve = self.s_SubClass.Animations[anim][2]
-        if type(mcurve) == "boolean" then
-            if mcurve == true then
-                mcurve = MovingCurve.ETransZ
-            else
-                mcurve = 0
-            end
-        end
-        if mcurve ~= 0 then
+	self._HasMovingCurve = false
+	self._moveWithAnimation = false
+	local mcurve = 0
+	if self.s_SubClass.Animations and self.s_SubClass.Animations[anim] then
+		-- reset movement curve
+		mcurve = self.s_SubClass.Animations[anim][2]
+		if type(mcurve) == "boolean" then
+			if mcurve == true then
+				mcurve = MovingCurve.ETransZ
+			else
+				mcurve = 0
+			end
+		end
+		if mcurve ~= 0 then
 			self._HasMovingCurve = true
-        end
-        self._AnimationEvents = self._AnimEVENTS[anim]
-        
-        if self.s_SubClass.Animations[anim][5] then
+		end
+		self._AnimationEvents = self._AnimEVENTS[anim]
+
+		if self.s_SubClass.Animations[anim][5] then
 			self._moveWithAnimation = true
 			--Game:Print("MWANIM "..(self.angle * 180/math.pi))
 			self._oldAngle = self.angle
 		end
-    end    
-    
-    ---- RANDOMIZE ANIMSPEED 3% ----
-    if self._AIBrain then
+	end
+
+	---- RANDOMIZE ANIMSPEED 3% ----
+	if self._AIBrain then
 		speed = speed * FRand(0.97, 1.03)
 	end
-    --------------------------------
-    if anim == "" then
-        return false
-    end
-    local anm = MDL.SetAnim(self._Entity, anim, loop, speed, blend, mcurve, self._HasMovingCurveRot)
-
-    if anm < 0 then
-        --if debugMarek then Game:Print(self._Name.." nie ma animacji:"..anim) end
+	--------------------------------
+	if anim == "" then
+		return false
+	end
+	local anm = MDL.SetAnim(self._Entity, anim, loop, speed, blend, mcurve, self._HasMovingCurveRot)
+	ENTITY.EnableNetworkSynchronization(self._Entity,false,false)
+	ENTITY.EnableNetworkSynchronization(self._Entity,true,true)
+	if anm < 0 then
+		--if debugMarek then Game:Print(self._Name.." nie ma animacji:"..anim) end
 		return false
 	end
 
@@ -780,24 +781,24 @@ function CActor:SetAnim(anim,loop,animSpeed, blendTime)
 
 	--if debugAnim then Game:Print(self._Name.." >Set anim: "..anim.." "..", blend "..blend..", old anim "..self.Animation.." "..self._LastAnimTime) end
 
---[[	for i,v in self._AnimationSounds do
-		SOUND3D.SetVolume(v[1], 0, 0.3)
-		SOUND3D.Forget(v[1])
-		Game:Print("anim end: faded sound "..v[2])
-	end
-	self._AnimationSounds = {}--]]
-	
-    self._CurAnimIndex = anm
-    self._CurAnimLength = MDL.GetAnimLength(self._Entity, anm)        
-    self._LastAnimTime = 0
-    
-	self:ZeroEventsTime()
+	--[[	for i,v in self._AnimationSounds do
+	SOUND3D.SetVolume(v[1], 0, 0.3)
+	SOUND3D.Forget(v[1])
+	Game:Print("anim end: faded sound "..v[2])
+end
+self._AnimationSounds = {}--]]
 
-	self._animLoop = loop
-	self._isAnimating = true
-	if self.OnStartAnim then self:OnStartAnim(self.Animation) end
-	self.Animation = anim
-	return true
+self._CurAnimIndex = anm
+self._CurAnimLength = MDL.GetAnimLength(self._Entity, anm)
+self._LastAnimTime = 0
+
+self:ZeroEventsTime()
+
+self._animLoop = loop
+self._isAnimating = true
+if self.OnStartAnim then self:OnStartAnim(self.Animation) end
+self.Animation = anim
+return true
 end
 --============================================================================
 --function CActor:GetAnimLength()
@@ -805,7 +806,7 @@ end
 --end
 --============================================================================
 --function CActor:GetAnimTime()
---    return MDL.GetAnimTime(self._Entity,self._CurAnimIndex)    
+--    return MDL.GetAnimTime(self._Entity,self._CurAnimIndex)
 --end
 --============================================================================
 --function CActor:GetAnimMovement(delta)
@@ -813,18 +814,18 @@ end
 --end
 --============================================================================
 function CActor:Synchronize()
-    -- synchronization with  C++ object
+	-- synchronization with  C++ object
 	if not ENTITY.PO_Exist(self._Entity) then
-        ENTITY.SetPosition(self._Entity,self.Pos.X,self.Pos.Y,self.Pos.Z)
-        if self.Rot then
-            self.Rot:ToEntity(self._Entity) 
-        else
-            ENTITY.SetOrientation(self._Entity, self.angle)
-        end
-    else
-        self.Pos.X,self.Pos.Y,self.Pos.Z = ENTITY.GetPosition(self._Entity)
-        self.angle = ENTITY.GetOrientation(self._Entity);
-    end
+		ENTITY.SetPosition(self._Entity,self.Pos.X,self.Pos.Y,self.Pos.Z)
+		if self.Rot then
+			self.Rot:ToEntity(self._Entity)
+		else
+			ENTITY.SetOrientation(self._Entity, self.angle)
+		end
+	else
+		self.Pos.X,self.Pos.Y,self.Pos.Z = ENTITY.GetPosition(self._Entity)
+		self.angle = ENTITY.GetOrientation(self._Entity);
+	end
 end
 --============================================================================
 function CActor:ZeroEventsTime()
@@ -858,10 +859,10 @@ function CActor:Tick(delta)
 			end
 		end
 	end
-	
+
 	if not self._enabledRD and not self._gibbed then
 		self._CurAnimTime = MDL.GetAnimTime(self._Entity,self._CurAnimIndex)
-	    
+
 		if self._isAnimating and (self._CurAnimTime < self._LastAnimTime or self._CurAnimTime == self._CurAnimLength) then
 			self:ZeroEventsTime()
 			--if debugMarek then Game:Print(self._Name.." > Not animating "..(Game.currentTime/30)) end
@@ -881,9 +882,9 @@ function CActor:Tick(delta)
 			end
 		end
 	end
-	
+
 	if self.AiParams then
-		if not self._died then			-- and not self.enabledRD 
+		if not self._died then			-- and not self.enabledRD
 			self._groundx,self._groundy,self._groundz = ENTITY.PO_GetPawnFloorPos(self._Entity)
 			if self._rotatingWithAnim then
 				self:UpdateRotateWithAnim(delta)
@@ -903,85 +904,85 @@ function CActor:Tick(delta)
 				end
 			else
 				if --[[self._HasMovingCurve--]] --[[and not self._notIsWalkingTimer or--]] self._moveWithAnimation then
-					self:MoveWithAnimation(delta)
-				else
-					
-					if self.maxWalkAcc then
-                        if self._v_vel and self._v_vel:Len() > 0.005 then
-                            --Game:Print("hamowanie "..self._v_vel:Len())
-                            self._v_vel:MulByFloat(0.8)
-							local d2 = 1 / delta
-                            ENTITY.PO_Move(self._Entity,self._v_vel.X*d2, self._v_vel.Y*d2, self._v_vel.Z*d2)
-                        else
-                            ENTITY.PO_Move(self._Entity,0,0,0)
-                        end
-						
+				self:MoveWithAnimation(delta)
+			else
+
+				if self.maxWalkAcc then
+					if self._v_vel and self._v_vel:Len() > 0.005 then
+						--Game:Print("hamowanie "..self._v_vel:Len())
+						self._v_vel:MulByFloat(0.8)
+						local d2 = 1 / delta
+						ENTITY.PO_Move(self._Entity,self._v_vel.X*d2, self._v_vel.Y*d2, self._v_vel.Z*d2)
 					else
 						ENTITY.PO_Move(self._Entity,0,0,0)
 					end
+
+				else
+					ENTITY.PO_Move(self._Entity,0,0,0)
 				end
+			end
 
 			--[[else
-				if self.flyingInertia and self._lastmvx then
-					local b,d = WORLD.LineTrace(self._groundx, self._groundy, self._groundz, self._groundx, self._groundy - 2.0, self._groundz)	-- moze nie co update?
-					if not d then
-						if not self._timerMove then
-							self._timerMove = 6
-						end
-						Game:Print("f")
-						self._timerMove = self._timerMove - 1
+			if self.flyingInertia and self._lastmvx then
+				local b,d = WORLD.LineTrace(self._groundx, self._groundy, self._groundz, self._groundx, self._groundy - 2.0, self._groundz)	-- moze nie co update?
+				if not d then
+					if not self._timerMove then
+						self._timerMove = 6
+					end
+					Game:Print("f")
+					self._timerMove = self._timerMove - 1
 
-						self._lastmvx = self._lastmvx * 0.5
-						self._lastmvy = self._lastmvy * 0.5
-						self._lastmvz = self._lastmvz * 0.5
-						
-						ENTITY.SetVelocity(self._Entity,self._lastmvx, self._lastmvy, self._lastmvz)
-						
-						--local x,y,z,vel = ENTITY.GetVelocity(self._Entity)
-						--Game:Print(" vel2 = " ..vel)
+					self._lastmvx = self._lastmvx * 0.5
+					self._lastmvy = self._lastmvy * 0.5
+					self._lastmvz = self._lastmvz * 0.5
 
-						
-						if self._timerMove < 0 then
-							self._timerMove = nil
-							self._lastmvx = nil
-						end
-					else
+					ENTITY.SetVelocity(self._Entity,self._lastmvx, self._lastmvy, self._lastmvz)
+
+					--local x,y,z,vel = ENTITY.GetVelocity(self._Entity)
+					--Game:Print(" vel2 = " ..vel)
+
+
+					if self._timerMove < 0 then
 						self._timerMove = nil
 						self._lastmvx = nil
 					end
-				end--]]
-			end
-
-			local headParams = self.s_SubClass
-			if headParams.rotateHead and self.AIenabled and not self._disableRotateHead then
-
-				self._AIBrain:RotateHead(delta)
-                local joint = MDL.GetJointIndex(self._Entity, headParams.rotateHeadBone)
-                
-				if headParams.rotateHeadRight and headParams.rotateHeadLeft then		-- custom rotate
-					local v = {0, self._angleAttackX, self._angleAttackY}
-					if headParams.rotateHeadCoordsAdd then
-						v[1] = v[1] + headParams.rotateHeadCoordsAdd.X
-						v[2] = v[2] + headParams.rotateHeadCoordsAdd.Y
-						v[3] = v[3] + headParams.rotateHeadCoordsAdd.Z
-					end
-					if self._angleAttackX > 0 then
-                        MDL.ApplyJointRotation(self._Entity, joint, v[headParams.rotateHeadCoords.X] * headParams.rotateHeadRight.X, v[headParams.rotateHeadCoords.Y] * headParams.rotateHeadRight.Y, v[headParams.rotateHeadCoords.Z] * headParams.rotateHeadRight.Z)
-					else
-						--MDL.SetHeadTrackRot(self._Entity, v[headParams.rotateHeadCoords.X] * headParams.rotateHeadLeft.X,  v[headParams.rotateHeadCoords.Y] * headParams.rotateHeadLeft.Y, v[headParams.rotateHeadCoords.Z] * headParams.rotateHeadLeft.Z)
-                        MDL.ApplyJointRotation(self._Entity, joint, v[headParams.rotateHeadCoords.X] * headParams.rotateHeadLeft.X,  v[headParams.rotateHeadCoords.Y] * headParams.rotateHeadLeft.Y, v[headParams.rotateHeadCoords.Z] * headParams.rotateHeadLeft.Z)
-					end
-				else														-- default
-					--MDL.SetHeadTrackRot(self._Entity, -self._angleAttackX, self._angleAttackY, 0)
-                    MDL.ApplyJointRotation(self._Entity, joint, -self._angleAttackX, self._angleAttackY, 0)
+				else
+					self._timerMove = nil
+					self._lastmvx = nil
 				end
-			end
-			if self.OnTick then self:OnTick(delta) end
+			end--]]
 		end
-	end
 
-	--------------------
-    self._LastAnimTime = self._CurAnimTime
+		local headParams = self.s_SubClass
+		if headParams.rotateHead and self.AIenabled and not self._disableRotateHead then
+
+			self._AIBrain:RotateHead(delta)
+			local joint = MDL.GetJointIndex(self._Entity, headParams.rotateHeadBone)
+
+			if headParams.rotateHeadRight and headParams.rotateHeadLeft then		-- custom rotate
+				local v = {0, self._angleAttackX, self._angleAttackY}
+				if headParams.rotateHeadCoordsAdd then
+					v[1] = v[1] + headParams.rotateHeadCoordsAdd.X
+					v[2] = v[2] + headParams.rotateHeadCoordsAdd.Y
+					v[3] = v[3] + headParams.rotateHeadCoordsAdd.Z
+				end
+				if self._angleAttackX > 0 then
+					MDL.ApplyJointRotation(self._Entity, joint, v[headParams.rotateHeadCoords.X] * headParams.rotateHeadRight.X, v[headParams.rotateHeadCoords.Y] * headParams.rotateHeadRight.Y, v[headParams.rotateHeadCoords.Z] * headParams.rotateHeadRight.Z)
+				else
+					--MDL.SetHeadTrackRot(self._Entity, v[headParams.rotateHeadCoords.X] * headParams.rotateHeadLeft.X,  v[headParams.rotateHeadCoords.Y] * headParams.rotateHeadLeft.Y, v[headParams.rotateHeadCoords.Z] * headParams.rotateHeadLeft.Z)
+					MDL.ApplyJointRotation(self._Entity, joint, v[headParams.rotateHeadCoords.X] * headParams.rotateHeadLeft.X,  v[headParams.rotateHeadCoords.Y] * headParams.rotateHeadLeft.Y, v[headParams.rotateHeadCoords.Z] * headParams.rotateHeadLeft.Z)
+				end
+			else														-- default
+				--MDL.SetHeadTrackRot(self._Entity, -self._angleAttackX, self._angleAttackY, 0)
+				MDL.ApplyJointRotation(self._Entity, joint, -self._angleAttackX, self._angleAttackY, 0)
+			end
+		end
+		if self.OnTick then self:OnTick(delta) end
+	end
+end
+
+--------------------
+self._LastAnimTime = self._CurAnimTime
 end
 
 --============================================================================
@@ -1034,12 +1035,12 @@ function CActor:UpdateFlying(delta)
 	end
 	local Step = Vector:New(self._destx - x, self._desty - y, self._destz - z)
 	local mvx,mvy,mvz
-	
+
 	if self._flyWithAngle then
 		local maxDeltaY = self.smoothFly * 180/math.pi * delta
-		
+
 		Step:Normalize()
-		
+
 		local pitch =  math.atan2(Step.Y, math.sqrt((Step.X)*(Step.X)+(Step.Z)*(Step.Z)))
 		local a = 1.0
 		if self.flyEmulateGravityEffect then
@@ -1057,21 +1058,21 @@ function CActor:UpdateFlying(delta)
 				pitch = self._lastPitch + maxDeltaY*math.pi/180
 				--Game.freezeUpdate = true
 			end
-			
+
 			if pitch < self._lastPitch and deltaY > maxDeltaY then
 				--Game:Print(" limit2 "..(self._lastPitch - maxDeltaY))
 				pitch = self._lastPitch - maxDeltaY*math.pi/180
 				--Game.freezeUpdate = true
 			end
 		end
-				
+
 		self._lastPitch = pitch
 
 		mvx,mvy,mvz = VectorRotate(1,0,0, 0, 0, -pitch)
 		--Game:Print("1 = "..mvx.." "..mvy.." "..mvz)
 		mvx,mvy,mvz = VectorRotate(mvx,mvy,mvz, 0, -self.angle+math.pi/2, 0)
 		--Game:Print("2 = "..mvx.." "..mvy.." "..mvz)
-		
+
 		--[[
 		if debugMarek then
 			self.yaadebug1 = x
@@ -1081,7 +1082,7 @@ function CActor:UpdateFlying(delta)
 			self.yaadebug5 = y + mvy
 			self.yaadebug6 = z + mvz
 		end--]]
-		
+
 		local mul = self._Speed * delta * a
 		mvx = mvx * mul
 		mvy = mvy * mul
@@ -1103,14 +1104,14 @@ function CActor:UpdateFlying(delta)
 		self.Pos.X = self.Pos.X + mvx
 		self.Pos.Y = self.Pos.Y + mvy
 		self.Pos.Z = self.Pos.Z + mvz
-	else 
+	else
 		local d = 1 / delta
 		ENTITY.SetVelocity(self._Entity,mvx * d, mvy * d, mvz * d)
 	end
-	
-	
 
-	local br = self._AIBrain	
+
+
+	local br = self._AIBrain
 	if br and self.AIenabled and self.checkColInFlight then
 		if self._lastCheck and self._lastCheck ~= br._currentTime then
 			--Game:Print((self._lastCheck*30).." "..(br._currentTime*30).." |  was= "..self._butMove.." teor="..self._shouldMove)
@@ -1127,7 +1128,7 @@ function CActor:UpdateFlying(delta)
 					self._lastCantMoveTime = br._currentTime
 				end
 			end
-			
+
 			self._lastShouldMove = self._shouldMove
 			self._lastbutMove = self._butMove
 			self._shouldMove = 0
@@ -1162,14 +1163,14 @@ function CActor:MoveWithAnimation(delta)
 		self.Pos.X = self.Pos.X + mvx
 		self.Pos.Y = self.Pos.Y + mvy
 		self.Pos.Z = self.Pos.Z + mvz
-	else 
+	else
 		local d = 1 / delta
 		--[[if debugMarek then
-			self._debugPOMOVEx,self._debugPOMOVEy, self._debugPOMOVEz = mvx * d, mvy * d, mvz * d
-		end--]]
+		self._debugPOMOVEx,self._debugPOMOVEy, self._debugPOMOVEz = mvx * d, mvy * d, mvz * d
+	end--]]
 
-		ENTITY.PO_Move(self._Entity,mvx * d, mvy * d, mvz * d)
-	end
+	ENTITY.PO_Move(self._Entity,mvx * d, mvy * d, mvz * d)
+end
 end
 
 
@@ -1179,7 +1180,7 @@ function CActor:UpdateWalking(delta)
 		--if debugMarek then Game:Print(self._Name.." BIG ANGLE to move 0,0,0") end
 		return
 	end
-	
+
 	if self._walkWithAngle and not self._isRotating and not self._panzer then
 		--if debugMarek then Game:Print("koniec obracania, stop walk") end
 		self:SetIdle()
@@ -1188,7 +1189,7 @@ function CActor:UpdateWalking(delta)
 	local x,y,z = self._groundx,self._groundy,self._groundz
 	local vel = Dist2D(x,z, self._lastgroundx,self._lastgroundz)		-- vel
 	self._butMove = self._butMove + vel
-	
+
 	--Game:Print("uw = "..self._AIBrain._currentTime)
 	--Game.freezeUpdate = true
 	if self._walkMaxDist then
@@ -1257,7 +1258,7 @@ function CActor:UpdateWalking(delta)
 		l = Dist2D(x,z,self._Point.X,self._Point.Z)   -- do nastepnego way-pointa
 		if l < 0.01 then
 			if not self:NextPoint() then					-- ####################
-				--if debugMarek then 
+				--if debugMarek then
 				--	Game:Print("next point false!")
 				--	Game.freezeUpdate = true
 				--end
@@ -1274,7 +1275,7 @@ function CActor:UpdateWalking(delta)
 	end
 
 	local mvx,mvy,mvz
-	
+
 	if self._HasMovingCurve then
 		local x,y,z = MDL.GetAnimMovement(self._Entity,self._CurAnimIndex,delta)	--self:GetAnimMovement(delta)
 		local ang
@@ -1283,158 +1284,158 @@ function CActor:UpdateWalking(delta)
 		else
 			ang = -math.atan2(Step.X, Step.Z)
 		end
-		
+
 		--[[if debugMarek then
-			self._debugSTEPx = Step.X
-			self._debugSTEPz = Step.Z
-		end--]]
-		if self._moveBackward then
-			x = -x
-			--y = -y
-			z = -z
-		end
-		if self._overrideMovingCurve then
-			x = x * self._overrideMovingCurve
-			--y = y * self._overrideMovingCurve
-			z = z * self._overrideMovingCurve
-		end
-		mvy = 0
-		if not self._moveWithAnimation then
-			mvx = math.cos(ang)*x - math.sin(ang)*z
-			mvz = math.sin(ang)*x + math.cos(ang)*z
-		else
-			local angle = -self.angle
-			mvx = math.cos(angle)*x - math.sin(angle)*z
-			mvz = math.sin(angle)*x + math.cos(angle)*z
-		end
-
-		local d = math.sqrt(x*x+z*z)
-
-		if Lev.AI_walkUp then
-			mvy = d * Lev.AI_walkUp			-- troche do gory zeby latwiej przechodzil przez przeszkody
-			--Game:Print("move up "..mvx.." "..mvy.." "..mvz)
-		end
-
-		
-		if not self.doNotDampMovementIfLastStepPassesDestination then		-- dla malych krokow pozwoli uniknac szarpniec w chodzeniu, b
-			if self._distStart + d > self._distToEnd + 0.2 then
-				--Game.freezeUpdate = true
-				local mul = 1 - (d - (self._distToEnd - self._distStart))/d
-				--Game:Print("self._distStart + d > self._distToEnd "..self._distStart.."  "..self._distToEnd.."  "..d.." -> "..(mul*d))
-				--Game:Print("mul = "..mul)
-				mvx = mvx * mul
-				mvz = mvz * mul
-				d = d * mul
-				--self.xxxx = 1
-			end
-		end
-
-
-		self._shouldMove = self._shouldMove + d
-
+		self._debugSTEPx = Step.X
+		self._debugSTEPz = Step.Z
+	end--]]
+	if self._moveBackward then
+		x = -x
+		--y = -y
+		z = -z
+	end
+	if self._overrideMovingCurve then
+		x = x * self._overrideMovingCurve
+		--y = y * self._overrideMovingCurve
+		z = z * self._overrideMovingCurve
+	end
+	mvy = 0
+	if not self._moveWithAnimation then
+		mvx = math.cos(ang)*x - math.sin(ang)*z
+		mvz = math.sin(ang)*x + math.cos(ang)*z
 	else
-		local v = Vector:New(Step.X, 0, Step.Z)
-		v:Normalize()
-		mvx = v.X * delta * self._Speed
-		mvy = 0
-		mvz = v.Z * delta * self._Speed		
-		
-		local d = math.sqrt(mvx*mvx+mvz*mvz)
-		if self.maxWalkAcc then
-	
-			--Game:Print("d = "..d)
-			if d > self._lastD + self.maxWalkAcc*delta then		-- ograniczenie przyspieszenia
-				d = (self._lastD/delta + self.maxWalkAcc)*delta
-				--Game:Print("new d = "..d.." should = "..math.sqrt(mvx*mvx+mvz*mvz))
-				local v = Vector:New(mvx,mvy,mvz)
-				v:Normalize()
-				v:MulByFloat(d)
-				mvx = v.X
-				mvy = v.Y
-				mvz = v.Z
-			end
-			self._lastD = d
+		local angle = -self.angle
+		mvx = math.cos(angle)*x - math.sin(angle)*z
+		mvz = math.sin(angle)*x + math.cos(angle)*z
+	end
 
-			if not self._v_vel then
-				self._v_vel = Vector:New(0,0,0)
-			end
+	local d = math.sqrt(x*x+z*z)
 
-			self._v_vel.X = mvx
-			self._v_vel.Y = mvy
-			self._v_vel.Z = mvz
-		end
-
-		if Lev.AI_walkUp then
-			--Game:Print("move up")
-			mvy = d * Lev.AI_walkUp			-- troche do gory zeby latwiej przechodzil przez przeszkody
-		end
-
-		self._shouldMove = self._shouldMove + d
-		--Game:Print("self._shouldMove = "..self._shouldMove)
+	if Lev.AI_walkUp then
+		mvy = d * Lev.AI_walkUp			-- troche do gory zeby latwiej przechodzil przez przeszkody
+		--Game:Print("move up "..mvx.." "..mvy.." "..mvz)
 	end
 
 
-	if not ENTITY.PO_Exist(self._Entity) then
-		self.Pos.X = self.Pos.X + mvx
-		self.Pos.Y = self.Pos.Y + mvy
-		self.Pos.Z = self.Pos.Z + mvz
-	else 
-		local d = 1 / delta
-		--if mvy < 0 then
-		--	mvy = 0
-		--end
-
-
-		--[[local v = Vector:New(math.sin(self.angle), 0, math.cos(self.angle))
-		v:Normalize()
-		local length = 1
-		local fx = v.X*length + self._groundx
-		local fz = v.Z*length + self._groundz
-
-		DEBUGfx = dx	DEBUGfy = self._groundy	DEBUGfz = fz
-		DEBUGcx = self._groundx	DEBUGcy = self._groundy	DEBUGcz = self._groundz
-
-		local b = WORLD.LineTraceFixedGeom(self._groundx, self._groundy, self._groundz, fx,self._groundy, fz)
-		if b then
-			mvy = math.sqrt((mvx*mvx) + (mvz*mvz)) * 1.0	-- narazie ###
-			--Game:Print("!")
-		end--]]
-		
-		--Game:Print("PO_MOVE 2 "..(math.sqrt(mvx*mvx+mvy*mvy+mvz*mvz)))
-		--Game:Print("PO_MOVE"..(mvx * d).." "..(mvy * d).." "..(mvz * d))
-		--[[if debugMarek then
-			self._debugPOMOVEx,self._debugPOMOVEy, self._debugPOMOVEz = mvx * d, mvy * d, mvz * d
-		end--]]
-
-		ENTITY.PO_Move(self._Entity,mvx * d, mvy * d, mvz * d)
+	if not self.doNotDampMovementIfLastStepPassesDestination then		-- dla malych krokow pozwoli uniknac szarpniec w chodzeniu, b
+		if self._distStart + d > self._distToEnd + 0.2 then
+			--Game.freezeUpdate = true
+			local mul = 1 - (d - (self._distToEnd - self._distStart))/d
+			--Game:Print("self._distStart + d > self._distToEnd "..self._distStart.."  "..self._distToEnd.."  "..d.." -> "..(mul*d))
+			--Game:Print("mul = "..mul)
+			mvx = mvx * mul
+			mvz = mvz * mul
+			d = d * mul
+			--self.xxxx = 1
+		end
 	end
 
 
-	if self._AIBrain and self.AIenabled then
-		local br = self._AIBrain
-		if self._lastCheck and self._lastCheck ~= br._currentTime then
-			--Game:Print((self._lastCheck*30).." "..(br._currentTime*30).." |  was= "..self._butMove.." teor="..self._shouldMove)
-			if self._lastShouldMove then
-				if self._butMove < self._lastShouldMove * self.CollisionDetect and self._butMove < self._lastbutMove and self._lastShouldMove > 0.01 then
-					--if debugMarek then Game:Print("Obstacle "..(br._currentTime*30).." "..(self._lastCantMoveTime*30).." "..(self._lastlastCantMoveTime*30).."  "..self._butMove.."  should: "..self._shouldMove) end
-					if (br._currentTime < self._lastCantMoveTime + 2/30) and
-					   (br._currentTime < self._lastlastCantMoveTime + 3/30) then
-						--if debugMarek then Game:Print(self._Name.." Obstacle -> idle") end
-						--ENTITY.PO_Move(self._Entity,mvx * 2 / delta, mvy * 2 / delta, mvz * 2 / delta)
-						self:Stop()
-					end
-					self._lastlastCantMoveTime = self._lastCantMoveTime			-- hardcore
-					self._lastCantMoveTime = br._currentTime
+	self._shouldMove = self._shouldMove + d
+
+else
+	local v = Vector:New(Step.X, 0, Step.Z)
+	v:Normalize()
+	mvx = v.X * delta * self._Speed
+	mvy = 0
+	mvz = v.Z * delta * self._Speed
+
+	local d = math.sqrt(mvx*mvx+mvz*mvz)
+	if self.maxWalkAcc then
+
+		--Game:Print("d = "..d)
+		if d > self._lastD + self.maxWalkAcc*delta then		-- ograniczenie przyspieszenia
+			d = (self._lastD/delta + self.maxWalkAcc)*delta
+			--Game:Print("new d = "..d.." should = "..math.sqrt(mvx*mvx+mvz*mvz))
+			local v = Vector:New(mvx,mvy,mvz)
+			v:Normalize()
+			v:MulByFloat(d)
+			mvx = v.X
+			mvy = v.Y
+			mvz = v.Z
+		end
+		self._lastD = d
+
+		if not self._v_vel then
+			self._v_vel = Vector:New(0,0,0)
+		end
+
+		self._v_vel.X = mvx
+		self._v_vel.Y = mvy
+		self._v_vel.Z = mvz
+	end
+
+	if Lev.AI_walkUp then
+		--Game:Print("move up")
+		mvy = d * Lev.AI_walkUp			-- troche do gory zeby latwiej przechodzil przez przeszkody
+	end
+
+	self._shouldMove = self._shouldMove + d
+	--Game:Print("self._shouldMove = "..self._shouldMove)
+end
+
+
+if not ENTITY.PO_Exist(self._Entity) then
+	self.Pos.X = self.Pos.X + mvx
+	self.Pos.Y = self.Pos.Y + mvy
+	self.Pos.Z = self.Pos.Z + mvz
+else
+	local d = 1 / delta
+	--if mvy < 0 then
+	--	mvy = 0
+	--end
+
+
+	--[[local v = Vector:New(math.sin(self.angle), 0, math.cos(self.angle))
+	v:Normalize()
+	local length = 1
+	local fx = v.X*length + self._groundx
+	local fz = v.Z*length + self._groundz
+
+	DEBUGfx = dx	DEBUGfy = self._groundy	DEBUGfz = fz
+	DEBUGcx = self._groundx	DEBUGcy = self._groundy	DEBUGcz = self._groundz
+
+	local b = WORLD.LineTraceFixedGeom(self._groundx, self._groundy, self._groundz, fx,self._groundy, fz)
+	if b then
+		mvy = math.sqrt((mvx*mvx) + (mvz*mvz)) * 1.0	-- narazie ###
+		--Game:Print("!")
+	end--]]
+
+	--Game:Print("PO_MOVE 2 "..(math.sqrt(mvx*mvx+mvy*mvy+mvz*mvz)))
+	--Game:Print("PO_MOVE"..(mvx * d).." "..(mvy * d).." "..(mvz * d))
+	--[[if debugMarek then
+	self._debugPOMOVEx,self._debugPOMOVEy, self._debugPOMOVEz = mvx * d, mvy * d, mvz * d
+end--]]
+
+ENTITY.PO_Move(self._Entity,mvx * d, mvy * d, mvz * d)
+end
+
+
+if self._AIBrain and self.AIenabled then
+	local br = self._AIBrain
+	if self._lastCheck and self._lastCheck ~= br._currentTime then
+		--Game:Print((self._lastCheck*30).." "..(br._currentTime*30).." |  was= "..self._butMove.." teor="..self._shouldMove)
+		if self._lastShouldMove then
+			if self._butMove < self._lastShouldMove * self.CollisionDetect and self._butMove < self._lastbutMove and self._lastShouldMove > 0.01 then
+				--if debugMarek then Game:Print("Obstacle "..(br._currentTime*30).." "..(self._lastCantMoveTime*30).." "..(self._lastlastCantMoveTime*30).."  "..self._butMove.."  should: "..self._shouldMove) end
+				if (br._currentTime < self._lastCantMoveTime + 2/30) and
+				(br._currentTime < self._lastlastCantMoveTime + 3/30) then
+					--if debugMarek then Game:Print(self._Name.." Obstacle -> idle") end
+					--ENTITY.PO_Move(self._Entity,mvx * 2 / delta, mvy * 2 / delta, mvz * 2 / delta)
+					self:Stop()
 				end
+				self._lastlastCantMoveTime = self._lastCantMoveTime			-- hardcore
+				self._lastCantMoveTime = br._currentTime
 			end
-			
-			self._lastShouldMove = self._shouldMove
-			self._lastbutMove = self._butMove
-			self._shouldMove = 0
-			self._butMove = 0
 		end
-		self._lastCheck = br._currentTime
+
+		self._lastShouldMove = self._shouldMove
+		self._lastbutMove = self._butMove
+		self._shouldMove = 0
+		self._butMove = 0
 	end
+	self._lastCheck = br._currentTime
+end
 end
 
 --============================================================================
@@ -1447,26 +1448,26 @@ function CActor:IsRotating()
 end
 
 function CActor:CreateGib(newModel)
-    if Tweak.GlobalData.DisableGibs and not self.notBleeding then
-    	if not (self.Model == "zombieapo_v2" and self.Health > 0) then
+	if Tweak.GlobalData.DisableGibs and not self.notBleeding then
+		if not (self.Model == "zombieapo_v2" and self.Health > 0) then
 			return false
 		end
-    end
+	end
 	local gib = MDL.MakeGib(self._Entity, ECollisionGroups.RagdollNonColliding, newModel)
 	if gib then
 		--Game:Print(">> enable gib <<")
 		self._CurAnimIndex = 0
 		self._gibbed = true
-		
+
 		if not forceModel then
-            ENTITY.RemoveRagdoll( self._Entity )		   -- added by Krystian	
-            ENTITY.EnableDraw( self._Entity, false, true ) -- added by Krystian
+			ENTITY.RemoveRagdoll( self._Entity )		   -- added by Krystian
+			ENTITY.EnableDraw( self._Entity, false, true ) -- added by Krystian
 			ENTITY.Release( self._Entity )
 			self._Entity = gib
 			EntityToObject[self._Entity] = self
 		end
 
-        if self.s_SubClass.xchgTextures then
+		if self.s_SubClass.xchgTextures then
 			for i,v in self.s_SubClass.xchgTextures do
 				MDL.SetTexture(self._Entity, v[1], v[2])
 			end
@@ -1475,11 +1476,11 @@ function CActor:CreateGib(newModel)
 		local x,y,z = self:GetJointPos("root")
 		if not self._disableGibSound then
 			local s
-            if self._frozen then 
+			if self._frozen then
 				self:PlaySound("gibFrozen",nil,nil,nil,nil,x,y,z)
-            else
+			else
 				self:PlaySound("gib",nil,nil,nil,nil,x,y,z)
-            end
+			end
 			self._disableDeathSounds = true
 		end
 		if self.s_SubClass.gibFX then
@@ -1494,7 +1495,7 @@ function CActor:CreateGib(newModel)
 				self:BindFX(gibFX,0.3,v[1], nil,nil,nil, v[3])
 			end
 		end
-		
+
 		if self.s_SubClass.gibShader then
 			if self._frozen then
 				MDL.SetMaterial(gib, "palskinned_freeze")
@@ -1509,65 +1510,65 @@ function CActor:CreateGib(newModel)
 		if self.s_Physics.RagdollFriction then
 			MDL.SetRagdollFriction(self._Entity, self.s_Physics.RagdollFriction)
 		end
-	    if self.s_SubClass.CollidableRagdoll then 
-		    MDL.SetRagdollCollisionGroup(self._Entity, ECollisionGroups.RagdollColliding)
+		if self.s_SubClass.CollidableRagdoll then
+			MDL.SetRagdollCollisionGroup(self._Entity, ECollisionGroups.RagdollColliding)
 		end
-		
+
 		if self.s_SubClass.GibExplosionStrength and self.s_SubClass.GibExplosionRange then
 			if self.s_SubClass.GibExplosionDeltaY then
 				y = y + self.s_SubClass.GibExplosionDeltaY
 			end
 			--[[[if debugMarek then
-				DebugSphereX = x
-				DebugSphereY = y
-				DebugSphereZ = z
-				DebugSphereRange = self.s_SubClass.GibExplosionRange
-			end--]]
-			self._Ax = x
-			self._Ay = y
-			self._Az = z
+			DebugSphereX = x
+			DebugSphereY = y
+			DebugSphereZ = z
+			DebugSphereRange = self.s_SubClass.GibExplosionRange
+		end--]]
+		self._Ax = x
+		self._Ay = y
+		self._Az = z
 
-			MDL.SetRagdollMovedByExplosions(gib, false)
-			self._enableMovedByExplosions = 2
-		end
-		
-		local rcoll = self.s_SubClass.RagdollCollisionsGib
-
-		if rcoll then
-			for i,v in rcoll.Bones do
-				local j = MDL.GetJointIndex(self._Entity, v[1])
-				if j >= 0 then
-					ENTITY.EnableCollisionsToRagdoll(self._Entity, j, rcoll.MinTime, rcoll.MinStren)
-					self._raggDollPrecomputedCollData[j] = {v[2], v[3]}
-				else
-					--[[[if debugMarek then
-						Game:Print(self._Name.." set ragdoll col. joint not found: "..v[1])
-					end--]]
-				end
-			end
-            self:ReplaceFunction("OnCollision","StdRagdollOnCollision")
-		end
-		if self.CustomOnGib then
-			self:CustomOnGib()
-		end
-		self:ApplySpecular()
-		return gib
+		MDL.SetRagdollMovedByExplosions(gib, false)
+		self._enableMovedByExplosions = 2
 	end
+
+	local rcoll = self.s_SubClass.RagdollCollisionsGib
+
+	if rcoll then
+		for i,v in rcoll.Bones do
+			local j = MDL.GetJointIndex(self._Entity, v[1])
+			if j >= 0 then
+				ENTITY.EnableCollisionsToRagdoll(self._Entity, j, rcoll.MinTime, rcoll.MinStren)
+				self._raggDollPrecomputedCollData[j] = {v[2], v[3]}
+			else
+				--[[[if debugMarek then
+				Game:Print(self._Name.." set ragdoll col. joint not found: "..v[1])
+			end--]]
+		end
+	end
+	self:ReplaceFunction("OnCollision","StdRagdollOnCollision")
+end
+if self.CustomOnGib then
+	self:CustomOnGib()
+end
+self:ApplySpecular()
+return gib
+end
 end
 
 --============================================================================
 function CActor:EnableRagdoll(enable,disable_po)
-    if disable_po then
-        ENTITY.PO_Enable(self._Entity,false)
-    end
+	if disable_po then
+		ENTITY.PO_Enable(self._Entity,false)
+	end
 
-    if enable and MDL.IsRagdoll(self._Entity) then return end
-    if not enable and not MDL.IsRagdoll(self._Entity) then return end
+	if enable and MDL.IsRagdoll(self._Entity) then return end
+	if not enable and not MDL.IsRagdoll(self._Entity) then return end
 
-    local cr = ECollisionGroups.RagdollNonColliding
- 
-    if self.s_SubClass.CollidableRagdoll then
-        cr = ECollisionGroups.RagdollColliding
+	local cr = ECollisionGroups.RagdollNonColliding
+
+	if self.s_SubClass.CollidableRagdoll then
+		cr = ECollisionGroups.RagdollColliding
 	end
 
 	local eg = self.enableGibWhenHPBelow
@@ -1581,45 +1582,45 @@ function CActor:EnableRagdoll(enable,disable_po)
 	else
 		MDL.EnableRagdoll(self._Entity,enable,cr)
 	end
-	
+
 	local rcoll = self.s_SubClass.RagdollCollisions
 	if not self._gibbed and rcoll then
 		for i,v in rcoll.Bones do
 			local j = MDL.GetJointIndex(self._Entity, v[1])
-            if j >= 0 then
+			if j >= 0 then
 				ENTITY.EnableCollisionsToRagdoll(self._Entity, j, rcoll.MinTime, rcoll.MinStren)
-                self._raggDollPrecomputedCollData[j] = {v[2], v[3]}
-            else
+				self._raggDollPrecomputedCollData[j] = {v[2], v[3]}
+			else
 				--[[[if debugMarek then
-					Game:Print(self._Name.." set ragdoll col. joint not found: "..v[1])
-				end--]]
-            end
+				Game:Print(self._Name.." set ragdoll col. joint not found: "..v[1])
+			end--]]
 		end
-        self:ReplaceFunction("OnCollision","StdRagdollOnCollision")
 	end
+	self:ReplaceFunction("OnCollision","StdRagdollOnCollision")
+end
 
-	if not self._gibbed then
-		if enable and self.s_Physics then
-			local p = self.s_Physics
-			-- dopiero po aktywacji moge pobrac i zmienic mase ragdolla
-			if p.Mass then ENTITY.PO_SetMass(self._Entity, p.Mass) end
-			if p.InertiaTensorMultiplier then self._inertiaTensorDelayedEnable = 15 end
-			if p.RagdollFriction then
-				MDL.SetRagdollFriction(self._Entity, p.RagdollFriction)
-			end
+if not self._gibbed then
+	if enable and self.s_Physics then
+		local p = self.s_Physics
+		-- dopiero po aktywacji moge pobrac i zmienic mase ragdolla
+		if p.Mass then ENTITY.PO_SetMass(self._Entity, p.Mass) end
+		if p.InertiaTensorMultiplier then self._inertiaTensorDelayedEnable = 15 end
+		if p.RagdollFriction then
+			MDL.SetRagdollFriction(self._Entity, p.RagdollFriction)
 		end
 	end
-	    
-    --if enable and ENTITY.PO_Exist(self._Entity) then
-    --    ENTITY.PO_Enable(self._Entity,false)
-    if enable then
-        --self.Animation = ""
-        self._CurAnimLength = 99999
-		self._enabledRD = true
-    end
-    --elseif self._HadPO then
-    --    ENTITY.PO_Enable(self._Entity,true)
-    --end
+end
+
+--if enable and ENTITY.PO_Exist(self._Entity) then
+--    ENTITY.PO_Enable(self._Entity,false)
+if enable then
+	--self.Animation = ""
+	self._CurAnimLength = 99999
+	self._enabledRD = true
+end
+--elseif self._HadPO then
+--    ENTITY.PO_Enable(self._Entity,true)
+--end
 end
 
 
@@ -1629,12 +1630,12 @@ function CActor:StdRagdollOnCollision(x,y,z,nx,ny,nz,e_other,h_me,h_other,vx,vy,
 	if self.CustomOnRagdollCollision then
 		self:CustomOnRagdollCollision(x,y,z,nx,ny,nz,j,velocity_me,velocity_other)
 	end
-	
+
 	if e_other and self.RagdollCollDamage then
 		local obj = EntityToObject[e_other]
 		if obj and obj.OnDamage and not obj._AIBrain then			--- velocity * INP.GetTimeMultiplier()
 			--if debugMarek then Game:Print("RAGDOLL COLL - with obj dam") end
-		    if velocity_me and velocity_other then
+			if velocity_me and velocity_other then
 				if velocity_me + 2.0 > velocity_other then
 					obj:OnDamage(self.RagdollCollDamage, self)
 					if obj == Player and self.s_SubClass.SoundsDefinitions.damageByRagdoll then
@@ -1643,28 +1644,28 @@ function CActor:StdRagdollOnCollision(x,y,z,nx,ny,nz,e_other,h_me,h_other,vx,vy,
 				else
 					--Game:Print("$$$ no COL")
 				end
-			--else
+				--else
 				--Game:Print("$$$ ERROR: NIE MA velocity def")
 				--Game.freezeUpdate = true
 			end
 		end
 	end
-	
+
 	if j and j ~= -1 then
 		if self._raggDollPrecomputedCollData[j] then
-            local name
-            if self._frozen then
+			local name
+			if self._frozen then
 				name = "frozenSplash"
 			else
 				name = self._raggDollPrecomputedCollData[j][1]
 			end
-			
+
 			if name then
 				self:PlaySound(name,nil,nil,nil,nil,x,y,z)
 			end
-       		if self._raggDollPrecomputedCollData[j][2] and not self._frozen and not self.notBleeding then
-                self:BloodFX(x,y,z)		-- dodac cos zeby rozmazywalo np. uzaleznic od predkosci
-            end
+			if self._raggDollPrecomputedCollData[j][2] and not self._frozen and not self.notBleeding then
+				self:BloodFX(x,y,z)		-- dodac cos zeby rozmazywalo np. uzaleznic od predkosci
+			end
 		end
 	end
 end
@@ -1672,50 +1673,51 @@ end
 
 --============================================================================
 function CActor:PO_Create(bodytype,bodyscale,collisionGroup)
-    if not ENTITY.PO_Exist(self._Entity) then
+	if not collisionGroup then collisionGroup = ECollisionGroups.PlayerBody end
+	if not ENTITY.PO_Exist(self._Entity) then
 		local phys = self.s_Physics
-        if not bodytype then
-            if phys then
-                bodytype = phys.BodyType
-                if phys.BodyScale then
+		if not bodytype then
+			if phys then
+				bodytype = phys.BodyType
+				if phys.BodyScale then
 					bodyscale = phys.BodyScale
 				end
-            else
-                bodytype = BodyTypes.Fatter
-            end
-        end
-        self:Synchronize()
-        ENTITY.PO_Create(self._Entity, bodytype, bodyscale, collisionGroup)
-        
-        --if self.Friction then
+			else
+				bodytype = BodyTypes.Fatter
+			end
+		end
+		self:Synchronize()
+		ENTITY.PO_Create(self._Entity, bodytype, bodyscale, collisionGroup)
+
+		--if self.Friction then
 		--	ENTITY.PO_SetFriction(self._Entity,self.Friction)
 		--else
 		--	ENTITY.PO_SetFriction(self._Entity,1.5)
 		--end
-        --if self.Mass then
+		--if self.Mass then
 		--	ENTITY.PO_SetMass(self._Entity, self.Mass)
 		--end
-        
-        -- nie ustawiam tarcia poniewaz nie beda wchodzili po schodach
-        -- tylko dla ragdoli w jest ustawiane tarcie na 2.0 w physics.cpp
-        --ENTITY.PO_SetFriction(self._Entity, 2) -- default friction
-		
-        if phys then
-            if phys.Mass then ENTITY.PO_SetMass(self._Entity, phys.Mass) end
-		    if phys.Friction then ENTITY.PO_SetFriction(self._Entity, phys.Friction) end
+
+		-- nie ustawiam tarcia poniewaz nie beda wchodzili po schodach
+		-- tylko dla ragdoli w jest ustawiane tarcie na 2.0 w physics.cpp
+		--ENTITY.PO_SetFriction(self._Entity, 2) -- default friction
+
+		if phys then
+			if phys.Mass then ENTITY.PO_SetMass(self._Entity, phys.Mass) end
+			if phys.Friction then ENTITY.PO_SetFriction(self._Entity, phys.Friction) end
 			--if phys.AngularDamping then ENTITY.PO_SetAngularDamping(self._Entity, phys.AngularDamping) end
 			--if phys.LinearDamping then ENTITY.PO_SetLinearDamping(self._Entity, phys.LinearDamping) end
 			if phys.Restitution then ENTITY.PO_SetRestitution(self._Entity, phys.Restitution) end
-		end        
-        
-        ENTITY.PO_SetMonsterType(self._Entity)
-        if self.Pinned then
+		end
+
+		ENTITY.PO_SetMonsterType(self._Entity)
+		if self.Pinned then
 			ENTITY.PO_SetPinned(self._Entity,true)
 			ENTITY.PO_Activate(self._Entity,true)
 		end
 
---        self._HadPO = true
-    end
+		--        self._HadPO = true
+	end
 end
 --============================================================================
 --function CActor:MakeProjectile(type,lifetime,mass)
@@ -1742,17 +1744,17 @@ end
 
 function CActor:RotateToVector(tx,ty,tz)
 	--[[[if debugMarek then
-		if Dist3D(tx,0,tz,self._groundx,0,self._groundz) < 0.01 then
-			self._isRotating = true
-			--Game.freezeUpdate = true
-			--Game:Print("RTV: "..tx.." "..self._groundx)
-			return
-		end
-	end--]]
-	if not self._rotatingWithAnim then
-		self._angleDest = math.atan2(tx - self._groundx, tz - self._groundz)
+	if Dist3D(tx,0,tz,self._groundx,0,self._groundz) < 0.01 then
 		self._isRotating = true
+		--Game.freezeUpdate = true
+		--Game:Print("RTV: "..tx.." "..self._groundx)
+		return
 	end
+end--]]
+if not self._rotatingWithAnim then
+	self._angleDest = math.atan2(tx - self._groundx, tz - self._groundz)
+	self._isRotating = true
+end
 end
 
 function CActor:FlyForward(dist, ang, up, animName,disableInitialRotate, maxDist)
@@ -1772,48 +1774,48 @@ function CActor:FlyForward(dist, ang, up, animName,disableInitialRotate, maxDist
 	local v = Vector:New(math.sin(angle), 0, math.cos(angle))
 	v:Normalize()
 	return self:FlyTo(xd + v.X*dist, yd, zd + v.Z*dist,nil,animName,disableInitialRotate, maxDist)
-end	
+end
 
 function CActor:FlyTo(destx,desty,destz, Run, animName, disableInitialRotate, maxDist)
 	local x,y,z = self._groundx,self._groundy,self._groundz
-	
+
 	self._disableInitialRotate = disableInitialRotate
 	local d1 = Dist3D(x,y,z,destx,desty,destz)
-    if d1 < 0.04 then		-- dest to close
+	if d1 < 0.04 then		-- dest to close
 		return false
-    end
-    if self._flyWithAngle then
+	end
+	if self._flyWithAngle then
 		self._lastDistToEnd = d1
 	end
-	
+
 	self._walkMaxDist = maxDist
 	self._walkTotalMove = 0
 
-   	if self.NeverMove then
+	if self.NeverMove then
 		return true
 	end
 
-    local run = Run
-    if self.NeverRun then
+	local run = Run
+	if self.NeverRun then
 		run = false
-    end
+	end
 
-    if self.NeverWalk then
+	if self.NeverWalk then
 		run = true
-    end
+	end
 
-    
+
 	self._shouldMove = 0
 	self._lastShouldMove = nil
 	self._lastbutMove = nil
-    self._butMove = 0
-    self._lastgroundx,self._lastgroundy,self._lastgroundz = self._groundx,self._groundy,self._groundz
+	self._butMove = 0
+	self._lastgroundx,self._lastgroundy,self._lastgroundz = self._groundx,self._groundy,self._groundz
 
 	self._notIsWalkingTimer = nil
-    self._destx = destx
-    self._desty = desty
-    self._destz = destz
-    self._destAngle = math.atan2(destx - x, destz - z)
+	self._destx = destx
+	self._desty = desty
+	self._destz = destz
+	self._destAngle = math.atan2(destx - x, destz - z)
 
 	self._Speed = 1.0
 	local animSpeed = 1.0
@@ -1829,10 +1831,10 @@ function CActor:FlyTo(destx,desty,destz, Run, animName, disableInitialRotate, ma
 		anm = self.s_SubClass.flyRun
 	end
 
-    if animName then
-        anm = animName
-    end
-    
+	if animName then
+		anm = animName
+	end
+
 	if self.s_SubClass.Animations then
 		if self.s_SubClass.Animations[anm] and self.s_SubClass.Animations[anm][2] then
 			self._HasMovingCurve = true
@@ -1841,9 +1843,9 @@ function CActor:FlyTo(destx,desty,destz, Run, animName, disableInitialRotate, ma
 			animSpeed = self.s_SubClass.Animations[anm][1]
 		end
 	end
-	
+
 	self:SetAnim(anm, not self._doNotLoopWalkAnim, animSpeed)
-	
+
 	if not disableInitialRotate then
 		self:RotateToVector(self._destx, 0, self._destz)
 	end
@@ -1878,7 +1880,7 @@ function CActor:WalkTo(destx,desty,destz, Run, maxDist, animName, useOnlyWP, wal
 	self._walkWithAngle = walkWithAngle
 	self._state = "PREWALK"
 	self._isWalking = nil
-	
+
 	if self.NeverMove then
 		return true
 	end
@@ -1888,57 +1890,57 @@ function CActor:WalkTo(destx,desty,destz, Run, maxDist, animName, useOnlyWP, wal
 	end
 
 	local x,y,z = self._groundx,self._groundy,self._groundz
-	
+
 	local d1 = Dist3D(x,y,z,destx,desty,destz)
-    if d1 < 0.04 then		-- dest to close
+	if d1 < 0.04 then		-- dest to close
 		--if debugMarek then Game:Print("Walk too close") end
 		return false
-    end
-    
-    if debugMarek then
+	end
+
+	if debugMarek then
 		DEBUG1, DEBUG2, DEBUG3, DEBUG4, DEBUG5, DEBUG6 = x,y,z,destx,desty,destz
 	end
 
 	--if debugMarek then Game:Print("Walk distance = "..d1) end
 	self._preferWP = useOnlyWP
-	
-	if not self._Path then    
+
+	if not self._Path then
 		self._Path = PATH.Create()
 	end
 
-    self._walkMaxDist = maxDist
+	self._walkMaxDist = maxDist
 
-    local run = Run
-    if self.NeverRun then
+	local run = Run
+	if self.NeverRun then
 		run = false
-    end
+	end
 
-    if self.NeverWalk then
+	if self.NeverWalk then
 		run = true
-    end
+	end
 
-    self._walkTotalMove = 0
+	self._walkTotalMove = 0
 	self._shouldMove = 0
 	self._lastShouldMove = nil
 	self._lastbutMove = nil
-    self._butMove = 0
-    self._lastgroundx,self._lastgroundy,self._lastgroundz = x,y,z
+	self._butMove = 0
+	self._lastgroundx,self._lastgroundy,self._lastgroundz = x,y,z
 
-	
+
 
 	if not self.doNotUseWP then
 		PATH.GetShortest(self._Path,x,y,z,destx,desty,destz,self.s_SubClass.WPminDist,self.s_SubClass.WPmaxDist)
 	end
-    self._destx = destx
-    self._desty = desty
-    self._destz = destz
-    self._destAngle = math.atan2(destx - x, destz - z)
+	self._destx = destx
+	self._desty = desty
+	self._destz = destz
+	self._destAngle = math.atan2(destx - x, destz - z)
 
 	local mode = "walk"
-    if run then
+	if run then
 		mode = "run"
-    end
-   
+	end
+
 	self._Speed = 1.0
 	local animSpeed = 1.0
 
@@ -1990,36 +1992,36 @@ function CActor:WalkTo(destx,desty,destz, Run, maxDist, animName, useOnlyWP, wal
 		Game:Print(self._Name.." WALK TO, anim not found? "..mode)
 		Game.freezeUpdate = true
 	end
-	
+
 	self._rotatingWithAnim = false
 	self._moveBackward = moveBackward
-	
+
 	if not self.doNotUseWP and PATH.IsFinished(self._Path) == 0 then
-        self._forceMove = nil
-        self:NextPoint()
-    else
-    	if self.onlyWPmove then			-- first is global, second is local
+		self._forceMove = nil
+		self:NextPoint()
+	else
+		if self.onlyWPmove then			-- first is global, second is local
 			--if debugMarek then Game:Print(self._Name.." walk cancled, only wp move...") end
 			return false
 		end
 		if not self._disableRotatingWhileWalking then
 			self:RotateToVector(self._destx, 0, self._destz)
-            if self._moveBackward then
+			if self._moveBackward then
 				self._angleDest = self._angleDest + math.pi
-            end
+			end
 		end
-		
+
 		if self._preferWP then
 			local v = Vector:New(self._destx - self._groundx, 0, self._destz - self._groundz)	-- sprawdzanie lekko do przodu
 			v:Normalize()
 			if not self:CheckYLevel(self._destx, self._desty, self._destz)
-				and not self:CheckYLevel(self._destx + v.X * self._checkRadius, self._desty, self._destz + v.Z * self._checkRadius) then
+			and not self:CheckYLevel(self._destx + v.X * self._checkRadius, self._desty, self._destz + v.Z * self._checkRadius) then
 
 				self._forceMove = false
 				if self._AIBrain then
-		   			self._lastCantMoveTime = self._AIBrain._currentTime
-		   		end
-		   		--if debugMarek then Game:Print(self._Name.." prefer wp...walk canceled") end
+					self._lastCantMoveTime = self._AIBrain._currentTime
+				end
+				--if debugMarek then Game:Print(self._Name.." prefer wp...walk canceled") end
 				--Game:Print("CHECK_Y #2")
 				return false
 			else
@@ -2030,7 +2032,7 @@ function CActor:WalkTo(destx,desty,destz, Run, maxDist, animName, useOnlyWP, wal
 		self._distStart = 0
 		self._forceMove = true
 
-    end
+	end
 	if self.Animation ~= mode then
 		if self._moveBackward then
 			animSpeed = -animSpeed
@@ -2053,14 +2055,14 @@ function CActor:WalkTo(destx,desty,destz, Run, maxDist, animName, useOnlyWP, wal
 end
 
 function CActor:SetIdle(once)
-	self:Stop()	
+	self:Stop()
 	local loop = true
 	if once then
 		loop = once
 	end
-	
+
 	if debugAnim then Game:Print(")"..GetCallStackInfo(2)) end
-	
+
 	if not self.s_SubClass.Animations.idle or not self:SetAnim("idle", loop) then
 		if self.s_SubClass.Ambients then
 			--local animName = self.s_SubClass.Ambients[math.random(1,table.getn(self.s_SubClass.Ambients))]
@@ -2076,72 +2078,72 @@ function CActor:SetIdle(once)
 end
 
 function CActor:CheckYLevel(x,y,z, debug)
---[[	if self.debugCheck then
-		self.debugCheck = nil
+	--[[	if self.debugCheck then
+	self.debugCheck = nil
+else
+	self.debugCheck = 1
+end--]]
+if not ENTITY.PO_Exist(self._Entity) then
+	return true
+end
+local b,d = WORLD.LineTraceFixedGeom(x, y + self._SphereSize * 3, z, x, y - self._SphereSize * 3, z)
+--local b,d,debugx,debugy,debugz = WORLD.LineTraceFixedGeom(x, y + self._SphereSize * 3, z, x, y - self._SphereSize * 3, z)
+if d and d > self._SphereSize*1.5 and d < self._SphereSize * 4.5 then
+	--[[if debug then
+	if self.debugCheck then
+		self.debugCheckY1 = x
+		self.debugCheckY2 = y + self._SphereSize * 3
+		self.debugCheckY3 = z
+		self.debugCheckY4 = debugx
+		self.debugCheckY5 = debugy
+		self.debugCheckY6 = debugz
 	else
-		self.debugCheck = 1
-	end--]]
-	if not ENTITY.PO_Exist(self._Entity) then
-		return true
+		self.d1ebugCheckY1 = x
+		self.d1ebugCheckY2 = y + self._SphereSize * 3
+		self.d1ebugCheckY3 = z
+		self.d1ebugCheckY4 = debugx
+		self.d1ebugCheckY5 = debugy
+		self.d1ebugCheckY6 = debugz
 	end
-	local b,d = WORLD.LineTraceFixedGeom(x, y + self._SphereSize * 3, z, x, y - self._SphereSize * 3, z)
-	--local b,d,debugx,debugy,debugz = WORLD.LineTraceFixedGeom(x, y + self._SphereSize * 3, z, x, y - self._SphereSize * 3, z)
-	if d and d > self._SphereSize*1.5 and d < self._SphereSize * 4.5 then
-		--[[if debug then
-			if self.debugCheck then
-				self.debugCheckY1 = x
-				self.debugCheckY2 = y + self._SphereSize * 3
-				self.debugCheckY3 = z
-				self.debugCheckY4 = debugx
-				self.debugCheckY5 = debugy
-				self.debugCheckY6 = debugz
-			else
-				self.d1ebugCheckY1 = x
-				self.d1ebugCheckY2 = y + self._SphereSize * 3
-				self.d1ebugCheckY3 = z
-				self.d1ebugCheckY4 = debugx
-				self.d1ebugCheckY5 = debugy
-				self.d1ebugCheckY6 = debugz
-			end
-		end--]]
-		return true
+end--]]
+return true
+else
+	--[[if debug then
+	if self.debugCheck then
+		self.debugCheckY1 = x
+		self.debugCheckY2 = y + self._SphereSize * 3
+		self.debugCheckY3 = z
+		self.debugCheckY4 = x
+		self.debugCheckY5 = y - self._SphereSize * 3
+		self.debugCheckY6 = z
 	else
-		--[[if debug then
-			if self.debugCheck then
-				self.debugCheckY1 = x
-				self.debugCheckY2 = y + self._SphereSize * 3
-				self.debugCheckY3 = z
-				self.debugCheckY4 = x
-				self.debugCheckY5 = y - self._SphereSize * 3
-				self.debugCheckY6 = z
-			else
-				self.d1ebugCheckY1 = x
-				self.d1ebugCheckY2 = y + self._SphereSize * 3
-				self.d1ebugCheckY3 = z
-				self.d1ebugCheckY4 = x
-				self.d1ebugCheckY5 = y - self._SphereSize * 3
-				self.d1ebugCheckY6 = z
-			end
-		end--]]
-		return false
+		self.d1ebugCheckY1 = x
+		self.d1ebugCheckY2 = y + self._SphereSize * 3
+		self.d1ebugCheckY3 = z
+		self.d1ebugCheckY4 = x
+		self.d1ebugCheckY5 = y - self._SphereSize * 3
+		self.d1ebugCheckY6 = z
 	end
+end--]]
+return false
+end
 end
 
 
-function CActor:NextPoint()    
-    local x,y,z = self._groundx,self._groundy,self._groundz
-    if PATH.IsFinished(self._Path) == 1 then				-- nie ma wiecej WP
+function CActor:NextPoint()
+	local x,y,z = self._groundx,self._groundy,self._groundz
+	if PATH.IsFinished(self._Path) == 1 then				-- nie ma wiecej WP
 		self._distToEnd = Dist2D(x,z,self._destx,self._destz)
 		self._distStart = 0
 		if not self._disableRotatingWhileWalking then
 			self:RotateToVector(self._destx, 0, self._destz)
 		end
-        if self._moveBackward then
+		if self._moveBackward then
 			self._angleDest = self._angleDest + math.pi
 		end
-   		if self.onlyWPmove then
-   			self._lastCantMoveTime = self._AIBrain._currentTime
-   			self._isWalking = nil
+		if self.onlyWPmove then
+			self._lastCantMoveTime = self._AIBrain._currentTime
+			self._isWalking = nil
 			return false
 		else
 			if self._preferWP then
@@ -2150,9 +2152,9 @@ function CActor:NextPoint()
 				if not self:CheckYLevel(self._destx, self._desty, self._destz) and not self:CheckYLevel(self._destx + v.X * self._checkRadius, self._desty, self._destz + v.Z * self._checkRadius) then
 					self._forceMove = false
 					if self._AIBrain then
-		   				self._lastCantMoveTime = self._AIBrain._currentTime
-		   			end
-   					self._isWalking = nil
+						self._lastCantMoveTime = self._AIBrain._currentTime
+					end
+					self._isWalking = nil
 					--Game:Print("CHECK_Y #1")
 					return false
 				else
@@ -2161,10 +2163,10 @@ function CActor:NextPoint()
 			end
 			self._forceMove = true
 		end
-    else
-        local dx,dy,dz = PATH.GetNextPoint(self._Path)
-        local l = Dist3D(x,y,z,dx,dy,dz)
-        if PATH.IsFinished(self._Path) == 1 then			-- nie ma wiecej WP
+	else
+		local dx,dy,dz = PATH.GetNextPoint(self._Path)
+		local l = Dist3D(x,y,z,dx,dy,dz)
+		if PATH.IsFinished(self._Path) == 1 then			-- nie ma wiecej WP
 			local dist = Dist3D(x,y,z,self._destx,self._desty,self._destz)
 			if (dist < l * 1.3) then						-- cel prawie tak blisko jak ostatni WP
 				if not self.onlyWPmove then
@@ -2177,288 +2179,288 @@ function CActor:NextPoint()
 
 					if not self._preferWP then
 						--[[if self._displacement and self._displacement ~= 0 and self._AIBrain._seeEnemy then
-							local v = Vector:New(z - self._destz, 0, self._destx - x)		-- na bok wzgl. patrzenia potwora
-							v:Normalize()
-							local aiParams = self.AiParams
-		
-							local range = self._displacement
-							local limit = (dist - aiParams.attackRange) * 0.5
-							if limit < 0 then
-								limit = 0
-							end
-							
-							if math.abs(range) > limit then
-								range = limit
-								if self._displacement < 0 then
-									range = -limit
-								end
-							end
-
-							--if debugDisplace then Game:Print(self._Name.." walkto displace "..range.." "..limit.." dist: "..dist) end
-
-							local dxx = self._destx + v.X * range
-							local dzz = self._destz + v.Z * range
-
-							local dxxForTest = dx + v.X * (range + self._SphereSize)
-							local dzzForTest = dz + v.Z * (range + self._SphereSize)
-							local b,d,x,y,z = WORLD.LineTraceFixedGeom(dxxForTest, dy + self._SphereSize * 3, dzzForTest, dxxForTest, dy - self._SphereSize * 3, dzzForTest)
-							--self.yaadebug1,self.yaadebug2,self.yaadebug3,self.yaadebug4,self.yaadebug5,self.yaadebug6 = dxxForTest, dy + self._SphereSize * 3, dzzForTest, dxxForTest, dy - self._SphereSize * 3, dzzForTest
-							if d and d > self._SphereSize*1.5 and d < self._SphereSize * 4.5 then	
-
-								local ok2 = false
-								--self.yadebug1,self.yadebug2,self.yadebug3,self.yadebug4,self.yadebug5,self.yadebug6 = dx, dy + self._SphereSize * 3, dz, x,y,z
-								local b,d,d1,d2,d3 = WORLD.LineTraceFixedGeom(dx, dy + self._SphereSize * 3, dz, x,y,z)
-								local len = Dist3D(x,y,z, dx, dy + self._SphereSize * 3, dz)
-								if not d or (d > len * 0.9) then
-									ok2 = true
-								end
-
-								if ok2 then
-									self._destx = dxx
-									self._destz = dzz
-									--Game:Print("@@displace OK1")
-								--else
-									--Game:Print("@@displace FAILED1")
-								end
-
-							else
-								--if d then
-									--Game:Print("@@displace FAILED1 "..d)
-								--else
-									--Game:Print("@@displace FAILED1a")
-								--end
-							end
-						end--]]
-						self._forceMove = true
-						self._distToEnd = dist
-						self._distStart = 0
-						return true
-					else
-						local v = Vector:New(self._destx - self._groundx, 0, self._destz - self._groundz)	-- sprawdzanie lekko do przodu
+						local v = Vector:New(z - self._destz, 0, self._destx - x)		-- na bok wzgl. patrzenia potwora
 						v:Normalize()
-						if self:CheckYLevel(self._destx, self._desty, self._destz) and self:CheckYLevel(self._destx + v.X * self._checkRadius, self._desty, self._destz + v.Z * self._checkRadius) then
-							self._forceMove = true
-							self._distToEnd = dist
-							self._distStart = 0
-							--Game:Print("CHECK_Y #3 OK ")
-							return true
-						--else
-							--Game:Print("CHECK_Y #3")
+						local aiParams = self.AiParams
+
+						local range = self._displacement
+						local limit = (dist - aiParams.attackRange) * 0.5
+						if limit < 0 then
+							limit = 0
 						end
-					end
-				end
-			end
-		else			-- sa jeszcze WP, to displace
-		    if self._displacement and math.abs(self._displacement) > 0.15 and self._AIBrain and self._AIBrain._seeEnemy then
-				local dist = Dist2D(x,z,self._destx,self._destz)
-                local aiParams = self.AiParams
-				local v = Vector:New(z - self._destz, 0, self._destx - x)
-				v:Normalize()
 
-				local range = self._displacement
-				local limit = (dist - aiParams.attackRange) * 0.5
-				if limit < 0 then
-					limit = 0
-				end
-				
-				if math.abs(range) > limit then
-					--if debugMarek then
-					--	Game:Print(self._Name.." walkto WP displace limit reached "..range.." "..limit)
-					--end
-					range = limit
-					if self._displacement < 0 then
-						range = -limit
-					end
-				end
-
-				--if debugDisplace then 
-				--	Game:Print(self._Name.." walkto WP displace "..range.." "..limit.." dist: "..dist)
-				--end
-
-				local dxx = dx + v.X * range
-				local dzz = dz + v.Z * range
-
-				local ok3 = true
-				-- trace z wyliczonego WP do miejsca z displace
-				
-			    --ENTITY.RemoveRagdollFromIntersectionSolver(self._Entity)		-- powinno byc remove all
-
-				--if debugDisplace then
-				--	self.yaaaaadebug1,self.yaaaaadebug2,self.yaaaaadebug3,self.yaaaaadebug4,self.yaaaaadebug5,self.yaaaaadebug6 = self._groundx,self._groundy + 0.1,self._groundz, dx,dy+0.1,dz
-				--	self.yadebug1,self.yadebug2,self.yadebug3,self.yadebug4,self.yadebug5,self.yadebug6 = dxx, dy+0.5, dzz, dx,dy+0.5,dz
-				--	DEB1 = dxx
-				--	DEB2 = dy + 0.5
-				--	DEB3 = dzz
-				--end
-
-				local b,d = WORLD.LineTraceFixedGeom(dx,dy+0.5,dz,dxx, dy+0.5, dzz)
-
-				if b then
-					--if debugDisplace then 
-					--	Game:Print(self._Name.." displace col "..d.." range = "..range.." "..self._SphereSize)
-					--end
-					if d > self._SphereSize * 2.0 then
-						local sign = 1
-						if self._displacement < 0 then
-							sign = -1
-						end
-						dxx = dx + v.X * (d - self._SphereSize*2.0) * sign
-						dzz = dz + v.Z * (d - self._SphereSize*2.0) * sign
-						range = (d - self._SphereSize*2.0) * sign
-						--if self._displacement < 0 then
-						--	range = -range
-						--end
-						--if debugDisplace then 
-						--	Game:Print("NEW range = "..range)
-						--end
-					else
-						ok3 = false
-						----Game.freezeUpdate = true
-						--if debugDisplace then 
-						--	Game:Print(self._Name.." displace col, za blisko")
-						--end
-					end
-				end
-
---				if debugDisplace then
---					DEB4 = dxx
---					DEB5 = dy + 0.5
---					DEB6 = dzz
---				end
-				
-				if ok3 then
-					local ok4 = true 
---					if debugDisplace then
---						self.yzdebug1,self.yzdebug2,self.yzdebug3,self.yzdebug4,self.yzdebug5,self.yzdebug6 = x,y+0.5,z,dxx, dy+0.5, dzz
---					end
-
-					-- trace do wyliczonego miescja od aktora
-					local b,d = WORLD.LineTraceFixedGeom(x,y+0.5,z,dxx, dy+0.5, dzz)
-					if b then
---						if debugDisplace then
---							Game:Print(self._Name.." jest kolizja do celu!")
---						end
-						ok4 = false
-					else
---						if debugDisplace then
---							Game:Print(self._Name.." nie ma kolizja do celu")
---						end
-						
-					end
-
---					if debugDisplace then
---						self.yaaadebug1,self.yaaadebug2,self.yaaadebug3,self.yaaadebug4,self.yaaadebug5,self.yaaadebug6 = dxx, dy+0.5, dzz, self._destx,self._desty+0.5,self._destz
---					end
-					-- trace z wyliczonego miejsca do celu (widocznosc)
-					if ok4 then
-						local b,d = WORLD.LineTraceFixedGeom(dxx, dy+0.5, dzz, self._destx,self._desty+0.5,self._destz)
-						if b then
-							ok4 = false
---							if debugDisplace then 
---								Game:Print(self._Name.." brak widocznosci z tego miejsca")
---							end
-						--else
-						--	Game:Print(self._Name.." OK. jest widocznosc")
-						end
-					end
-					
-					if ok4 then
-						local zasieg = range + self._SphereSize
-						if range < 0 then
-							zasieg = range - self._SphereSize
-						end
-						local dxxForTest = dx + v.X * zasieg
-						local dzzForTest = dz + v.Z * zasieg
-						-- sprawdzanie roznicy wysokosci
-						local b,d,x,y,z,nx,ny,nz,he,e = WORLD.LineTrace(dxxForTest, dy + self._SphereSize * 3, dzzForTest, dxxForTest, dy - self._SphereSize * 3, dzzForTest)
---						if debugDisplace then
---							self.yaadebug1,self.yaadebug2,self.yaadebug3,self.yaadebug4,self.yaadebug5,self.yaadebug6 = dxxForTest, dy + self._SphereSize * 3, dzzForTest, dxxForTest, dy - self._SphereSize * 3, dzzForTest
---						end
-						if e then
-							local obj = EntityToObject[e]
-							if obj then
-								--if debugMarek then
-								--	Game:Print(self._Name.." DISPLACE OBJ COL WITH "..obj._Name.." "..obj._Class)
-									--Game.freezeUpdate = true
-								--end
-								if obj._Class == "CItem" then
-									d = nil
-								end
+						if math.abs(range) > limit then
+							range = limit
+							if self._displacement < 0 then
+								range = -limit
 							end
 						end
-						if d and d > self._SphereSize*1.5 and d < self._SphereSize * 4.5 then	
+
+						--if debugDisplace then Game:Print(self._Name.." walkto displace "..range.." "..limit.." dist: "..dist) end
+
+						local dxx = self._destx + v.X * range
+						local dzz = self._destz + v.Z * range
+
+						local dxxForTest = dx + v.X * (range + self._SphereSize)
+						local dzzForTest = dz + v.Z * (range + self._SphereSize)
+						local b,d,x,y,z = WORLD.LineTraceFixedGeom(dxxForTest, dy + self._SphereSize * 3, dzzForTest, dxxForTest, dy - self._SphereSize * 3, dzzForTest)
+						--self.yaadebug1,self.yaadebug2,self.yaadebug3,self.yaadebug4,self.yaadebug5,self.yaadebug6 = dxxForTest, dy + self._SphereSize * 3, dzzForTest, dxxForTest, dy - self._SphereSize * 3, dzzForTest
+						if d and d > self._SphereSize*1.5 and d < self._SphereSize * 4.5 then
+
 							local ok2 = false
---							if debugDisplace then 
---								self.yaaaadebug1,self.yaaaadebug2,self.yaaaadebug3,self.yaaaadebug4,self.yaaaadebug5,self.yaaaadebug6 = dx, dy + self._SphereSize * 3, dz, x,y,z
---							end
-							local b,d = WORLD.LineTraceFixedGeom(dx, dy + self._SphereSize * 3, dz, x,y,z)
+							--self.yadebug1,self.yadebug2,self.yadebug3,self.yadebug4,self.yadebug5,self.yadebug6 = dx, dy + self._SphereSize * 3, dz, x,y,z
+							local b,d,d1,d2,d3 = WORLD.LineTraceFixedGeom(dx, dy + self._SphereSize * 3, dz, x,y,z)
 							local len = Dist3D(x,y,z, dx, dy + self._SphereSize * 3, dz)
 							if not d or (d > len * 0.9) then
 								ok2 = true
 							end
 
 							if ok2 then
-								dx = dxx
-								dz = dzz
-								--Game:Print("displace OK2")
-							else
---								if debugDisplace then
---									Game:Print("displace FAILED2")
---								end
+								self._destx = dxx
+								self._destz = dzz
+								--Game:Print("@@displace OK1")
+								--else
+								--Game:Print("@@displace FAILED1")
 							end
 
 						else
 							--if d then
-								--Game:Print("displace FAILED2 "..d)
+							--Game:Print("@@displace FAILED1 "..d)
 							--else
-								--Game:Print("displace FAILED2")
+							--Game:Print("@@displace FAILED1a")
 							--end
---							if debugDisplace then
---								Game:Print("displace FAILED3")
---							end
 						end
+					end--]]
+					self._forceMove = true
+					self._distToEnd = dist
+					self._distStart = 0
+					return true
+				else
+					local v = Vector:New(self._destx - self._groundx, 0, self._destz - self._groundz)	-- sprawdzanie lekko do przodu
+					v:Normalize()
+					if self:CheckYLevel(self._destx, self._desty, self._destz) and self:CheckYLevel(self._destx + v.X * self._checkRadius, self._desty, self._destz + v.Z * self._checkRadius) then
+						self._forceMove = true
+						self._distToEnd = dist
+						self._distStart = 0
+						--Game:Print("CHECK_Y #3 OK ")
+						return true
+						--else
+						--Game:Print("CHECK_Y #3")
 					end
 				end
-				--ENTITY.AddRagdollToIntersectionSolver(self._Entity)
 			end
-        end
-   
-        if l > 0.01 then        
-            self._Point:Set(dx,dy,dz)
-            if not self._disableRotatingWhileWalking then
-				self:RotateToVector(dx, 0, dz)
-			end
-            if self._moveBackward then
-				self._angleDest = self._angleDest + math.pi
-            end
-            if debugMarek then
-				self._pdebugdx2 = self._debugdx2		--- previous
-				self._pdebugdy2 = self._debugdy2
-				self._pdebugdz2 = self._debugdz2
+		end
+	else			-- sa jeszcze WP, to displace
+		if self._displacement and math.abs(self._displacement) > 0.15 and self._AIBrain and self._AIBrain._seeEnemy then
+			local dist = Dist2D(x,z,self._destx,self._destz)
+			local aiParams = self.AiParams
+			local v = Vector:New(z - self._destz, 0, self._destx - x)
+			v:Normalize()
 
-				self._pdebugdx3 = self._debugdx3					-- act. WP
-				self._pdebugdy3 = self._debugdy3
-				self._pdebugdz3 = self._debugdz3
-
-
-				self._debugdx2 = dx					-- act. WP
-				self._debugdy2 = dy
-				self._debugdz2 = dz
-
-				self._debugdx3 = x					-- act. WP
-				self._debugdy3 = y
-				self._debugdz3 = z
+			local range = self._displacement
+			local limit = (dist - aiParams.attackRange) * 0.5
+			if limit < 0 then
+				limit = 0
 			end
 
-			self._distToEnd = Dist2D(dx, dz, x, z)
-			self._distStart = 0
-	    else
-            self._isWalking = nil
-            --Game:Print("?????? finished walking ??????")
-            return false
-        end
-    end
-    return true 
+			if math.abs(range) > limit then
+				--if debugMarek then
+				--	Game:Print(self._Name.." walkto WP displace limit reached "..range.." "..limit)
+				--end
+				range = limit
+				if self._displacement < 0 then
+					range = -limit
+				end
+			end
+
+			--if debugDisplace then
+			--	Game:Print(self._Name.." walkto WP displace "..range.." "..limit.." dist: "..dist)
+			--end
+
+			local dxx = dx + v.X * range
+			local dzz = dz + v.Z * range
+
+			local ok3 = true
+			-- trace z wyliczonego WP do miejsca z displace
+
+			--ENTITY.RemoveRagdollFromIntersectionSolver(self._Entity)		-- powinno byc remove all
+
+			--if debugDisplace then
+			--	self.yaaaaadebug1,self.yaaaaadebug2,self.yaaaaadebug3,self.yaaaaadebug4,self.yaaaaadebug5,self.yaaaaadebug6 = self._groundx,self._groundy + 0.1,self._groundz, dx,dy+0.1,dz
+			--	self.yadebug1,self.yadebug2,self.yadebug3,self.yadebug4,self.yadebug5,self.yadebug6 = dxx, dy+0.5, dzz, dx,dy+0.5,dz
+			--	DEB1 = dxx
+			--	DEB2 = dy + 0.5
+			--	DEB3 = dzz
+			--end
+
+			local b,d = WORLD.LineTraceFixedGeom(dx,dy+0.5,dz,dxx, dy+0.5, dzz)
+
+			if b then
+				--if debugDisplace then
+				--	Game:Print(self._Name.." displace col "..d.." range = "..range.." "..self._SphereSize)
+				--end
+				if d > self._SphereSize * 2.0 then
+					local sign = 1
+					if self._displacement < 0 then
+						sign = -1
+					end
+					dxx = dx + v.X * (d - self._SphereSize*2.0) * sign
+					dzz = dz + v.Z * (d - self._SphereSize*2.0) * sign
+					range = (d - self._SphereSize*2.0) * sign
+					--if self._displacement < 0 then
+					--	range = -range
+					--end
+					--if debugDisplace then
+					--	Game:Print("NEW range = "..range)
+					--end
+				else
+					ok3 = false
+					----Game.freezeUpdate = true
+					--if debugDisplace then
+					--	Game:Print(self._Name.." displace col, za blisko")
+					--end
+				end
+			end
+
+			--				if debugDisplace then
+			--					DEB4 = dxx
+			--					DEB5 = dy + 0.5
+			--					DEB6 = dzz
+			--				end
+
+			if ok3 then
+				local ok4 = true
+				--					if debugDisplace then
+				--						self.yzdebug1,self.yzdebug2,self.yzdebug3,self.yzdebug4,self.yzdebug5,self.yzdebug6 = x,y+0.5,z,dxx, dy+0.5, dzz
+				--					end
+
+				-- trace do wyliczonego miescja od aktora
+				local b,d = WORLD.LineTraceFixedGeom(x,y+0.5,z,dxx, dy+0.5, dzz)
+				if b then
+					--						if debugDisplace then
+					--							Game:Print(self._Name.." jest kolizja do celu!")
+					--						end
+					ok4 = false
+				else
+					--						if debugDisplace then
+					--							Game:Print(self._Name.." nie ma kolizja do celu")
+					--						end
+
+				end
+
+				--					if debugDisplace then
+				--						self.yaaadebug1,self.yaaadebug2,self.yaaadebug3,self.yaaadebug4,self.yaaadebug5,self.yaaadebug6 = dxx, dy+0.5, dzz, self._destx,self._desty+0.5,self._destz
+				--					end
+				-- trace z wyliczonego miejsca do celu (widocznosc)
+				if ok4 then
+					local b,d = WORLD.LineTraceFixedGeom(dxx, dy+0.5, dzz, self._destx,self._desty+0.5,self._destz)
+					if b then
+						ok4 = false
+						--							if debugDisplace then
+						--								Game:Print(self._Name.." brak widocznosci z tego miejsca")
+						--							end
+						--else
+						--	Game:Print(self._Name.." OK. jest widocznosc")
+					end
+				end
+
+				if ok4 then
+					local zasieg = range + self._SphereSize
+					if range < 0 then
+						zasieg = range - self._SphereSize
+					end
+					local dxxForTest = dx + v.X * zasieg
+					local dzzForTest = dz + v.Z * zasieg
+					-- sprawdzanie roznicy wysokosci
+					local b,d,x,y,z,nx,ny,nz,he,e = WORLD.LineTrace(dxxForTest, dy + self._SphereSize * 3, dzzForTest, dxxForTest, dy - self._SphereSize * 3, dzzForTest)
+					--						if debugDisplace then
+					--							self.yaadebug1,self.yaadebug2,self.yaadebug3,self.yaadebug4,self.yaadebug5,self.yaadebug6 = dxxForTest, dy + self._SphereSize * 3, dzzForTest, dxxForTest, dy - self._SphereSize * 3, dzzForTest
+					--						end
+					if e then
+						local obj = EntityToObject[e]
+						if obj then
+							--if debugMarek then
+							--	Game:Print(self._Name.." DISPLACE OBJ COL WITH "..obj._Name.." "..obj._Class)
+							--Game.freezeUpdate = true
+							--end
+							if obj._Class == "CItem" then
+								d = nil
+							end
+						end
+					end
+					if d and d > self._SphereSize*1.5 and d < self._SphereSize * 4.5 then
+						local ok2 = false
+						--							if debugDisplace then
+						--								self.yaaaadebug1,self.yaaaadebug2,self.yaaaadebug3,self.yaaaadebug4,self.yaaaadebug5,self.yaaaadebug6 = dx, dy + self._SphereSize * 3, dz, x,y,z
+						--							end
+						local b,d = WORLD.LineTraceFixedGeom(dx, dy + self._SphereSize * 3, dz, x,y,z)
+						local len = Dist3D(x,y,z, dx, dy + self._SphereSize * 3, dz)
+						if not d or (d > len * 0.9) then
+							ok2 = true
+						end
+
+						if ok2 then
+							dx = dxx
+							dz = dzz
+							--Game:Print("displace OK2")
+						else
+							--								if debugDisplace then
+							--									Game:Print("displace FAILED2")
+							--								end
+						end
+
+					else
+						--if d then
+						--Game:Print("displace FAILED2 "..d)
+						--else
+						--Game:Print("displace FAILED2")
+						--end
+						--							if debugDisplace then
+						--								Game:Print("displace FAILED3")
+						--							end
+					end
+				end
+			end
+			--ENTITY.AddRagdollToIntersectionSolver(self._Entity)
+		end
+	end
+
+	if l > 0.01 then
+		self._Point:Set(dx,dy,dz)
+		if not self._disableRotatingWhileWalking then
+			self:RotateToVector(dx, 0, dz)
+		end
+		if self._moveBackward then
+			self._angleDest = self._angleDest + math.pi
+		end
+		if debugMarek then
+			self._pdebugdx2 = self._debugdx2		--- previous
+			self._pdebugdy2 = self._debugdy2
+			self._pdebugdz2 = self._debugdz2
+
+			self._pdebugdx3 = self._debugdx3					-- act. WP
+			self._pdebugdy3 = self._debugdy3
+			self._pdebugdz3 = self._debugdz3
+
+
+			self._debugdx2 = dx					-- act. WP
+			self._debugdy2 = dy
+			self._debugdz2 = dz
+
+			self._debugdx3 = x					-- act. WP
+			self._debugdy3 = y
+			self._debugdz3 = z
+		end
+
+		self._distToEnd = Dist2D(dx, dz, x, z)
+		self._distStart = 0
+	else
+		self._isWalking = nil
+		--Game:Print("?????? finished walking ??????")
+		return false
+	end
+end
+return true
 end
 
 function CActor:Stop()
@@ -2483,15 +2485,15 @@ end
 function CActor:UpdateRotate(delta)
 	local ad = self._distToAngle
 
-    --local md = math.abs(ad) -- wygaszanie
-    --if md > 1 then md = 1 end   
-    --if md < 0.2 then md = 0.2 end   
+	--local md = math.abs(ad) -- wygaszanie
+	--if md > 1 then md = 1 end
+	--if md < 0.2 then md = 0.2 end
 
-    local rs = 0
-   
-    if self._randomizedParams.RotateSpeed then
-        rs = self._randomizedParams.RotateSpeed * delta * 30*3.1415/180		--	 * md
-    end
+	local rs = 0
+
+	if self._randomizedParams.RotateSpeed then
+		rs = self._randomizedParams.RotateSpeed * delta * 30*3.1415/180		--	 * md
+	end
 
 	local maxAcc = 0.5
 	if rs > self._lastVel + maxAcc*delta then		-- ograniczenie przyspieszenia katowego
@@ -2499,23 +2501,23 @@ function CActor:UpdateRotate(delta)
 	end
 	self._lastVel = rs
 
-		
-    if (ad > 0) then
+
+	if (ad > 0) then
 		if ad < rs then
 			self.angle = self._angleDest
 		else
 			self.angle = math.mod(self.angle + rs, math.pi*2)
 		end
-    else
+	else
 		rs = -rs
 		if ad > rs then
 			self.angle = self._angleDest
 		else
-			self.angle = math.mod(self.angle + rs, math.pi*2)			
+			self.angle = math.mod(self.angle + rs, math.pi*2)
 		end
-    end
+	end
 
-    ENTITY.SetOrientation(self._Entity,self.angle)
+	ENTITY.SetOrientation(self._Entity,self.angle)
 end
 
 --============================================================================
@@ -2532,7 +2534,7 @@ function CActor:GetJointPos(name)
 		if debugMarek then Game:Print("))"..GetCallStackInfo(2)) end
 		return ENTITY.GetWorldPosition(self._Entity)
 	end
-end        
+end
 --============================================================================
 function CActor:OnDamage(damage, obj, type, x, y, z, nx, ny, nz, he,msg)			-- +pos
 	if self.Immortal then return end
@@ -2540,7 +2542,7 @@ function CActor:OnDamage(damage, obj, type, x, y, z, nx, ny, nz, he,msg)			-- +p
 		if Game.Cheat_WeakEnemies then self.Health = 1 end -- cheat
 		if Game.WeakEnemies and not self.IsBoss then self.Health = 1 end -- karta
 
-        if self._frozen then damage = self.Health * 3 end
+		if self._frozen then damage = self.Health * 3 end
 
 		if obj == Player then
 			damage = damage * Game.DamageFactor
@@ -2550,13 +2552,13 @@ function CActor:OnDamage(damage, obj, type, x, y, z, nx, ny, nz, he,msg)			-- +p
 				if Player.Health > 250 then Player.Health = 250 end
 			end
 		end
-		
+
 		if Game.ConfuseEnemies and obj and obj._AIBrain and obj._AIBrain._lockedEnemy == self then
 			--Game:Print(self._Name.." ConfuseEnemies damage * 4 from "..obj._Name)
 			damage = damage * 4
 		end
 
-        if self.CustomOnDamage then
+		if self.CustomOnDamage then
 			local skip, dmg = self:CustomOnDamage(he,x,y,z,obj, damage, type,nx,ny,nz)
 			if skip then
 				if type ~= AttackTypes.OutOfLevel then
@@ -2567,13 +2569,13 @@ function CActor:OnDamage(damage, obj, type, x, y, z, nx, ny, nz, he,msg)			-- +p
 				Game:Print(self._Name.." nowy damage = "..damage.." "..dmg)
 				damage = dmg
 			end
-        end
-        --if he then
-        --    local t,e,j = PHYSICS.GetHavokBodyInfo(he)
-        --    if j then Game:Print(MDL.GetJointName(e,j)) end
-        --end
-        
-        --ENTITY.PO_SetFlying(self._Entity,false)
+		end
+		--if he then
+		--    local t,e,j = PHYSICS.GetHavokBodyInfo(he)
+		--    if j then Game:Print(MDL.GetJointName(e,j)) end
+		--end
+
+		--ENTITY.PO_SetFlying(self._Entity,false)
 		self.Health =  self.Health - damage
 		if self._AIBrain and self.AIenabled then
 			self._AIBrain._lastDamageTime = self._AIBrain._currentTime
@@ -2602,15 +2604,15 @@ function CActor:OnDamage(damage, obj, type, x, y, z, nx, ny, nz, he,msg)			-- +p
 				ENTITY.PO_Enable(self._objTakenToThrow._Entity,true)
 				self._objTakenToThrow = nil
 			end
-			
+
 			self:StopLastSound()
 			self:StopSoundHitBinded()
-			
+
 			if self._proc then
 				GObjects:ToKill(self._proc)
 				self._proc = nil
 			end
-	        if self._procBind then
+			if self._procBind then
 				-- czy trzeba odbindowac?
 				ENTITY.Release(self._procBind._targetEntity)
 				GObjects:ToKill(self._procBind)
@@ -2622,32 +2624,32 @@ function CActor:OnDamage(damage, obj, type, x, y, z, nx, ny, nz, he,msg)			-- +p
 			end
 			self._sndHitId = nil
 
-            if not self.NotCountable and not self._died then 
-                Game.BodyCountTotal = Game.BodyCountTotal + 1
-                --Game.all[self.Model] = Game.all[self.Model] - 1
+			if not self.NotCountable and not self._died then
+				Game.BodyCountTotal = Game.BodyCountTotal + 1
+				--Game.all[self.Model] = Game.all[self.Model] - 1
 				for i,v in Actors do
 					if v.Model == "preacher" and v.AiParams.immortalBodiesCounter and v.AiParams.immortalBodiesCounter >= 0 then
 						v:SomeoneDied(self)
 					end
-                end
-                if Game.IsDemon then
+				end
+				if Game.IsDemon then
 					Game.KilledInDemonMode = Game.KilledInDemonMode + 1
 				end
-            end
+			end
 			self._died = true
 			self._diedByAttackType = type
-	        if self._pfxWhenFrozen then
+			if self._pfxWhenFrozen then
 				for i,v in self._pfxWhenFrozen do
 					PARTICLE.Die(v)
 				end
 				self._pfxWhenFrozen = nil
-	        end
+			end
 
-			           
+
 			self._deathTimer = self.DeathTimer
-            if self._deathTimer > 10 then
-                self._deathTimer = self._deathTimer * FRand(1.0, 1.2)
-            end
+			if self._deathTimer > 10 then
+				self._deathTimer = self._deathTimer * FRand(1.0, 1.2)
+			end
 			if not self._ToKill then
 				self:Stop()
 				self:EnableRagdoll(true,true)
@@ -2675,7 +2677,7 @@ function CActor:OnDamage(damage, obj, type, x, y, z, nx, ny, nz, he,msg)			-- +p
 					end
 				end
 				if obj and not Game.ConfuseEnemies and obj._Class == "CActor" and obj.Health and obj.Health > 0 and obj._AIBrain and not obj.disableFreeze and
-					not obj.NotCountable and obj.AIenabled and self._AIBrain and not self._AIBrain._confuseEnemy and obj ~= self then
+				not obj.NotCountable and obj.AIenabled and self._AIBrain and not self._AIBrain._confuseEnemy and obj ~= self then
 					local dist = Dist3D(self._groundx,self._groundy,self._groundz,obj._groundx,obj._groundy,obj._groundz)
 					--Game:Print(self._Name.." dostal <<< od "..obj._Name.." "..dist)
 					if not self.forceMonsterCanAttackAnotherMonsterChance or (self.forceMonsterCanAttackAnotherMonsterChance and FRand(0.0, 1.0) < self.forceMonsterCanAttackAnotherMonsterChance) then
@@ -2694,7 +2696,7 @@ function CActor:OnDamage(damage, obj, type, x, y, z, nx, ny, nz, he,msg)			-- +p
 					end
 				end
 			end
-			
+
 			if self._AIBrain then
 				self._state = "HIT"
 				if obj then
@@ -2733,9 +2735,9 @@ function CActor:OnDamage(damage, obj, type, x, y, z, nx, ny, nz, he,msg)			-- +p
 				if self.s_SubClass.Hits and not self._disableHits then
 					local animName -- = self._lastHitAnim
 					--if not animName then
-						animName = self.s_SubClass.Hits[math.random(1,table.getn(self.s_SubClass.Hits))]
+					animName = self.s_SubClass.Hits[math.random(1,table.getn(self.s_SubClass.Hits))]
 					--end
-					
+
 					if not self.AIenabled and self._isAnimating then
 						self._animationBeforeHit = self.Animation
 					end
@@ -2753,8 +2755,8 @@ function CActor:OnDamage(damage, obj, type, x, y, z, nx, ny, nz, he,msg)			-- +p
 					end
 				end
 			end
-        end
-    else
+		end
+	else
 		if type and not self._gibbed then
 			self._HealthAfterDeath = self._HealthAfterDeath - damage
 			--Game:Print(">>>explosion "..damage.." "..type)
@@ -2783,11 +2785,11 @@ function CActor:OnDamage(damage, obj, type, x, y, z, nx, ny, nz, he,msg)			-- +p
 			--Game:Print("<<<explosion "..damage.." no type")
 		end
 	end
-    if x and not self.notBleeding then
+	if x and not self.notBleeding then
 		if he and self.s_SubClass.notBleedingJoints then
-	        local t,e,j = PHYSICS.GetHavokBodyInfo(he)
-	        local jName = MDL.GetJointName(e,j)
-	        if self.s_SubClass.notBleedingJoints[jName] then
+			local t,e,j = PHYSICS.GetHavokBodyInfo(he)
+			local jName = MDL.GetJointName(e,j)
+			if self.s_SubClass.notBleedingJoints[jName] then
 				--Game:Print(self._Name.." NOT BLEEDING jName : "..jName)
 				return
 			else
@@ -2804,7 +2806,7 @@ function CActor:OnDamage(damage, obj, type, x, y, z, nx, ny, nz, he,msg)			-- +p
 			self._lastBlood = Game.currentTime
 			self:BloodFX(x,y,z,nx,ny,nz)
 		end
-    end
+	end
 end
 
 function CActor:Electrize()
@@ -2821,8 +2823,8 @@ function CActor:Electrize()
 			local t = Templates["DriverElectro.CWeapon"].s_SubClass
 			local i = self:GetAnyJoint()
 			if i >= 0 and not MDL.IsPinned(self._Entity) then
-				
-   				MDL.SetRagdollLinearDamping(self._Entity, 2.0)
+
+				MDL.SetRagdollLinearDamping(self._Entity, 2.0)
 				MDL.SetRagdollAngularDamping(self._Entity, 2.0)
 
 				local x,y,z = MDL.GetVelocitiesFromJoint(self._Entity, i)
@@ -2832,14 +2834,14 @@ function CActor:Electrize()
 				self._shakeJoint = i
 				self._ragdollShockTime = t.ragdollShockTime * 30
 				local x1,y1,z1 = MDL.GetJointPos(self._Entity, i)
-			
+
 				local v = Vector:New(x1 - PX, y1 - PY, z1 - PZ)
 				v:Normalize()
 				local rnd2 = t.impulseAfterDeathY
 				local rnd1 = v.X * t.impulseAfterDeathXZ
 				local rnd3 = v.Z * t.impulseAfterDeathXZ
 				MDL.ApplyVelocitiesToJoint(self._Entity, i, rnd1 + x, rnd2 + y, rnd3 + z)
-			--else
+				--else
 				--Game:Print(self._Name.." elector: nie ma root")
 			end
 		end
@@ -2847,7 +2849,7 @@ function CActor:Electrize()
 end
 
 function CActor:ThrowHeart()
-    if Game.Difficulty == 3 then return end
+	if Game.Difficulty == 3 then return end
 	if self.throwHeart then
 		local obj
 		if self.throwHeart == "red" then
@@ -2866,22 +2868,22 @@ function CActor:ThrowHeart()
 		obj:Apply()
 	end
 	--[[if self.throwHeart then
-		local obj = GObjects:Add(TempObjName(),CloneTemplate("moneta_zlota.CItem"))
-		if self.s_SubClass.ragdollJoint then
-			obj._groundx, obj._groundy, obj._groundz = self:GetJointPos(self.s_SubClass.ragdollJoint)
-			obj._groundy = self._groundy + 1.0
-		else
-			obj._groundx = self._groundx
-			obj._groundy = self._groundy + 1.5
-			obj._groundz = self._groundz
-		end
-		
-		obj.Pos.X = obj._groundx
-		obj.Pos.Y = obj._groundy
-		obj.Pos.Z = obj._groundz
-		obj:Apply()
-		obj:Synchronize()
-	end--]]
+	local obj = GObjects:Add(TempObjName(),CloneTemplate("moneta_zlota.CItem"))
+	if self.s_SubClass.ragdollJoint then
+		obj._groundx, obj._groundy, obj._groundz = self:GetJointPos(self.s_SubClass.ragdollJoint)
+		obj._groundy = self._groundy + 1.0
+	else
+		obj._groundx = self._groundx
+		obj._groundy = self._groundy + 1.5
+		obj._groundz = self._groundz
+	end
+
+	obj.Pos.X = obj._groundx
+	obj.Pos.Y = obj._groundy
+	obj.Pos.Z = obj._groundz
+	obj:Apply()
+	obj:Synchronize()
+end--]]
 end
 
 --============================================================================
@@ -2925,150 +2927,150 @@ function CActor:OnDeathUpdate()
 					self._electroFX = self:BindFX(t2.ragdoll_fx, t2.ragdoll_fxscale, self._shakeJoint)
 					self._electroSound = self:BindSound(t2.ragdoll_sound,8,20, true, self._shakeJoint)
 					--[[if debugMarek then
-						local m = ENTITY.PO_GetMass(self._Entity)
-						Game:Print("MASS = "..m)
-					end--]]
+					local m = ENTITY.PO_GetMass(self._Entity)
+					Game:Print("MASS = "..m)
+				end--]]
+			else
+				if self._shakeStrUp then
+					self._shakeStr = self._shakeStr + 0.05
+					if self._shakeStr > 0.04 then
+						self._shakeStrUp = false
+					end
 				else
-					if self._shakeStrUp then
-						self._shakeStr = self._shakeStr + 0.05
-						if self._shakeStr > 0.04 then
-							self._shakeStrUp = false
-						end
-					else
-						self._shakeStr = self._shakeStr - 0.05
-						if self._shakeStr < -0.04 then
-							self._shakeStrUp = true
-							if math.random(100) < 50 then
-								self._shakeJoint = self:GetAnyJoint()
-							else
-								local i = MDL.GetJointIndex(self._Entity, "k_szyja")
-								if i >= 0 then
-									self._shakeJoint = i
-								end
+					self._shakeStr = self._shakeStr - 0.05
+					if self._shakeStr < -0.04 then
+						self._shakeStrUp = true
+						if math.random(100) < 50 then
+							self._shakeJoint = self:GetAnyJoint()
+						else
+							local i = MDL.GetJointIndex(self._Entity, "k_szyja")
+							if i >= 0 then
+								self._shakeJoint = i
 							end
 						end
 					end
 				end
-				
-				
-				local i = self._shakeJoint
-				--[[if math.random(100) < 50 then
-					i = MDL.GetJointIndex(self._Entity, "k_szyja")
-					if i < 0 then
-						i = MDL.GetJointIndex(self._Entity, "root")
-					end
-				else
-					i = MDL.GetJointIndex(self._Entity, "root")
-				end--]]
-				local stren = t2.ragdollShockStren
-				local rnd1 = FRand(-0.01, 0.01) * stren
-				local rnd3 = FRand(-0.01, 0.01) * stren
-				local rnd2 = FRand(-0.05, 0.05) * stren
-				
-				local rnd2 = self._shakeStr * t2.ragdollShockStren
-				if rnd2 < 0 then
-					rnd2 = rnd2 * 2
-				end
-				local x,y,z = MDL.GetVelocitiesFromJoint(self._Entity, i)
-				
-				MDL.ApplyVelocitiesToJoint(self._Entity, i, rnd1 + x, rnd2 + y, rnd3 + z)
-				--[[
-				--if FRand(0,1) < t.otherJointsShockFreq then
-					for i,v in t do
-						local j = MDL.GetJointIndex(self._Entity, v)
-						if j>= 0 then
-							local rnd1 = FRand(-0.02, 0.02) * t2.ragdollShockStren
-							local rnd3 = FRand(-0.02, 0.02) * t2.ragdollShockStren
-							local rnd2 = FRand(-0.05, 0.05) * t2.ragdollShockStren
+			end
 
-							local x,y,z = MDL.GetVelocitiesFromJoint(self._Entity, j)
-							MDL.ApplyVelocitiesToJoint(self._Entity, j, rnd1 + x, rnd2 + y, rnd3 + z)
-						else
-							Game:Print("JOINT < 0 "..v)
-						end
-					end
-				--end
-				--]]
+
+			local i = self._shakeJoint
+			--[[if math.random(100) < 50 then
+			i = MDL.GetJointIndex(self._Entity, "k_szyja")
+			if i < 0 then
+				i = MDL.GetJointIndex(self._Entity, "root")
 			end
 		else
-			if self._electroFX then
-				PARTICLE.Die(self._electroFX)
-				self._electroFX = nil
-			end
-			
-			if self._electroSound then
-				ENTITY.Release(self._electroSound)
-				self._electroSound = nil
+			i = MDL.GetJointIndex(self._Entity, "root")
+		end--]]
+		local stren = t2.ragdollShockStren
+		local rnd1 = FRand(-0.01, 0.01) * stren
+		local rnd3 = FRand(-0.01, 0.01) * stren
+		local rnd2 = FRand(-0.05, 0.05) * stren
+
+		local rnd2 = self._shakeStr * t2.ragdollShockStren
+		if rnd2 < 0 then
+			rnd2 = rnd2 * 2
+		end
+		local x,y,z = MDL.GetVelocitiesFromJoint(self._Entity, i)
+
+		MDL.ApplyVelocitiesToJoint(self._Entity, i, rnd1 + x, rnd2 + y, rnd3 + z)
+		--[[
+		--if FRand(0,1) < t.otherJointsShockFreq then
+		for i,v in t do
+			local j = MDL.GetJointIndex(self._Entity, v)
+			if j>= 0 then
+				local rnd1 = FRand(-0.02, 0.02) * t2.ragdollShockStren
+				local rnd3 = FRand(-0.02, 0.02) * t2.ragdollShockStren
+				local rnd2 = FRand(-0.05, 0.05) * t2.ragdollShockStren
+
+				local x,y,z = MDL.GetVelocitiesFromJoint(self._Entity, j)
+				MDL.ApplyVelocitiesToJoint(self._Entity, j, rnd1 + x, rnd2 + y, rnd3 + z)
+			else
+				Game:Print("JOINT < 0 "..v)
 			end
 		end
+		--end
+		--]]
+	end
+else
+	if self._electroFX then
+		PARTICLE.Die(self._electroFX)
+		self._electroFX = nil
 	end
 
-	if self._enableMovedByExplosions then
-		self._enableMovedByExplosions = self._enableMovedByExplosions - 1
-		if self._enableMovedByExplosions <= 0 then
-			local x,y,z = self._Ax, self._Ay, self._Az
-			MDL.SetRagdollMovedByExplosions(self._Entity, true)
-			local st = self.s_SubClass.GibExplosionStrength
-			if self._forceGibExplosionStrength then
-				st = self._forceGibExplosionStrength
+	if self._electroSound then
+		ENTITY.Release(self._electroSound)
+		self._electroSound = nil
+	end
+end
+end
+
+if self._enableMovedByExplosions then
+	self._enableMovedByExplosions = self._enableMovedByExplosions - 1
+	if self._enableMovedByExplosions <= 0 then
+		local x,y,z = self._Ax, self._Ay, self._Az
+		MDL.SetRagdollMovedByExplosions(self._Entity, true)
+		local st = self.s_SubClass.GibExplosionStrength
+		if self._forceGibExplosionStrength then
+			st = self._forceGibExplosionStrength
+		end
+		if self._diedByAttackType == AttackTypes.Demon and self._gibbedByDemon then
+			MDL.ApplyVelocitiesToAllJoints(self._Entity,self._gibbedByDemon.X*0.1,self._gibbedByDemon.Y*0.1,self._gibbedByDemon.Z*0.1)
+		else
+			MDL.RagdollSelfExplosion(self._Entity,x,y,z,st*FRand(0.2,0.25),self.s_SubClass.GibExplosionRange)
+		end
+		self._enableMovedByExplosions = nil
+		self._Ax, self._Ay, self._Az = nil,nil,nil
+	end
+end
+
+if self._deathTimer > 0 then
+	if not Game.Cheat_KeepBodies then
+		self._deathTimer = self._deathTimer - 1
+	end
+	if self._inertiaTensorDelayedEnable then
+		self._inertiaTensorDelayedEnable = self._inertiaTensorDelayedEnable - 1
+		if self._inertiaTensorDelayedEnable < 0 then
+			if not self._gibbed and self._enabledRD then
+				local p = self.s_Physics
+				if p.InertiaTensorMultiplier then ENTITY.PO_ScaleInertiaTensor(self._Entity, p.InertiaTensorMultiplier) end
 			end
-			if self._diedByAttackType == AttackTypes.Demon and self._gibbedByDemon then
-				MDL.ApplyVelocitiesToAllJoints(self._Entity,self._gibbedByDemon.X*0.1,self._gibbedByDemon.Y*0.1,self._gibbedByDemon.Z*0.1)
-			else
-				MDL.RagdollSelfExplosion(self._Entity,x,y,z,st*FRand(0.2,0.25),self.s_SubClass.GibExplosionRange)
-			end
-			self._enableMovedByExplosions = nil
-			self._Ax, self._Ay, self._Az = nil,nil,nil
+			self._inertiaTensorDelayedEnable = nil
 		end
 	end
-	
-	if self._deathTimer > 0 then
-		if not Game.Cheat_KeepBodies then
-			self._deathTimer = self._deathTimer - 1
-		end
-		if self._inertiaTensorDelayedEnable then
-			self._inertiaTensorDelayedEnable = self._inertiaTensorDelayedEnable - 1
-			if self._inertiaTensorDelayedEnable < 0 then
-				if not self._gibbed and self._enabledRD then
-					local p = self.s_Physics
-					if p.InertiaTensorMultiplier then ENTITY.PO_ScaleInertiaTensor(self._Entity, p.InertiaTensorMultiplier) end
-				end
-				self._inertiaTensorDelayedEnable = nil
-			end
-		end
-	else
-		self._AIBrain = nil
-		--if debugMarek then Game:Print("Death after ragdoll") end
-		-- heart
-		if self ~= Player then
-			self:ThrowHeart()
-		end
-		--        
-        if self._procBind then
-			-- czy trzeba odbindowac?
-	        ENTITY.Release(self._procBind._targetEntity)
-			--self._procBind._ToKill = true
-			self._procBind = nil
-        end
-        self:ExplodeBody()
-		GObjects:ToKill(self,true)
-		local blend = self.deathBlendTime
-		if not blend then
-			blend = 0.25
-		end
-	    ENTITY.SetTimeToDie(self._Entity,blend)
+else
+	self._AIBrain = nil
+	--if debugMarek then Game:Print("Death after ragdoll") end
+	-- heart
+	if self ~= Player then
+		self:ThrowHeart()
 	end
+	--
+	if self._procBind then
+		-- czy trzeba odbindowac?
+		ENTITY.Release(self._procBind._targetEntity)
+		--self._procBind._ToKill = true
+		self._procBind = nil
+	end
+	self:ExplodeBody()
+	GObjects:ToKill(self,true)
+	local blend = self.deathBlendTime
+	if not blend then
+		blend = 0.25
+	end
+	ENTITY.SetTimeToDie(self._Entity,blend)
+end
 end
 --============================================================================
 function CActor:ExplodeBody()
-    -- death effect
-    local tdj = self.s_SubClass.DeathJoints
-    if tdj then
-        local size = self._SphereSize * 0.4
-        for i=1,table.getn(tdj) do
-            local x,y,z = self:GetJointPos(tdj[i])
+	-- death effect
+	local tdj = self.s_SubClass.DeathJoints
+	if tdj then
+		local size = self._SphereSize * 0.4
+		for i=1,table.getn(tdj) do
+			local x,y,z = self:GetJointPos(tdj[i])
 			if self.AiParams.madonnaFX and not self._gibbed then
-   				local obj = GObjects:Add(TempObjName(),CloneTemplate("Raven_EscapeAfterCreate.CActor"))
+				local obj = GObjects:Add(TempObjName(),CloneTemplate("Raven_EscapeAfterCreate.CActor"))
 				obj.Pos.X = x
 				obj.Pos.Y = y
 				obj.Pos.Z = z
@@ -3082,63 +3084,63 @@ function CActor:ExplodeBody()
 			else
 				if not Cfg.NoGibs then self:AddPFX("BodyExplosion", size ,Vector:New(x,y,z)) end
 			end
-        end
-        if self.AiParams.madonnaFX then
+		end
+		if self.AiParams.madonnaFX then
 			self:AddPFX("but", self._SphereSize * 0.6 ,Vector:New(self:GetJointPos("root")))
 			if self.s_SubClass.SoundsDefinitions.OnDisapear then
 				self:PlaySound("OnDisapear")
 			end
 		else
-		    --PlaySound3D("monster_body_explosion",self.Pos.X,self.Pos.Y,self.Pos.Z,8)
-		    self:PlaySound("monsterExplosion")
+			--PlaySound3D("monster_body_explosion",self.Pos.X,self.Pos.Y,self.Pos.Z,8)
+			self:PlaySound("monsterExplosion")
 		end
-    end        
+	end
 
 end
 --============================================================================
 function CActor:ApplySpecular(other)
-    if not self.s_SubClass then return end    
-    MDL.ResetMaterialSpecular(self._Entity)
-    local stab
-    if other then
+	if not self.s_SubClass then return end
+	MDL.ResetMaterialSpecular(self._Entity)
+	local stab
+	if other then
 		stab = other
 	else
 		stab = self.s_SubClass.Specular
 	end
-    if stab then
-        local i, o = next(stab, nil)
-        while i do
-            MDL.SetMaterialSpecular(self._Entity,i,o[1],o[2],o[3],o[4])
-            i, o = next(stab, i)
-        end
-    end
+	if stab then
+		local i, o = next(stab, nil)
+		while i do
+			MDL.SetMaterialSpecular(self._Entity,i,o[1],o[2],o[3],o[4])
+			i, o = next(stab, i)
+		end
+	end
 end
 
---============================================================================    
+--============================================================================
 function CActor:ApplyFresnel(other)
-	if not self.s_SubClass then return end    
-    local stab
-    if other then
+	if not self.s_SubClass then return end
+	local stab
+	if other then
 		stab = other
-    else
+	else
 		stab = self.s_SubClass.RefractFresnel
 	end
-    if stab then
-        local i, o = next(stab, nil)
-        while i do
-            MDL.SetMaterialRefractFresnel(self._Entity,i,o.Refract,o.Fresnel,o.ReflTint.R,o.ReflTint.G,o.ReflTint.B,o.RefrTint.R,o.RefrTint.G,o.RefrTint.B)
-            i, o = next(stab, i)
-        end
-    end
+	if stab then
+		local i, o = next(stab, nil)
+		while i do
+			MDL.SetMaterialRefractFresnel(self._Entity,i,o.Refract,o.Fresnel,o.ReflTint.R,o.ReflTint.G,o.ReflTint.B,o.RefrTint.R,o.RefrTint.G,o.RefrTint.B)
+			i, o = next(stab, i)
+		end
+	end
 end
 --============================================================================
 
 function CActor:Trace(length, ang,fixed)
-    local cx,cy,cz = self._groundx,self._groundy + self._SphereSize*2.1, self._groundz
-   	local angle = self.angle
-   	if ang then
-   		angle = angle + ang * math.pi/180
-   	end
+	local cx,cy,cz = self._groundx,self._groundy + self._SphereSize*2.1, self._groundz
+	local angle = self.angle
+	if ang then
+		angle = angle + ang * math.pi/180
+	end
 
 	local v = Vector:New(math.sin(angle), 0, math.cos(angle))
 	v:Normalize()
@@ -3159,7 +3161,7 @@ function CActor:Trace(length, ang,fixed)
 		b,d,x,y,z,nx,ny,nz,he,e = WORLD.LineTrace(cx,cy,cz,fx,fy,fz)
 		ENTITY.AddRagdollToIntersectionSolver(self._Entity)
 	end
-    return b,d,e		-- x,y,z,nx,ny,nz,he
+	return b,d,e		-- x,y,z,nx,ny,nz,he
 end
 
 
@@ -3198,14 +3200,14 @@ function CActor:BindFX(name,scale,joint,ox,oy,oz, rotateWithJoint, rx, ry, rz)
 				ry = 0
 				rz = math.pi/2
 			end
-			
+
 			if fx.rotateWithJointOffset then
 				rx = fx.rotateWithJointOffset.X
 				ry = fx.rotateWithJointOffset.Y
 				rz = fx.rotateWithJointOffset.Z
 			end
 
-			
+
 			if rotateWithJoint then
 				PARTICLE.SetParentOffset(pfx,fx.offset.X,fx.offset.Y,fx.offset.Z,joint,nil,nil,nil,rx,ry,rz)
 			else
@@ -3214,30 +3216,30 @@ function CActor:BindFX(name,scale,joint,ox,oy,oz, rotateWithJoint, rx, ry, rz)
 			return pfx
 		end
 	end
-	
+
 	pfx = self:AddPFX(name,scale)
 
-    if pfx then
+	if pfx then
 		ENTITY.RegisterChild(self._Entity,pfx)
-        if rotateWithJoint then
-		
-            if rz == nil then
-                PARTICLE.SetParentOffset(pfx,0,0,0,joint, nil,nil,nil, 0, 0, math.pi/2 * rotateWithJoint)
-            else
-                PARTICLE.SetParentOffset(pfx,ox,oy,oz,joint, nil,nil,nil, rx, ry, rz)
-            end                    
-        else
-            PARTICLE.SetParentOffset(pfx,ox,oy,oz,joint)
+		if rotateWithJoint then
+
+			if rz == nil then
+				PARTICLE.SetParentOffset(pfx,0,0,0,joint, nil,nil,nil, 0, 0, math.pi/2 * rotateWithJoint)
+			else
+				PARTICLE.SetParentOffset(pfx,ox,oy,oz,joint, nil,nil,nil, rx, ry, rz)
+			end
+		else
+			PARTICLE.SetParentOffset(pfx,ox,oy,oz,joint)
 		end
 	end
-    return pfx
+	return pfx
 end
 --============================================================================
 function CActor:BindTrail(name,...)
-    local e = ENTITY.Create(ETypes.Trail,name,"trailName")
-    ENTITY.AttachTrailToBones(self._Entity,e,unpack(arg))
-    WORLD.AddEntity(e)
-    return e
+	local e = ENTITY.Create(ETypes.Trail,name,"trailName")
+	ENTITY.AttachTrailToBones(self._Entity,e,unpack(arg))
+	WORLD.AddEntity(e)
+	return e
 end
 --============================================================================
 function CActor:AddPFX(effect,scale,pos,rot,norm)
@@ -3258,11 +3260,11 @@ function CActor:AddPFX(effect,scale,pos,rot,norm)
 end
 
 --[[function CActor:AddPFX2(effect,scale,pos,rot,norm)
-	if self.disablePFX then return end
-	local fx = self.s_SubClass.ParticlesDefinitions[effect]
-	if fx then
-		return AddPFX(fx.pfx,fx.scale,pos,rot,norm)
-	end
+if self.disablePFX then return end
+local fx = self.s_SubClass.ParticlesDefinitions[effect]
+if fx then
+	return AddPFX(fx.pfx,fx.scale,pos,rot,norm)
+end
 end--]]
 
 --============================================================================
@@ -3273,56 +3275,56 @@ end--]]
 --end
 --============================================================================
 --function CActor:UnregisterAllChildren()			-- ### do wywalenia
---    ENTITY.UnregisterAllChildren(self._Entity)    
+--    ENTITY.UnregisterAllChildren(self._Entity)
 --end
 --============================================================================
 function CActor:BloodFX(x,y,z,nx,ny,nz)
-    -- blood
-    local n = math.random(1,2) -- how many (min,max)
-    for i = 1, n do
-        local ke = AddItem("Blood.CItem",0.1,Vector:New(x,y,z),true)
-        local vx = FRand(-3,3) -- velocity x
-        local vy = FRand(3,4)  -- velocity y
-        local vz = FRand(-3,3) -- velocity z
-        ENTITY.SetVelocity(ke,vx,vy,vz)
-    end
-    if not Cfg.NoBlood then 
-    if nx then
-        if Tweak.GlobalData.GermanVersion then
-			self:AddPFX("BodyBlood_german",0.3,Vector:New(x,y,z),Quaternion:New_FromNormal(nx,ny,nz))
-        else
-			self:AddPFX("BodyBlood",0.3,Vector:New(x,y,z),Quaternion:New_FromNormal(nx,ny,nz))
+	-- blood
+	local n = math.random(1,2) -- how many (min,max)
+	for i = 1, n do
+		local ke = AddItem("Blood.CItem",0.1,Vector:New(x,y,z),true)
+		local vx = FRand(-3,3) -- velocity x
+		local vy = FRand(3,4)  -- velocity y
+		local vz = FRand(-3,3) -- velocity z
+		ENTITY.SetVelocity(ke,vx,vy,vz)
+	end
+	if not Cfg.NoBlood then
+		if nx then
+			if Tweak.GlobalData.GermanVersion then
+				self:AddPFX("BodyBlood_german",0.3,Vector:New(x,y,z),Quaternion:New_FromNormal(nx,ny,nz))
+			else
+				self:AddPFX("BodyBlood",0.3,Vector:New(x,y,z),Quaternion:New_FromNormal(nx,ny,nz))
+			end
 		end
-    end
-    end
+	end
 end
 --============================================================================
 function CActor:InDeathZone(x,y,z,zone)
-    if string.find(zone,"wat",1,true) then
-        AddObject("FX_splash.CActor",1.5,Vector:New(x,y,z),nil,true)        
-        self:PlaySound("waterSplash",nil,nil,nil,nil,x,y,z)
-    end
+	if string.find(zone,"wat",1,true) then
+		AddObject("FX_splash.CActor",1.5,Vector:New(x,y,z),nil,true)
+		self:PlaySound("waterSplash",nil,nil,nil,nil,x,y,z)
+	end
 
-    ENTITY.RemoveFromIntersectionSolver(self._Entity)
-    local b,d,dx,dy,dz,nx,ny,nz,he,e = WORLD.LineTrace(x,y+5,z,x,y-5,z)    
---    if b and e and ENTITY.IsWater(e) then
---        ENTITY.SpawnDecal(e,'splash_big',dx,dy,dz,0,1,0)
---    end
+	ENTITY.RemoveFromIntersectionSolver(self._Entity)
+	local b,d,dx,dy,dz,nx,ny,nz,he,e = WORLD.LineTrace(x,y+5,z,x,y-5,z)
+	--    if b and e and ENTITY.IsWater(e) then
+	--        ENTITY.SpawnDecal(e,'splash_big',dx,dy,dz,0,1,0)
+	--    end
 
 	if debugMarek then
 		Game:Print(self._Name.." out of level")
 	end
 
-    if not self._died then        
-        self.Immortal = nil
-        self.Health = 1
-        self:OnDamage(99999,nil,AttackTypes.OutOfLevel)
-        GObjects:ToKill(self)
-    else
+	if not self._died then
+		self.Immortal = nil
+		self.Health = 1
+		self:OnDamage(99999,nil,AttackTypes.OutOfLevel)
+		GObjects:ToKill(self)
+	else
 		if self._deathTimer and self._deathTimer > 1 then
 			self._deathTimer = 1
 		end
-    end
+	end
 end
 --============================================================================
 
@@ -3387,7 +3389,7 @@ function CActor:BindRandomSound(tableR, dist1, dist2, bjoint, doNotAutodelete, l
 					loop = true
 				end
 			end
-		end		
+		end
 	end
 	if name ~= "" then
 		local res = string.find(name,"$/")
@@ -3437,7 +3439,7 @@ function CActor:PlaySoundAndStopLast(name, dist1, dist2, noRandomize)		-- nastep
 	return self._sndHitId
 end
 
-function CActor:PlaySoundHit(name, par4, par5)			-- dla dzwiekow ktore maja byc przerwane np. paszcza, zeby nie odgrywal sie nowy, gdy jest stary. 
+function CActor:PlaySoundHit(name, par4, par5)			-- dla dzwiekow ktore maja byc przerwane np. paszcza, zeby nie odgrywal sie nowy, gdy jest stary.
 	if self:IsPlayingLastSound() and self._sndHitName == name then
 		return
 	end
@@ -3468,7 +3470,7 @@ function CActor:StopLastSound(idLUA)
 		if self._sndHitId == idLUA then
 			if SOUND3D.IsPlaying(self._sndHitId) then
 				SOUND3D.SetVolume(self._sndHitId, 0, 0.2)
-			end		
+			end
 			return true
 		else
 			return false
@@ -3476,7 +3478,7 @@ function CActor:StopLastSound(idLUA)
 	else
 		if SOUND3D.IsPlaying(self._sndHitId) then
 			SOUND3D.SetVolume(self._sndHitId, 0, 0.2)
-		end		
+		end
 		return true
 	end
 
@@ -3514,21 +3516,21 @@ end
 
 
 function CActor:FootFX(joint, forceSize)
-    local j = MDL.GetJointIndex(self._Entity, joint)
-    local x,y,z = MDL.TransformPointByJoint(self._Entity, j,0,0,0)
-    local size = 0.1
-    if forceSize then
+	local j = MDL.GetJointIndex(self._Entity, joint)
+	local x,y,z = MDL.TransformPointByJoint(self._Entity, j,0,0,0)
+	local size = 0.1
+	if forceSize then
 		size = forceSize
-    end
-    self:AddPFX('but',size,Vector:New(x,y,z))
+	end
+	self:AddPFX('but',size,Vector:New(x,y,z))
 end
 
-function CActor:LaunchFullAnimEvent(anim)    
-    if not self.s_SubClass.Animations[anim] then return end    
-    local animevent = self.s_SubClass.Animations[anim][3]
-    for i,ev in animevent do
-        self[ev[2]](self,ev[3], ev[4], ev[5])
-    end
+function CActor:LaunchFullAnimEvent(anim)
+	if not self.s_SubClass.Animations[anim] then return end
+	local animevent = self.s_SubClass.Animations[anim][3]
+	for i,ev in animevent do
+		self[ev[2]](self,ev[3], ev[4], ev[5])
+	end
 end
 
 
@@ -3553,9 +3555,9 @@ function CActor:TakeToThrow()
 	obj.ObjOwner = self
 	--obj._enabled = false
 	obj:Apply()
-    if obj.Synchronize then
-        obj:Synchronize()
-    end
+	if obj.Synchronize then
+		obj:Synchronize()
+	end
 	ENTITY.PO_Enable(obj._Entity,false)
 	if self._objTakenToThrow then
 		Game:Print(self._Name.." ERROR!!!: self._objTakenToThrow already exists")
@@ -3563,7 +3565,7 @@ function CActor:TakeToThrow()
 		Game.freezeUpdate = true
 	end
 	self._objTakenToThrow = obj
-    local brain = self._AIBrain
+	local brain = self._AIBrain
 	self:RotateToVector(brain._enemyLastSeenPoint.X,brain._enemyLastSeenPoint.Y,brain._enemyLastSeenPoint.Z)	-- ###
 	if aiParams.throwItemBindToOffset then
 		--self._proc = PBindToJoint:New(obj._Entity,self._Entity,aiParams.throwItemBindTo,aiParams.throwItemBindToOffset.X,aiParams.throwItemBindToOffset.Y, aiParams.throwItemBindToOffset.Z)
@@ -3580,11 +3582,11 @@ end
 
 
 function CActor:ThrowImmid(angle, straight, joint, angleDiff, jointOffsetX,jointOffsetY,jointOffsetZ)		-- bool straight/ballistic
-    local aiParams = self.AiParams
-    local j = joint
-    if not j then
+	local aiParams = self.AiParams
+	local j = joint
+	if not j then
 		j = aiParams.throwItemBindTo
-    end
+	end
 	local idx  = MDL.GetJointIndex(self._Entity,j)
 	local x,y,z
 	if aiParams.throwItemBindToOffset then
@@ -3599,16 +3601,16 @@ function CActor:ThrowImmid(angle, straight, joint, angleDiff, jointOffsetX,joint
 
 	local obj
 	local e
-	
+
 	--local q = Quaternion:New_FromEuler(0, math.pi/2 - actor._angleAttackX - actor.angle, math.pi/2)
-	
+
 	local obj = GObjects:Add(TempObjName(),CloneTemplate(aiParams.ThrowableItem))
 	--e, obj = AddItem(aiParams.ThrowableItem, nil, Vector:New(x,y,z),true)
-	
+
 	if self.GetThrowItemRotation then
 		obj.Rot = self:GetThrowItemRotation()
 	end
-	
+
 	obj.ObjOwner = self
 	obj._joint = idx
 	obj.Pos.X = x
@@ -3627,9 +3629,9 @@ function CActor:ThrowTaken(forceYaw, straight, angleDiff)		-- bool straight(true
 	local aiParams = self.AiParams
 	local angle = self.angle
 	local x1,y1,z1
-    if self._proc then
-        GObjects:ToKill(self._proc)
-        if self._objTakenToThrow then
+	if self._proc then
+		GObjects:ToKill(self._proc)
+		if self._objTakenToThrow then
 			if self._throwModeRagdoll then
 				x1,y1,z1 = self:GetJointPos(aiParams.throwItemBindTo)
 			else
@@ -3639,8 +3641,8 @@ function CActor:ThrowTaken(forceYaw, straight, angleDiff)		-- bool straight(true
 			Game:Print("ERROR #1 in cactor:throwtaken "..self._Name)
 			x1,y1,z1 = self._groundx,self._groundy + 1.4,self._groundz
 		end
-        self._proc = nil
-    else
+		self._proc = nil
+	else
 		if self._objTakenToThrow then
 			if self._objTakenToThrow.Model then
 				x1,y1,z1 = MDL.GetJointPos(self._objTakenToThrow._Entity, 0)
@@ -3648,21 +3650,21 @@ function CActor:ThrowTaken(forceYaw, straight, angleDiff)		-- bool straight(true
 				x1,y1,z1 = ENTITY.GetPosition(self._objTakenToThrow._Entity)
 			end
 		end
-    end
+	end
 
-    if self._objTakenToThrow then
+	if self._objTakenToThrow then
 		local entity = self._objTakenToThrow._Entity
-        local brain = self._AIBrain
-        
-        local targetDeltaY = 1.2
-        if aiParams.throwDeltaY then
+		local brain = self._AIBrain
+
+		local targetDeltaY = 1.2
+		if aiParams.throwDeltaY then
 			targetDeltaY = aiParams.throwDeltaY
-        end
+		end
 		local x2,y2,z2 = brain._enemyLastSeenPoint.X, brain._enemyLastSeenPoint.Y + targetDeltaY, brain._enemyLastSeenPoint.Z	--Player._groundx, Player.Pos.Y, Player._groundz			-- pozniej zgodnie z obrotem
 		if brain.r_closestEnemy then
 			x2,y2,z2 = brain.r_closestEnemy._groundx, brain.r_closestEnemy._groundy + targetDeltaY, brain.r_closestEnemy._groundz
 		end
-		
+
 		ENTITY.PO_Enable(entity,true)
 
 		local maxAngleDiff = 30
@@ -3683,7 +3685,7 @@ function CActor:ThrowTaken(forceYaw, straight, angleDiff)		-- bool straight(true
 			end
 		end
 		maxAngleDiffPitch = maxAngleDiffPitch * math.pi/180
-		
+
 		self._objTakenToThrow._enabled = true
 		local pitch
 		local x,y,z
@@ -3693,162 +3695,162 @@ function CActor:ThrowTaken(forceYaw, straight, angleDiff)		-- bool straight(true
 		if straight then
 			local recalc = false
 			local angleToPlayer = math.atan2(v.X, v.Z)
-				
-			--[[if debugMarek then
-				self.d1 = x2
-				self.d2 = y2
-				self.d3 = z2
-				self.d4 = x1
-				self.d5 = y1
-				self.d6 = z1
-			end--]]
-			
-
-			local aDist = AngDist(angle, angleToPlayer)
-			if math.abs(aDist) > maxAngleDiff then		-- max. angle reached (wzgl. kierunku patrzenia, to przed siebie)
-				--Game:Print("max angle diff reached. "..(angle*180/math.pi).." "..(angleToPlayer*180/math.pi))
-				if aDist > 0 then
-					recalc = true
-					angle = angle + maxAngleDiff
-				else
-					recalc = true
-					angle = angle - maxAngleDiff
-				end
-			else
-				angle = angleToPlayer
-			end
-			
-			if angleDiff then
-				recalc = true
-				angle = angle + angleDiff * math.pi/180
-			end
-			
-			pitch =  math.atan2(y1 - y2, math.sqrt((x1 - x2)*(x1 - x2)+(z1 - z2)*(z1 - z2)))
-			if pitch > maxAngleDiff then
-				--Game:Print("max PITCH diff reached.")
-				recalc = true
-				pitch = maxAngleDiff
-			end
-			if pitch < -maxAngleDiff then
-				--Game:Print("max -PITCH diff reached.")
-				recalc = true
-				pitch = -maxAngleDiff
-			end
-
-			if recalc then
-				v.X,v.Y,v.Z = VectorRotate(1.0,0,0, 0, 0, pitch)
-				v.X,v.Y,v.Z = VectorRotate(v.X,v.Y,v.Z, 0, -angle+math.pi/2, 0)
-			end
-			v:MulByFloat(aiParams.throwVelocity)
-			--[[if debugMarek then
-				self.yadebug1 = self._objTakenToThrow.Pos.X
-				self.yadebug2 = self._objTakenToThrow.Pos.Y
-				self.yadebug3 = self._objTakenToThrow.Pos.Z
-				self.yadebug4 = self._objTakenToThrow.Pos.X + v.X
-				self.yadebug5 = self._objTakenToThrow.Pos.Y + v.Y
-				self.yadebug6 = self._objTakenToThrow.Pos.Z + v.Z
-			end--]]
-			
-			if aiParams.throwAngularVelocitySpeed then
-				local vx = -math.sin(angle)
-				local vz = math.cos(angle)
-				local speed = -aiParams.throwAngularVelocitySpeed * FRand(0.8, 1.2)
-				ENTITY.SetAngularVelocity(entity,vz*speed,0,vx*speed)
-			end
-
-			ENTITY.SetVelocity(entity, v.X, v.Y, v.Z)
-
-		else	-- ballistic
-
-			local maxAngleDiffPitch = 45
-			if aiParams.throwMaxAnglePitchDiff then
-				maxAngleDiffPitch = aiParams.throwMaxAnglePitchDiff
-			end
-			maxAngleDiffPitch = maxAngleDiffPitch * math.pi/180
-			
-			--local distToTarget = Dist3D(x2,y2,z2, x1,y1,z1)
-			local distToTarget = Dist2D(x2,z2, x1,z1)
-			if distToTarget < 4 then
-				distToTarget = 4
-			end
-
-			if not forceYaw then
-				local angleToPlayer = math.atan2(v.X, v.Z)
-				local aDist = AngDist(angle, angleToPlayer)
-				if math.abs(aDist) > maxAngleDiff then		-- max. angle reached (wzgl. kierunku patrzenia, to przed siebie)
-					--Game:Print("max angle diff reached")
-					if aDist > 0 then
-						angle = angle + maxAngleDiff
-					else
-						angle = angle - maxAngleDiff
-					end
-					v = Vector:New(math.sin(angle), 0, math.cos(angle))
-					v:Normalize()
-				end	
-				angle = math.atan2(v.Z, v.X)
-			else
-				angle = forceYaw
-			end
-
-			if angleDiff then
-				angle = angle + angleDiff * math.pi/180
-			end
-			
-			if not aiParams.throwAngle and aiParams.throwVelocity then
-				x,y,z = CalcThrowVectorGivenVelocity(distToTarget - aiParams.throwDistMinus, aiParams.throwVelocity, angle, (brain._enemyLastSeenPoint.Y + 1.2) - y1, maxAngleDiffPitch)
-			else
-				x,y,z = CalcThrowVectorGivenAngle(distToTarget - aiParams.throwDistMinus, aiParams.throwAngle, angle, (brain._enemyLastSeenPoint.Y + 1.2) - y1)
-			end
 
 			--[[if debugMarek then
-				self.d1 = x1 + x
-				self.d2 = y1 + y
-				self.d3 = z1 + z
-				self.d4 = x1
-				self.d5 = y1
-				self.d6 = z1
-				
-				
-				self.yaaaadebug1 = x2
-				self.yaaaadebug2 = y2
-				self.yaaaadebug3 = z2
-				self.yaaaadebug4 = x1
-				self.yaaaadebug5 = y1
-				self.yaaaadebug6 = z1
-			end--]]
+			self.d1 = x2
+			self.d2 = y2
+			self.d3 = z2
+			self.d4 = x1
+			self.d5 = y1
+			self.d6 = z1
+		end--]]
 
-			if self._throwModeRagdoll then
-		        MDL.SetPinnedJoint(entity, brain._JointH, false)	
-		        MDL.ApplyVelocitiesToJointLinked(entity, brain._JointH, x,y,z, FRand(0,8),FRand(0,8),FRand(0,8))
+
+		local aDist = AngDist(angle, angleToPlayer)
+		if math.abs(aDist) > maxAngleDiff then		-- max. angle reached (wzgl. kierunku patrzenia, to przed siebie)
+			--Game:Print("max angle diff reached. "..(angle*180/math.pi).." "..(angleToPlayer*180/math.pi))
+			if aDist > 0 then
+				recalc = true
+				angle = angle + maxAngleDiff
 			else
-				if aiParams.throwAngularVelocitySpeed then
-					local vx = -math.sin(angle)
-					local vz = math.cos(angle)
-					local speed = -aiParams.throwAngularVelocitySpeed * FRand(0.8, 1.2)
-					ENTITY.SetAngularVelocity(entity,vx*speed,0,vz*speed)
-				end
-				if self._getVelOnly then
-					self._getVelOnly.X = x
-					self._getVelOnly.Y = y
-					self._getVelOnly.Z = z
-				else
-					ENTITY.SetVelocity(entity,x,y,z)
-				end
+				recalc = true
+				angle = angle - maxAngleDiff
 			end
-		end
-		if self.OnThrow then
-			self:OnThrow(v.X, v.Y, v.Z, angle, pitch)
+		else
+			angle = angleToPlayer
 		end
 
-	    if aiParams.escapeAfterThrowTime and aiParams.escapeAfterThrowTime > 0 then
-			brain.escape = FRand(aiParams.escapeAfterThrowTime*0.8,aiParams.escapeAfterThrowTime*1.3)
+		if angleDiff then
+			recalc = true
+			angle = angle + angleDiff * math.pi/180
 		end
-	else
-		Game:Print(self._Name.." ERROR: ThrowTaken() no obj")
-		Game.freezeUpdate = true
+
+		pitch =  math.atan2(y1 - y2, math.sqrt((x1 - x2)*(x1 - x2)+(z1 - z2)*(z1 - z2)))
+		if pitch > maxAngleDiff then
+			--Game:Print("max PITCH diff reached.")
+			recalc = true
+			pitch = maxAngleDiff
+		end
+		if pitch < -maxAngleDiff then
+			--Game:Print("max -PITCH diff reached.")
+			recalc = true
+			pitch = -maxAngleDiff
+		end
+
+		if recalc then
+			v.X,v.Y,v.Z = VectorRotate(1.0,0,0, 0, 0, pitch)
+			v.X,v.Y,v.Z = VectorRotate(v.X,v.Y,v.Z, 0, -angle+math.pi/2, 0)
+		end
+		v:MulByFloat(aiParams.throwVelocity)
+		--[[if debugMarek then
+		self.yadebug1 = self._objTakenToThrow.Pos.X
+		self.yadebug2 = self._objTakenToThrow.Pos.Y
+		self.yadebug3 = self._objTakenToThrow.Pos.Z
+		self.yadebug4 = self._objTakenToThrow.Pos.X + v.X
+		self.yadebug5 = self._objTakenToThrow.Pos.Y + v.Y
+		self.yadebug6 = self._objTakenToThrow.Pos.Z + v.Z
+	end--]]
+
+	if aiParams.throwAngularVelocitySpeed then
+		local vx = -math.sin(angle)
+		local vz = math.cos(angle)
+		local speed = -aiParams.throwAngularVelocitySpeed * FRand(0.8, 1.2)
+		ENTITY.SetAngularVelocity(entity,vz*speed,0,vx*speed)
 	end
-    self._objTakenToThrow = nil
-    return angle
+
+	ENTITY.SetVelocity(entity, v.X, v.Y, v.Z)
+
+else	-- ballistic
+
+	local maxAngleDiffPitch = 45
+	if aiParams.throwMaxAnglePitchDiff then
+		maxAngleDiffPitch = aiParams.throwMaxAnglePitchDiff
+	end
+	maxAngleDiffPitch = maxAngleDiffPitch * math.pi/180
+
+	--local distToTarget = Dist3D(x2,y2,z2, x1,y1,z1)
+	local distToTarget = Dist2D(x2,z2, x1,z1)
+	if distToTarget < 4 then
+		distToTarget = 4
+	end
+
+	if not forceYaw then
+		local angleToPlayer = math.atan2(v.X, v.Z)
+		local aDist = AngDist(angle, angleToPlayer)
+		if math.abs(aDist) > maxAngleDiff then		-- max. angle reached (wzgl. kierunku patrzenia, to przed siebie)
+			--Game:Print("max angle diff reached")
+			if aDist > 0 then
+				angle = angle + maxAngleDiff
+			else
+				angle = angle - maxAngleDiff
+			end
+			v = Vector:New(math.sin(angle), 0, math.cos(angle))
+			v:Normalize()
+		end
+		angle = math.atan2(v.Z, v.X)
+	else
+		angle = forceYaw
+	end
+
+	if angleDiff then
+		angle = angle + angleDiff * math.pi/180
+	end
+
+	if not aiParams.throwAngle and aiParams.throwVelocity then
+		x,y,z = CalcThrowVectorGivenVelocity(distToTarget - aiParams.throwDistMinus, aiParams.throwVelocity, angle, (brain._enemyLastSeenPoint.Y + 1.2) - y1, maxAngleDiffPitch)
+	else
+		x,y,z = CalcThrowVectorGivenAngle(distToTarget - aiParams.throwDistMinus, aiParams.throwAngle, angle, (brain._enemyLastSeenPoint.Y + 1.2) - y1)
+	end
+
+	--[[if debugMarek then
+	self.d1 = x1 + x
+	self.d2 = y1 + y
+	self.d3 = z1 + z
+	self.d4 = x1
+	self.d5 = y1
+	self.d6 = z1
+
+
+	self.yaaaadebug1 = x2
+	self.yaaaadebug2 = y2
+	self.yaaaadebug3 = z2
+	self.yaaaadebug4 = x1
+	self.yaaaadebug5 = y1
+	self.yaaaadebug6 = z1
+end--]]
+
+if self._throwModeRagdoll then
+	MDL.SetPinnedJoint(entity, brain._JointH, false)
+	MDL.ApplyVelocitiesToJointLinked(entity, brain._JointH, x,y,z, FRand(0,8),FRand(0,8),FRand(0,8))
+else
+	if aiParams.throwAngularVelocitySpeed then
+		local vx = -math.sin(angle)
+		local vz = math.cos(angle)
+		local speed = -aiParams.throwAngularVelocitySpeed * FRand(0.8, 1.2)
+		ENTITY.SetAngularVelocity(entity,vx*speed,0,vz*speed)
+	end
+	if self._getVelOnly then
+		self._getVelOnly.X = x
+		self._getVelOnly.Y = y
+		self._getVelOnly.Z = z
+	else
+		ENTITY.SetVelocity(entity,x,y,z)
+	end
+end
+end
+if self.OnThrow then
+	self:OnThrow(v.X, v.Y, v.Z, angle, pitch)
+end
+
+if aiParams.escapeAfterThrowTime and aiParams.escapeAfterThrowTime > 0 then
+	brain.escape = FRand(aiParams.escapeAfterThrowTime*0.8,aiParams.escapeAfterThrowTime*1.3)
+end
+else
+	Game:Print(self._Name.." ERROR: ThrowTaken() no obj")
+	Game.freezeUpdate = true
+end
+self._objTakenToThrow = nil
+return angle
 end
 
 function CActor:SetAnimSpeed(par1)
@@ -3858,90 +3860,90 @@ end
 
 function CActor:RotateToVectorWithAnim(tx,ty,tz)
 	--[[[if debugMarek then
-		if Dist3D(tx,0,tz,self._groundx,0,self._groundz) < 0.01 then
-			Game:Print(self._Name.." RTV")
-			return
-		end
-	end--]]
-	--if debugMarek then Game:Print("))"..GetCallStackInfo(2)) end
-	local angle = math.atan2(tx - self._groundx, tz - self._groundz)
-	return self:RotateToWithAnim(angle * 180 / math.pi)
+	if Dist3D(tx,0,tz,self._groundx,0,self._groundz) < 0.01 then
+		Game:Print(self._Name.." RTV")
+		return
+	end
+end--]]
+--if debugMarek then Game:Print("))"..GetCallStackInfo(2)) end
+local angle = math.atan2(tx - self._groundx, tz - self._groundz)
+return self:RotateToWithAnim(angle * 180 / math.pi)
 end
 
 
 function CActor:RotateWithAnim(angle)
 	--[[[if debugMarek then
-		if self._rotatingWithAnim then
-			Game:Print("self._rotatingWithAnim already set")
-		end
-	end--]]
-	if self._rotatingWithAnim then	-- juz sie kreci, schedule next rotation
-		--if debugMarek then Game:Print(">> RotateWithAnim Schedule "..angle.." old = "..(self.angle*180/math.pi).." adest = "..(self._angleDest*180/math.pi)) end
-		self._NEXTangleDestAnim = angle
-		return true
+	if self._rotatingWithAnim then
+		Game:Print("self._rotatingWithAnim already set")
 	end
-	self._NEXTangleDestAnim = nil
+end--]]
+if self._rotatingWithAnim then	-- juz sie kreci, schedule next rotation
+	--if debugMarek then Game:Print(">> RotateWithAnim Schedule "..angle.." old = "..(self.angle*180/math.pi).." adest = "..(self._angleDest*180/math.pi)) end
+	self._NEXTangleDestAnim = angle
+	return true
+end
+self._NEXTangleDestAnim = nil
 
-	self:FullStop()
-	local a = AngDist(self.angle, self.angle + angle * math.pi/180)
+self:FullStop()
+local a = AngDist(self.angle, self.angle + angle * math.pi/180)
 
-	local max = math.pi * 30/180
-	if not self.s_SubClass.rotate45R then
-		max = math.pi * 70/180
-	end
-    
-	if math.abs(a) >= max then
-		self._angleDestAnim = a
-		self._rotatingWithAnim = true
-		self._animRotName = nil
-		self._isRotating = true
-		--Game.freezeUpdate = true
-		--Game:Print("++ "..(self.angle * 180/math.pi).." dest = "..(self.angle * 180/math.pi + angle))
-		return true
-	else
-		--Game:Print("za maly kat "..a)
-		return false
-	end
+local max = math.pi * 30/180
+if not self.s_SubClass.rotate45R then
+	max = math.pi * 70/180
+end
+
+if math.abs(a) >= max then
+	self._angleDestAnim = a
+	self._rotatingWithAnim = true
+	self._animRotName = nil
+	self._isRotating = true
+	--Game.freezeUpdate = true
+	--Game:Print("++ "..(self.angle * 180/math.pi).." dest = "..(self.angle * 180/math.pi + angle))
+	return true
+else
+	--Game:Print("za maly kat "..a)
+	return false
+end
 
 end
 
 
 function CActor:RotateToWithAnim(angle)
 	--[[[if debugMarek then
-		if self._rotatingWithAnim then
-			Game:Print("self._rotatingWithAnim already set")
-		end
-	end--]]
-	if self._rotatingWithAnim then	-- juz sie kreci, schedule next rotation
-		--if debugMarek then Game:Print(">> RotateToWithAnim Schedule "..angle.." old = "..(self.angle*180/math.pi)) end
-		self._NEXTangleDestAnim = angle		-- moze od razu _angleDestAnim?
-		return true
+	if self._rotatingWithAnim then
+		Game:Print("self._rotatingWithAnim already set")
 	end
-	self._NEXTangleDestAnim = nil
+end--]]
+if self._rotatingWithAnim then	-- juz sie kreci, schedule next rotation
+	--if debugMarek then Game:Print(">> RotateToWithAnim Schedule "..angle.." old = "..(self.angle*180/math.pi)) end
+	self._NEXTangleDestAnim = angle		-- moze od razu _angleDestAnim?
+	return true
+end
+self._NEXTangleDestAnim = nil
 
-	self:FullStop()
-	local a = AngDist(self.angle, angle * math.pi/180)
-	--Game:Print(">> RotateToWithAnim "..(a*180/math.pi))
+self:FullStop()
+local a = AngDist(self.angle, angle * math.pi/180)
+--Game:Print(">> RotateToWithAnim "..(a*180/math.pi))
+--Game.freezeUpdate = true
+
+local max = math.pi * 30/180
+if not self.s_SubClass.rotate45R then
+	max = math.pi * 70/180
+end
+
+if math.abs(a) >= max then
+	self._angleDestAnim = a
+	self._rotatingWithAnim = true
+	self._isRotating = true
+	self._animRotName = nil
 	--Game.freezeUpdate = true
-	
-	local max = math.pi * 30/180
-	if not self.s_SubClass.rotate45R then
-		max = math.pi * 70/180
-	end
-	
-	if math.abs(a) >= max then
-		self._angleDestAnim = a
-		self._rotatingWithAnim = true
-		self._isRotating = true
-		self._animRotName = nil
-		--Game.freezeUpdate = true
-		--Game:Print("OK kat "..(a).." "..max)
-		return true
-	else
-		--? zwykly obrot
-		--Game:Print("za maly kat "..(a*math.pi/180))
-		return false
-	end
+	--Game:Print("OK kat "..(a).." "..max)
+	return true
+else
+	--? zwykly obrot
+	--Game:Print("za maly kat "..(a*math.pi/180))
+	return false
+end
 
 end
 
@@ -3953,12 +3955,12 @@ function CActor:UpdateRotateWithAnim(delta)
 			--if debugMarek then Game:Print("Get next rot from QUEUE: "..(self._NEXTangleDestAnim).." self.angle = "..(self.angle*180/math.pi)) end
 			self._NEXTangleDestAnim = nil
 			--self._animRotName = nil
-		--else
+			--else
 			--if debugMarek then Game:Print("koniec anim rot: self.angle = "..(self.angle*180/math.pi)) end
 		end
 
 		if math.abs(self._angleDestAnim) < 30*math.pi/180 then
-            --if debugMarek then Game:Print("koniec rotatewithanim "..(self._angleDestAnim * 180/math.pi).." angle dest = "..(self.angle * 180/math.pi)) end
+			--if debugMarek then Game:Print("koniec rotatewithanim "..(self._angleDestAnim * 180/math.pi).." angle dest = "..(self.angle * 180/math.pi)) end
 			self._animRotName = nil
 			self._isRotating = false
 			self._rotatingWithAnim = false
@@ -3975,7 +3977,7 @@ function CActor:UpdateRotateWithAnim(delta)
 				end
 			else
 				self._rotateWithAnimgStepAngle = math.pi/4
-	            if self._angleDestAnim < 0 then
+				if self._angleDestAnim < 0 then
 					self._animRotName = self.s_SubClass.rotate45R	--"rotate_right"
 				else
 					self._animRotName = self.s_SubClass.rotate45L	-- "rotate_left"
@@ -3993,12 +3995,12 @@ function CActor:UpdateRotateWithAnim(delta)
 			end
 			self._HasMovingCurveRot = nil
 		end
-        if (self._angleDestAnim < 0) then
-            self._angleDestAnim = self._angleDestAnim + self._rotateWithAnimgStepAngle
-        else
-            self._angleDestAnim = self._angleDestAnim - self._rotateWithAnimgStepAngle
-        end
-        self._angleDest = self.angle
+		if (self._angleDestAnim < 0) then
+			self._angleDestAnim = self._angleDestAnim + self._rotateWithAnimgStepAngle
+		else
+			self._angleDestAnim = self._angleDestAnim - self._rotateWithAnimgStepAngle
+		end
+		self._angleDest = self.angle
 	else
 		local add = self._rotateWithAnimgStepAngle * self._CurAnimTime / self._CurAnimLength
 		if self.Animation == self.s_SubClass.rotate90R or self.Animation == self.s_SubClass.rotate45R then		-- pozniej na podst. self._rotateWithAnimgStepAngle
@@ -4012,17 +4014,17 @@ function CActor:UpdateRotateWithAnim(delta)
 end
 
 function CActor:StopFlying()
-    if self.AIenabled then
-        ENTITY.PO_SetFlying(self._Entity, false)
-    end
+	if self.AIenabled then
+		ENTITY.PO_SetFlying(self._Entity, false)
+	end
 end
 
 function CActor:SetVel()
 	--if debugMarek then WORLD.SetWorldSpeed(1/4) end
-    if self.AIenabled and self._vdest and self._vdest.Z then
-        ENTITY.PO_SetFlying(self._Entity, true)
-        ENTITY.SetVelocity(self._Entity,self._vdest.X, self._vdest.Y, self._vdest.Z)
-    end
+	if self.AIenabled and self._vdest and self._vdest.Z then
+		ENTITY.PO_SetFlying(self._Entity, true)
+		ENTITY.SetVelocity(self._Entity,self._vdest.X, self._vdest.Y, self._vdest.Z)
+	end
 end
 
 
@@ -4044,16 +4046,16 @@ function CActor:EndTrailSword()
 end
 
 function CActor:Freeze()
-    if self._frozen then return end
-    if self.disableFreeze then return end
-    local s = Templates["Shotgun.CWeapon"]:GetSubClass()
-    local ftime = s.FrozenTime
-    if Player.HasWeaponModifier then ftime = ftime * 2 end
-    AddObject(Templates["FrozenObject.CProcess"]:New(self,ftime,s.FrozenFadeInTime,s.FrozenFadeOutTime),nil,nil,nil,true) 
-    if self.CustomOnFreeze then
+	if self._frozen then return end
+	if self.disableFreeze then return end
+	local s = Templates["Shotgun.CWeapon"]:GetSubClass()
+	local ftime = s.FrozenTime
+	if Player.HasWeaponModifier then ftime = ftime * 2 end
+	AddObject(Templates["FrozenObject.CProcess"]:New(self,ftime,s.FrozenFadeInTime,s.FrozenFadeOutTime),nil,nil,nil,true)
+	if self.CustomOnFreeze then
 		self:CustomOnFreeze()
 		return
-    end
+	end
 end
 
 function CActor:GetAnyJoint()		-- jesli ragdoll, to tylko z ragdoll-a
@@ -4089,7 +4091,7 @@ function CalcThrowVectorGivenVelocity(distance, velocity, angleXZ, deltaY, maxPi
 	else
 		pitch = deltaY/distance + gravity*distance/(2 * velocity * velocity)
 	end
-	
+
 	if pitch > maxPitch then
 		--Game:Print("max PITCH diff reached")
 		--Game.freezeUpdate = true
@@ -4103,7 +4105,7 @@ function CalcThrowVectorGivenVelocity(distance, velocity, angleXZ, deltaY, maxPi
 
 	local x,y,z = VectorRotate(1.0,0,0, 0, 0, -pitch)
 	x,y,z = VectorRotate(x,y,z, 0, angleXZ, 0)
-	
+
 	x = x * velocity
 	y = y * velocity
 	z = z * velocity
@@ -4121,22 +4123,22 @@ function CalcThrowVectorGivenAngle(distance, angle, angleXZ, deltaY)		-- given a
 		temp = (distance * distance * gravity)/((distance * math.tan(a) - deltaY) * 2 * math.cos(a) * math.cos(a))
 	end
 
-    local force = 8
-    if temp > 0 then
-        force = math.sqrt(temp)
-    else
-        Game:Print("ERROR: force < 0 actor cant throw at desired target, with that angle1")
-        temp = distance * gravity/math.sin(2 * a)
-        if temp > 0 then
+	local force = 8
+	if temp > 0 then
+		force = math.sqrt(temp)
+	else
+		Game:Print("ERROR: force < 0 actor cant throw at desired target, with that angle1")
+		temp = distance * gravity/math.sin(2 * a)
+		if temp > 0 then
 			force = math.sqrt(temp)
 		else
 			Game:Print("ERROR: force < 0 actor cant throw at desired target, with that angle2")
 		end
-    end
+	end
 
 	local x,y,z = VectorRotate(1.0,0,0, 0, 0, -a)
 	x,y,z = VectorRotate(x,y,z, 0, angleXZ, 0)
-	
+
 	x = x * force
 	y = y * force
 	z = z * force

@@ -750,7 +750,7 @@ function o:Shockwave()
 
 	--Game._EarthQuakeProc:Add(v.X, v.Y, v.Z, 8, 60, 0.4, 0.4, 2.0)
 
-	local dist = Dist3D(v.X,v.Y,v.Z,Player._groundx, Player._groundy, Player._groundz) 
+	local dist = Dist3D(v.X,v.Y,v.Z,self._AIBrain.Target._groundx, self._AIBrain.Target._groundy, self._AIBrain.Target._groundz) 
 	
     local b,d,x,y,z,nx,ny,nz,he,e
 	if s.HitDecal then
@@ -765,15 +765,15 @@ function o:Shockwave()
 
 	--Game:Print("SHOCK "..dist)
 	if dist < s.range then
-		if not ENTITY.PO_IsFlying(Player._Entity) then
-			ENTITY.PO_SetPlayerFlying(Player._Entity, 0.3)
-			--ENTITY.SetVelocity(Player._Entity, v2.X, v2.Y, v2.Z)
-			Player:OnDamage(s.damage - s.damage * dist / s.range, self)
-			local v2 = Vector:New(Player._groundx - v.X,0,Player._groundz - v.Z)
+		if not ENTITY.PO_IsFlying(self._AIBrain.Target._Entity) then
+			ENTITY.PO_SetPlayerFlying(self._AIBrain.Target._Entity, 0.3)
+			--ENTITY.SetVelocity(self._AIBrain.Target._Entity, v2.X, v2.Y, v2.Z)
+			self._AIBrain.Target:OnDamage(s.damage - s.damage * dist / s.range, self)
+			local v2 = Vector:New(self._AIBrain.Target._groundx - v.X,0,self._AIBrain.Target._groundz - v.Z)
 			v2:Normalize()
 			v2.Y = 1.2
 			v2:MulByFloat(s.playerHitStr * FRand(0.9,1.1))
-			ENTITY.SetVelocity(Player._Entity, v2.X, v2.Y, v2.Z)
+			ENTITY.SetVelocity(self._AIBrain.Target._Entity, v2.X, v2.Y, v2.Z)
 		end
 	end
 	

@@ -13,20 +13,20 @@ end
 
 function Giant:OnCreateEntity()
 	Game.MegaBossHealthMax = self.Health
-	Game.MegaBossHealth = self.Health	
+	Game.MegaBossHealth = self.Health
 	self._lastDamageStep = -100
-	
+
 	ENTITY.PO_SetCollisionGroup(self._Entity, ECollisionGroups.OnlyWithFixedSpecial)
 
---	if debugMarek then
---	MDL.SetRagdollCollisionGroup(self._Entity, ECollisionGroups.HCGNormalNCWithSelf)	-- todo: grupa tylko z playerbody i body
---	end
---	ENTITY.PO_SetCollisionGroup(self._Entity, ECollisionGroups.HCGNormalNCWithSelf)
-	
-    MDL.SetMeshLighting(self._Entity,"transp_tornado",false)
-    MDL.SetMeshLighting(self._Entity,"transp_tornado1",false)
+	--	if debugMarek then
+	--	MDL.SetRagdollCollisionGroup(self._Entity, ECollisionGroups.HCGNormalNCWithSelf)	-- todo: grupa tylko z playerbody i body
+	--	end
+	--	ENTITY.PO_SetCollisionGroup(self._Entity, ECollisionGroups.HCGNormalNCWithSelf)
+
+	MDL.SetMeshLighting(self._Entity,"transp_tornado",false)
+	MDL.SetMeshLighting(self._Entity,"transp_tornado1",false)
 	for i,v in self.s_SubClass.zasysa do
-		MDL.SetMeshVisibility(self._Entity, v, false)		-- narazie 
+		MDL.SetMeshVisibility(self._Entity, v, false)		-- narazie
 	end
 end
 
@@ -38,7 +38,7 @@ function Giant:CustomOnDeathUpdate()
 			self._timerToDemon = nil
 		end
 	else
-		if self._demonfx and self._demonfx.TickCount > self._demonfx.EffectTime - 1.0 then
+		if Game.GMode == GModes.SingleGame and self._demonfx and self._demonfx.TickCount > self._demonfx.EffectTime - 1.0 then
 			self._demonfx = nil
 			GObjects:Add(TempObjName(),CloneTemplate("EndLevel.CProcess"))
 		end
@@ -54,19 +54,19 @@ function Giant:DestroyChain()
 	MDL.SetMeshVisibility(self._Entity, "polySurfaceShape688", false)
 	local j = MDL.GetJointIndex(self._Entity, "op1")
 	local x,y,z = self.Pos.X,self.Pos.Y,self.Pos.Z--MDL.GetJointPos(self._Entity, j)
-	
+
 	local q = Quaternion:New_FromEuler(0,-self.angle,0)	-- self.angle
-	local obj,e = AddObject("GiantChain.CItem",nil,Vector:New(x,y,z),q,true) 
+	local obj,e = AddObject("GiantChain.CItem",nil,Vector:New(x,y,z),q,true)
 	Game._EarthQuakeProc:Add(self._groundx, self._groundy, self._groundz, 20, 250, 0.25, 0.25, 1.0)
 
-	local pfx = self.s_SubClass.ParticlesDefinitions.chainbreak    
-    local i = 1
-    if pfx then
+	local pfx = self.s_SubClass.ParticlesDefinitions.chainbreak
+	local i = 1
+	if pfx then
 		while i <= 15 do
 			local j = MDL.GetJointIndex(self._Entity, "op"..i)
 			local x,y,z = MDL.GetJointPos(self._Entity, j)
 			AddPFX(pfx.pfx, pfx.scale, Vector:New(x,y,z))
-			
+
 			local j = MDL.GetJointIndex(self._Entity, "ol"..i)
 			local x,y,z = MDL.GetJointPos(self._Entity, j)
 			AddPFX(pfx.pfx, pfx.scale, Vector:New(x,y,z))
@@ -77,9 +77,9 @@ end
 
 
 function Giant:OnInitTemplate()
-    self:SetAIBrain()
-    self._AIBrain._goals = {self._CustomAiStates.idleGiant, self._CustomAiStates.strike,
-		self._CustomAiStates.walkAndStrike, self._CustomAiStates.spawn, self._CustomAiStates.abreak, self._CustomAiStates.spikes }
+	self:SetAIBrain()
+	self._AIBrain._goals = {self._CustomAiStates.idleGiant, self._CustomAiStates.strike,
+	self._CustomAiStates.walkAndStrike, self._CustomAiStates.spawn, self._CustomAiStates.abreak, self._CustomAiStates.spikes }
 end
 
 -----------------
@@ -106,7 +106,7 @@ end
 function Giant._CustomAiStates.idleGiant:OnUpdate(brain)
 	local actor = brain._Objactor
 	local aiParams = actor.AiParams
-	
+
 	local tabl = aiParams.actions
 	if self.lastAmbient + 1.0 < brain._currentTime and not actor._isRotating then
 		if debugMarek then Game:Print("losowanie check "..brain._currentTime) end
@@ -139,7 +139,7 @@ function Giant._CustomAiStates.idleGiant:OnUpdate(brain)
 		end
 		return
 	end
-	
+
 	if self.timeChangeStillToFalse then
 		self.timeChangeStillToFalse =  self.timeChangeStillToFalse - 1
 		if self.timeChangeStillToFalse < 0 then
@@ -148,15 +148,16 @@ function Giant._CustomAiStates.idleGiant:OnUpdate(brain)
 			--Game:Print("self.GuardStill END")
 		end
 	end
-
-	local distToPlayer = Dist2D(actor._groundx, actor._groundz, Player._groundx, Player._groundz)
-	if not actor._isWalking then
-		if distToPlayer < 17 then
-			self.delay = nil
-			self.timeChangeStillToFalse = nil
-			self.GuardStill = false
-			--Game.freezeUpdate = true
-			--Game:Print("gracz blisko "..distToPlayer)
+	if brain.Target then
+		local distToPlayer = Dist2D(actor._groundx, actor._groundz, brain.Target._groundx, brain.Target._groundz)
+		if not actor._isWalking then
+			if distToPlayer < 17 then
+				self.delay = nil
+				self.timeChangeStillToFalse = nil
+				self.GuardStill = false
+				--Game.freezeUpdate = true
+				--Game:Print("gracz blisko "..distToPlayer)
+			end
 		end
 	end
 
@@ -190,13 +191,13 @@ function Giant._CustomAiStates.idleGiant:OnUpdate(brain)
 					end
 
 					local maxDist
-					
+
 					local movement = FRand(brain._walkStepLocal * 1.2, brain._walkStepLocal * 2)
-					if distToPlayer < 17 then
+					if distToPlayer and distToPlayer < 17 then
 						movement = FRand(50, 70)
 					end
-					
-					
+
+
 					--[[local ang = math.random(-30,30)
 
 					local b = actor:Trace(movement + actor._SphereSize, ang)
@@ -217,9 +218,9 @@ function Giant._CustomAiStates.idleGiant:OnUpdate(brain)
 					--local zd2 = zd + v.Z*(movement + actor._SphereSize * 3)
 					xd = xd + v.X*movement
 					zd = zd + v.Z*movement
-					
-					 Game:Print("movement = "..movement)
-					
+
+					Game:Print("movement = "..movement)
+
 					local d = Dist2D(xd, zd, 0,0)
 					if d < 100 then
 						actor:WalkTo(xd, yd, zd, false, maxDist)
@@ -275,7 +276,7 @@ function Giant._CustomAiStates.idleAnim:OnInit(brain)
 	self.done = false
 	self.active = true
 	actor:Stop()
-	actor:RotateToVectorWithAnim(Player._groundx, Player._groundy, Player._groundz)
+	actor:RotateToVectorWithAnim(brain.Target._groundx, brain.Target._groundy, brain.Target._groundz)
 	--actor._angleDest = math.mod(actor._angleDest - math.random(-30,30) * math.pi/180, math.pi*2)		-- tweak
 end
 
@@ -318,15 +319,16 @@ Giant._CustomAiStates.walkAndStrike = {
 function Giant._CustomAiStates.walkAndStrike:OnInit(brain)
 	local actor = brain._Objactor
 	self.distanceToPlayerStd = 72							--- odleglosc od lay do bossa
-	local dist = Dist2D(Player._groundx,Player._groundz, actor._groundx, actor._groundz)
-	local distToPlayer = Dist2D(0, 0, Player._groundx, Player._groundz)
+	if not brain.Target then return end
+	local dist = Dist2D(brain.Target._groundx,brain.Target._groundz, actor._groundx, actor._groundz)
+	local distToPlayer = Dist2D(0, 0, brain.Target._groundx, brain.Target._groundz)
 	local hit = false
 	if brain._submode ~= "walkToPlayerAndStrike" then		-- dostal rane
 		if debugMarek then Game:Print("walk and strike dist = "..dist.." player dist to 0 "..distToPlayer) end
-		
+
 		if dist > self.distanceToPlayerStd * 0.85 and dist < self.distanceToPlayerStd * 1.15 then
 			if debugMarek then Game:Print("walk and strike dist OK") end
-			actor:RotateToVectorWithAnim(Player._groundx, Player._groundy,Player._groundz)
+			actor:RotateToVectorWithAnim(brain.Target._groundx, brain.Target._groundy,brain.Target._groundz)
 			if math.random(100) < 50 then
 				Game:Print("spawn od razu odl. dobra")
 				brain._submode = "spawn"
@@ -349,12 +351,12 @@ function Giant._CustomAiStates.walkAndStrike:OnInit(brain)
 	if actor._isWalking then
 		actor:Stop()
 		if actor:GetAngleDistToPlayer() > 50 then
-			actor:RotateToVectorWithAnim(Player._groundx, Player._groundy, Player._groundz)
+			actor:RotateToVectorWithAnim(brain.Target._groundx, brain.Target._groundy, brain.Target._groundz)
 		end
 	else
-		actor:RotateToVectorWithAnim(Player._groundx, Player._groundy, Player._groundz)
+		actor:RotateToVectorWithAnim(brain.Target._groundx, brain.Target._groundy, brain.Target._groundz)
 	end
-	
+
 	brain._submode = nil
 	self.mode = 0
 	if dist > self.distanceToPlayerStd * 1.1 then
@@ -389,17 +391,17 @@ function Giant._CustomAiStates.walkAndStrike:OnUpdate(brain)
 	local actor = brain._Objactor
 	if self.mode == 0 then
 		if not actor._isRotating then
-			local dist = Dist2D(Player._groundx,Player._groundz, actor._groundx, actor._groundz)
-			actor:WalkTo(Player._groundx, Player._groundy,Player._groundz,nil, dist - 15)
+			local dist = Dist2D(brain.Target._groundx,brain.Target._groundz, actor._groundx, actor._groundz)
+			actor:WalkTo(brain.Target._groundx, brain.Target._groundy,brain.Target._groundz,nil, dist - 15)
 			self.mode = 1
 		end
 	end
 	if self.mode == 1 then
 		if actor._isWalking then
 			local d = Dist2D(actor._groundx, actor._groundz, 0,0)
-			local dist = Dist2D(Player._groundx, Player._groundz, actor._groundx, actor._groundz)
+			local dist = Dist2D(brain.Target._groundx, brain.Target._groundz, actor._groundx, actor._groundz)
 			if dist > self.distanceToPlayerStd * 0.85 and		-- pozniej dokladniej
-				 dist < self.distanceToPlayerStd * 1.15 then
+			dist < self.distanceToPlayerStd * 1.15 then
 				if debugMarek then Game:Print("1: dystans do ciosu "..dist) end
 				actor:FullStop()
 				brain._submode = "strike"
@@ -423,11 +425,11 @@ function Giant._CustomAiStates.walkAndStrike:OnUpdate(brain)
 			self.mode = 2
 		end
 	end
-	if self.mode == 2 then	
+	if self.mode == 2 then
 		if not actor._isAnimating or actor.Animation ~= "idle2" then
-			local dist = Dist2D(Player._groundx, Player._groundz, actor._groundx, actor._groundz)
+			local dist = Dist2D(brain.Target._groundx, brain.Target._groundz, actor._groundx, actor._groundz)
 			if dist > self.distanceToPlayerStd * 0.85 and		-- pozniej dokladniej
-				 dist < self.distanceToPlayerStd * 1.15 then
+			dist < self.distanceToPlayerStd * 1.15 then
 				brain._submode = "strike"
 				if debugMarek then Game:Print("2: dystans do ciosu after "..dist) end
 			else
@@ -474,10 +476,10 @@ function Giant._CustomAiStates.walkAndStrike:Evaluate(brain)
 	if brain._lastHitByEnemyPos then
 		brain._lastHitByEnemyPos = nil
 		if not self.active and math.random(100) < 70 then
-			local dist = Dist2D(0, 0, Player._groundx, Player._groundz)
+			local dist = Dist2D(0, 0, brain.Target._groundx, brain.Target._groundz)
 			if self._lastHitByEnemyTime + self.delayBetweenReactionsOnHit < brain._currentTime and dist < 130 then
-                local actor = brain._Objactor
-				local distToPlayer = Dist2D(actor._groundx, actor._groundz, Player._groundx, Player._groundz)
+				local actor = brain._Objactor
+				local distToPlayer = Dist2D(actor._groundx, actor._groundz, brain.Target._groundx, brain.Target._groundz)
 				if distToPlayer < 65 then
 					self._lastHitByEnemyTime = self._lastHitByEnemyTime + 1.0
 					Game:Print("reaction on canceled, gracz za blisko")
@@ -515,32 +517,35 @@ function Giant._CustomAiStates.spawn:OnInit(brain)
 	self.active = true
 	if debugMarek then Game:Print("spawn >>>>>") end
 	actor._spawns = {}
-	
+
 	self.distanceToPlayerStd = 46							--- odleglosc od lapy do bossa
-	local dist = Dist2D(Player._groundx, Player._groundz, actor._groundx, actor._groundz)
+	
+	if not brain.Target then return end
+	
+	local dist = Dist2D(brain.Target._groundx, brain.Target._groundz, actor._groundx, actor._groundz)
 	self.active = true
-	self.mode = -1	
+	self.mode = -1
 	if dist > self.distanceToPlayerStd * 1.1 then
 		-- pozniej nie do koncoa w to miejcs
 		if debugMarek then Game:Print("spawn oninit walkto") end
 		if not actor._isWalking then
 			if debugMarek then Game:Print("spawn oninit r") end
-			actor:RotateToVectorWithAnim(Player._groundx, Player._groundy, Player._groundz)
+			actor:RotateToVectorWithAnim(brain.Target._groundx, brain.Target._groundy, brain.Target._groundz)
 		else
 			actor:Stop()
 			if actor:GetAngleDistToPlayer() > 50 then
 				if debugMarek then Game:Print("spawn oninit walkto duzy kat") end
-				actor:RotateToVectorWithAnim(Player._groundx, Player._groundy, Player._groundz)
+				actor:RotateToVectorWithAnim(brain.Target._groundx, brain.Target._groundy, brain.Target._groundz)
 			else
 				if debugMarek then Game:Print("spawn oninit walkto male kat") end
 			end
 		end
 	else
 		actor:Stop()
-		local distToPlayer = Dist2D(0, 0, Player._groundx, Player._groundz)
+		local distToPlayer = Dist2D(0, 0, brain.Target._groundx, brain.Target._groundz)
 		--if distToPlayer > 20 then
-			--actor:RotateToVectorWithAnim(Player._groundx,Player._groundy,Player._groundz)
-			self.mode = 0
+		--actor:RotateToVectorWithAnim(brain.Target._groundx,brain.Target._groundy,brain.Target._groundz)
+		self.mode = 0
 		--end
 	end
 
@@ -551,9 +556,9 @@ function Giant._CustomAiStates.spawn:OnUpdate(brain)
 	if self.mode == -1 then
 		if not actor._isRotating and not actor._isWalking then
 			self.mode = 0
-			local dist = Dist2D(Player._groundx,Player._groundz, actor._groundx, actor._groundz)
+			local dist = Dist2D(brain.Target._groundx,brain.Target._groundz, actor._groundx, actor._groundz)
 			if dist > self.distanceToPlayerStd * 1.1 then
-				actor:WalkTo(Player._groundx, Player._groundy,Player._groundz,nil,dist - self.distanceToPlayerStd*0.6)
+				actor:WalkTo(brain.Target._groundx, brain.Target._groundy,brain.Target._groundz,nil,dist - self.distanceToPlayerStd*0.6)
 			end
 		end
 	end
@@ -570,16 +575,16 @@ function Giant._CustomAiStates.spawn:OnUpdate(brain)
 					if debugMarek then Game:Print("1: za daleko wyszedl ###") end		-- to poprawic
 				end
 			end
-			local dist = Dist2D(Player._groundx, Player._groundz, actor._groundx, actor._groundz)
+			local dist = Dist2D(brain.Target._groundx, brain.Target._groundz, actor._groundx, actor._groundz)
 			if dist > self.distanceToPlayerStd * 0.85 and		-- pozniej dokladniej
-				 dist < self.distanceToPlayerStd * 1.15 then
+			dist < self.distanceToPlayerStd * 1.15 then
 				if debugMarek then Game:Print("1: dystans ok "..dist) end
 				actor:FullStop()
 			end
 		else
 			if debugMarek then Game:Print("1: spawn") end
 			if not actor._isRotating then
-				actor:RotateToVectorWithAnim(Player._groundx, Player._groundy, Player._groundz)
+				actor:RotateToVectorWithAnim(brain.Target._groundx, brain.Target._groundy, brain.Target._groundz)
 				self.mode = 1
 			end
 		end
@@ -589,7 +594,7 @@ function Giant._CustomAiStates.spawn:OnUpdate(brain)
 		self.mode = 2
 		actor:SetAnim("atak1", false)
 	end
-	
+
 	if self.mode == 2 then
 		if not actor._isAnimating or actor.Animation ~= "atak1" then
 			self.active = nil
@@ -627,16 +632,16 @@ Giant._CustomAiStates.strike = {
 
 function Giant._CustomAiStates.strike:OnInit(brain)
 	local actor = brain._Objactor
-	
+
 	self.active = true
 	brain._submode = nil
-	if debugMarek then Game:Print("strike oninit: "..(Dist3D(Player._groundx,0,Player._groundz, actor._groundx,0, actor._groundz))) end
+	if debugMarek then Game:Print("strike oninit: "..(Dist3D(brain.Target._groundx,0,brain.Target._groundz, actor._groundx,0, actor._groundz))) end
 	-- obrot do playera ###
 	actor:Stop()
 	if not actor._isRotating then
-		actor:RotateToVectorWithAnim(Player._groundx,0,Player._groundz)
+		actor:RotateToVectorWithAnim(brain.Target._groundx,0,brain.Target._groundz)
 	end
-	actor._angleDest = math.mod(actor._angleDest + 30 * math.pi/180, math.pi*2)		-- tweak, 
+	actor._angleDest = math.mod(actor._angleDest + 30 * math.pi/180, math.pi*2)		-- tweak,
 	--
 	self.oldPos1 = Vector:New(0,0,0)
 	self.oldPos2 = Vector:New(0,0,0)
@@ -658,24 +663,24 @@ function Giant._CustomAiStates.strike:OnUpdate(brain)
 			self.oldPos1.X = x
 			self.oldPos1.Y = y
 			self.oldPos1.Z = z
-			local dist = Dist3D(x,y,z, Player._groundx, Player._groundy + 1.7, Player._groundz)
+			local dist = Dist3D(x,y,z, brain.Target._groundx, brain.Target._groundy + 1.7, brain.Target._groundz)
 
 			x,y,z = actor:GetJointPos('d_l_1_3')
 			local vel2x, vel2y, vel2z = self.oldPos2.X - x, self.oldPos2.Y - y, self.oldPos2.Z - z
 			self.oldPos2.X = x
 			self.oldPos2.Y = y
 			self.oldPos2.Z = z
-			local dist2 = Dist3D(x,y,z, Player._groundx, Player._groundy + 1.7, Player._groundz)
+			local dist2 = Dist3D(x,y,z, brain.Target._groundx, brain.Target._groundy + 1.7, brain.Target._groundz)
 
 			--Game:Print("dist to lapa = "..dist.." "..dist2)
 
-			local aiParams = actor.AiParams		
+			local aiParams = actor.AiParams
 			if (dist < aiParams.handRange or dist2 < aiParams.handRange) and self.lastTimeDamage + 0.6 < brain._currentTime then
 				Game:Print(">>>>> machnal gracza!")
 				self.lastTimeDamage = brain._currentTime
-				Player:OnDamage(aiParams.damageHandHit, actor)
+				brain.Target:OnDamage(aiParams.damageHandHit, actor)
 				PlaySound2D("actor/giant/giant_hand-hit")
-				local v 
+				local v
 				if dist < 5 then
 					v = Vector:New(vel1x,0,vel1z)
 				else
@@ -684,8 +689,8 @@ function Giant._CustomAiStates.strike:OnUpdate(brain)
 				v:Normalize()
 				local forceX = -aiParams.strikeForceXZ
 				local forceY = aiParams.strikeForceY
-				ENTITY.PO_SetPlayerFlying(Player._Entity, 0.5)
-				ENTITY.SetVelocity(Player._Entity, v.X*forceX, forceY, v.Z*forceX)
+				ENTITY.PO_SetPlayerFlying(brain.Target._Entity, 0.5)
+				ENTITY.SetVelocity(brain.Target._Entity, v.X*forceX, forceY, v.Z*forceX)
 			end
 		end
 	end
@@ -715,9 +720,9 @@ Giant._CustomAiStates.spikes = {
 function Giant._CustomAiStates.spikes:OnInit(brain)
 	local actor = brain._Objactor
 	actor:Stop()
-	local distToPlayer = Dist2D(0, 0, Player._groundx, Player._groundz)
+	local distToPlayer = Dist2D(0, 0, brain.Target._groundx, brain.Target._groundz)
 	if distToPlayer > 17 then
-		actor:RotateToVectorWithAnim(Player._groundx,Player._groundy,Player._groundz)
+		actor:RotateToVectorWithAnim(brain.Target._groundx,brain.Target._groundy,brain.Target._groundz)
 	end
 	self.active = true
 	brain._submode = nil
@@ -729,7 +734,7 @@ function Giant._CustomAiStates.spikes:OnUpdate(brain)
 	local actor = brain._Objactor
 	if self.mode == 0 and not actor._isRotating then
 		self.mode = 1
-		actor:SetAnim("kolce",false)		
+		actor:SetAnim("kolce",false)
 	end
 	if self.mode == 1 then
 		if not actor._isAnimating or actor.Animation ~= "kolce" then
@@ -750,20 +755,20 @@ function Giant._CustomAiStates.spikes:Evaluate(brain)
 		return 0.3
 	end
 	--[[if math.random(100) < 10 then
-		local actor = brain._Objactor
-		local dist = Dist2D(actor._groundx, actor._groundz, Player._groundx, Player._groundz)
-		if dist < 16 then
-			if math.random(100) < 90 then
-				-- idzie daleko
-				Game.freezeUpdate = true
-				
-			else
-				if debugMarek then Game:Print("##### spikes pod giantem") end
-				return 0.1
-			end
+	local actor = brain._Objactor
+	local dist = Dist2D(actor._groundx, actor._groundz, brain.Target._groundx, brain.Target._groundz)
+	if dist < 16 then
+		if math.random(100) < 90 then
+			-- idzie daleko
+			Game.freezeUpdate = true
+
+		else
+			if debugMarek then Game:Print("##### spikes pod giantem") end
+			return 0.1
 		end
-	end--]]
-	return 0
+	end
+end--]]
+return 0
 end
 
 
@@ -771,7 +776,7 @@ end
 Giant._CustomAiStates.sucking = {
 	name = "sucking",
 	active = false,
-    _lastHitByEnemyTime = -100,
+	_lastHitByEnemyTime = -100,
 	delayBetweenReactionsOnHit = 6,
 }
 
@@ -786,7 +791,7 @@ function Giant._CustomAiStates.sucking:OnInit(brain)
 	end
 
 	actor:Stop()
-	actor:RotateToVectorWithAnim(Player._groundx,Player._groundy,Player._groundz)
+	actor:RotateToVectorWithAnim(brain.Target._groundx,brain.Target._groundy,brain.Target._groundz)
 	actor:SetAnim("dmucha",false)
 	self.mode = -2
 	self.meteorCount = 0
@@ -813,7 +818,7 @@ function Giant._CustomAiStates.sucking:OnUpdate(brain)
 			self.mode = 0
 			-------------------
 			for i,v in actor.s_SubClass.zasysa do
-				MDL.SetMeshVisibility(actor._Entity, v, true)		-- narazie 
+				MDL.SetMeshVisibility(actor._Entity, v, true)		-- narazie
 			end
 			actor:BindFX("tornado3_1",0.5,'t1')
 			actor:BindFX("tornado3_1",0.7,'t2')
@@ -848,19 +853,19 @@ function Giant._CustomAiStates.sucking:OnUpdate(brain)
 			ENTITY.UnregisterAllChildren(actor._Entity, ETypes.ParticleFX)
 
 			for i,v in actor.s_SubClass.zasysa do
-				MDL.SetMeshVisibility(actor._Entity, v, false)		-- narazie 
+				MDL.SetMeshVisibility(actor._Entity, v, false)		-- narazie
 			end
 			SOUND2D.SetVolume(actor._soundSampleTornado, 0, 1.0)
 			SOUND2D.Forget(actor._soundSampleTornado)
-            actor._soundSampleTornado = nil
+			actor._soundSampleTornado = nil
 			CAM.SetPositionDisplacement(0,0,0)
 			CAM.SetRotationDisplacement(0,0,0)
 			actor:SetAnim("dmucha_up",false)
-			actor:RotateToVector(Player._groundx,Player._groundy,Player._groundz)
+			actor:RotateToVector(brain.Target._groundx,brain.Target._groundy,brain.Target._groundz)
 		else
 			actor:TornadoUpdate()
 			if math.random(100) < 9 then
-				actor:RotateToVector(Player._groundx,Player._groundy,Player._groundz)
+				actor:RotateToVector(brain.Target._groundx,brain.Target._groundy,brain.Target._groundz)
 			end
 		end
 	end
@@ -872,8 +877,8 @@ function Giant._CustomAiStates.sucking:OnUpdate(brain)
 			self.delay = FRand(60,70)
 		else
 			if FRand(0.0, 1.0) < actor.throwFreq and actor._CurAnimTime > 1.4 and actor._CurAnimTime < 2.2 and self.meteorCount < 10 then
-			    local j = MDL.GetJointIndex(actor._Entity, "k_szczeka")
-			    local x,y,z = MDL.TransformPointByJoint(actor._Entity, j,0,1,4)
+				local j = MDL.GetJointIndex(actor._Entity, "k_szczeka")
+				local x,y,z = MDL.TransformPointByJoint(actor._Entity, j,0,1,4)
 				--local x,y,z = actor:GetJointPos("k_szczeka")
 				local obj = actor.throwObjs[math.random(1, table.getn(actor.throwObjs))]
 				local crap = GObjects:Add(TempObjName(),CloneTemplate(obj))
@@ -885,9 +890,9 @@ function Giant._CustomAiStates.sucking:OnUpdate(brain)
 				crap.ObjOwner = actor
 
 				crap:Apply()
-				--local v = Vector:New(Player._groundx - x, Player._groundy+FRand(1.5,1.8) - y, Player._groundz - z)
+				--local v = Vector:New(brain.Target._groundx - x, brain.Target._groundy+FRand(1.5,1.8) - y, brain.Target._groundz - z)
 				--v:Normalize()
-				--local dist = Dist3D(Player._groundx,0, Player._groundz, actor._groundx,0,actor._groundz)
+				--local dist = Dist3D(brain.Target._groundx,0, brain.Target._groundz, actor._groundx,0,actor._groundz)
 				local speed = actor.spitSpeed * FRand(0.9, 1.1)
 
 				local q = Quaternion:New_FromNormal(0, 1, 0)
@@ -899,7 +904,7 @@ function Giant._CustomAiStates.sucking:OnUpdate(brain)
 				--ENTITY.EnableCollisions(crap._Entity, true, 0.3, 4, 0.3)
 				ENTITY.PO_EnableGravity(crap._Entity, false)
 				ENTITY.SetVelocity(crap._Entity,  speed*FRand(-0.2, 0.2), speed, speed*FRand(-0.2, 0.2))
-				actor:RotateToVector(Player._groundx, Player._groundy, Player._groundz)
+				actor:RotateToVector(brain.Target._groundx, brain.Target._groundy, brain.Target._groundz)
 				self.meteorCount = self.meteorCount + 1
 			end
 		end
@@ -922,10 +927,10 @@ function Giant._CustomAiStates.sucking:OnRelease(brain)
 	actor._disableRotateHead = nil
 	ENTITY.UnregisterAllChildren(actor._Entity, ETypes.ParticleFX)
 	for i,v in actor.s_SubClass.zasysa do
-		MDL.SetMeshVisibility(actor._Entity, v, false)		-- narazie 
+		MDL.SetMeshVisibility(actor._Entity, v, false)		-- narazie
 	end
-    CAM.SetPositionDisplacement(0,0,0)
-    CAM.SetRotationDisplacement(0,0,0)
+	CAM.SetPositionDisplacement(0,0,0)
+	CAM.SetRotationDisplacement(0,0,0)
 end
 
 function Giant._CustomAiStates.sucking:Evaluate(brain)
@@ -943,7 +948,7 @@ function Giant._CustomAiStates.sucking:Evaluate(brain)
 				actor:Stop()
 				if not actor._isRotating then
 					if debugMarek then Game:Print("....reaction on hit2 rot") end
-					actor:RotateToVectorWithAnim(Player._groundx, Player._groundy, Player._groundz)
+					actor:RotateToVectorWithAnim(brain.Target._groundx, brain.Target._groundy, brain.Target._groundz)
 				end
 				return 0.0
 			else
@@ -986,11 +991,11 @@ function Giant._CustomAiStates.abreak:OnUpdate(brain)
 end
 
 function Giant._CustomAiStates.abreak:OnRelease(brain)
-    local actor = brain._Objactor
-    local aiParams = actor.AiParams
-    aiParams.actions = aiParams.actionsAB
-    -- ciekawe, czy to zadziala...:
-    actor._AIBrain._goals = {actor._CustomAiStates.idleGiant, actor._CustomAiStates.sucking, actor._CustomAiStates.spikes}
+	local actor = brain._Objactor
+	local aiParams = actor.AiParams
+	aiParams.actions = aiParams.actionsAB
+	-- ciekawe, czy to zadziala...:
+	actor._AIBrain._goals = {actor._CustomAiStates.idleGiant, actor._CustomAiStates.sucking, actor._CustomAiStates.spikes}
 end
 
 function Giant._CustomAiStates.abreak:Evaluate(brain)
@@ -1008,22 +1013,22 @@ end
 
 function Giant:CustomUpdate()
 	Game.MegaBossHealth = self.Health
-	if self.AIenabled then
-        local aiParams = self.AiParams
+	if self._AIBrain.Target and self.AIenabled then
+		local aiParams = self.AiParams
 		local x,y,z = self:GetJointPos('s_p_kostka')
-		local dist = Dist3D(x,y,z, Player._groundx, Player._groundy + 1.7, Player._groundz)
+		local dist = Dist3D(x,y,z, self._AIBrain.Target._groundx, self._AIBrain.Target._groundy + 1.7, self._AIBrain.Target._groundz)
 		if dist < aiParams.touchFeetRange and self._lastDamageStep + 0.8 < self._AIBrain._currentTime then
 			self._lastDamageStep = self._AIBrain._currentTime
 			--Game:Print("dotknal gracza p ")
-			Player:OnDamage(self.AiParams.touchFeetDamage, self)			-- pozniej min delay dodac
+			self._AIBrain.Target:OnDamage(self.AiParams.touchFeetDamage, self)			-- pozniej min delay dodac
 		end
-		
+
 		x,y,z = self:GetJointPos('s_l_kostka')
-		dist = Dist3D(x,y,z, Player._groundx, Player._groundy + 1.7, Player._groundz)
+		dist = Dist3D(x,y,z, self._AIBrain.Target._groundx, self._AIBrain.Target._groundy + 1.7, self._AIBrain.Target._groundz)
 		if dist < aiParams.touchFeetRange and self._lastDamageStep + 0.8 < self._AIBrain._currentTime then
 			self._lastDamageStep = self._AIBrain._currentTime
 			--Game:Print("dotknal w gracza l ")
-			Player:OnDamage(self.AiParams.touchFeetDamage, self)
+			self._AIBrain.Target:OnDamage(self.AiParams.touchFeetDamage, self)
 		end
 	else
 		if self.Health <= 0 then
@@ -1033,12 +1038,12 @@ function Giant:CustomUpdate()
 					Game:Print("koniec animacji zamiera "..self.Animation)
 					--AddItem(,nil,Vector:New(self.Pos.X,self.Pos.Y,self.Pos.Z))
 					Game.BodyCountTotal = Game.BodyCountTotal + 1
-					
+
 					--GObjects:ToKill(self)
 					ENTITY.EnableDraw(self._Entity, false)
-					
+
 					self._disableUpdate = true
-					
+
 					Game.MegaBossHealth = nil
 					Game.MegaBossHealthMax = nil
 
@@ -1055,8 +1060,8 @@ function Giant:CustomUpdate()
 					ENTITY.PO_Enable(self._Entity, false)
 					ENTITY.ExplodeItem(self._Entity, "../Data/Items/"..self.deathExplosionItem, self.deathExplosionStren, self.deathExplosionRadius, 30.0, self.deathExplosionItemScale, nil, false)
 
-					Game._EarthQuakeProc:Add(self.Pos.X,self.Pos.Y,self.Pos.Z, 60, 400, 0.23, 0.23, 1.0)	
-					
+					Game._EarthQuakeProc:Add(self.Pos.X,self.Pos.Y,self.Pos.Z, 60, 400, 0.23, 0.23, 1.0)
+
 					local parts = WORLD.GetLastExplodedEntities(self._Entity)
 					for i,o in parts do
 						ENTITY.EnableCollisions(o, true, 1.5, 4.0)
@@ -1070,20 +1075,20 @@ end
 
 
 function Giant:CreateSpike()
-	local x = Player._groundx + FRand(-0.1, 0.1) + Player._velocityx * self._spikePrecictPlayerVelocity
-	local y = Player._groundy + 1
-	local z = Player._groundz + FRand(-0.1, 0.1) + Player._velocityz * self._spikePrecictPlayerVelocity
+	local x = self._AIBrain.Target._groundx + FRand(-0.1, 0.1) + self._AIBrain.Target._velocityx * self._spikePrecictPlayerVelocity
+	local y = self._AIBrain.Target._groundy + 1
+	local z = self._AIBrain.Target._groundz + FRand(-0.1, 0.1) + self._AIBrain.Target._velocityz * self._spikePrecictPlayerVelocity
 	local b,d,x2,y2,z2 = WORLD.LineTraceFixedGeom(x, y, z, x, y - 10, z)
 	if d then
-	
+
 		local b,d,x3,y3,z3 = WORLD.LineTraceFixedGeom(x2, y2 - 10, z2, x2, y2 - 0.1, z2)
 		if d then
 			x2 = x3
 			y2 = y3
 			z2 = z3
 		end
-		
-		local obj = GObjects:Add(TempObjName(),CloneTemplate("GiantStake.CItem"))	
+
+		local obj = GObjects:Add(TempObjName(),CloneTemplate("GiantStake.CItem"))
 		obj.Pos.X = x2
 		obj.Pos.Y = y2 + obj.initialPosY
 		obj.Pos.Z = z2
@@ -1103,14 +1108,14 @@ function Giant:Spawn()
 	--Game.freezeUpdate = true
 
 	local count = math.random(aiParams.spawnCount[1], aiParams.spawnCount[2])
-	
+
 	local x2,y2,z2 = self:GetJointPos("d_p_1_3")
-	dist = Dist2D(x2,z2, Player._groundx, Player._groundz)
+	dist = Dist2D(x2,z2, self._AIBrain.Target._groundx, self._AIBrain.Target._groundz)
 	--Game:Print(">>> ?create zombis "..dist)
 
 	if dist < aiParams.handRange then
 		if debugMarek then Game:Print("BEZPOSREDNI hit piescia") end
-		Player:OnDamage(self.AiParams.damageFist, self)
+		self._AIBrain.Target:OnDamage(self.AiParams.damageFist, self)
 	end
 
 	local cnt = table.getn(Actors)
@@ -1128,7 +1133,7 @@ function Giant:Spawn()
 	--Game.freezeUpdate = true
 	local xpos,ypos,zpos = self:GetJointPos("dlo_prawa_root")
 	for i=1,count do
-   		local angle = math.random(0,360)
+		local angle = math.random(0,360)
 		local x = math.sin(angle) + math.cos(angle)
 		local z = math.cos(angle) - math.sin(angle)
 		local d = FRand(6,16)
@@ -1180,21 +1185,21 @@ function Giant:Stomp(joint, modif)
 		DebugSphereRange = self.AiParams.explosionWhenWalkRange
 	end
 	WORLD.Explosion2(x,y - 2,z, self.AiParams.explosionWhenWalkStreng, self.AiParams.explosionWhenWalkRange, nil, AttackTypes.Step, self.AiParams.explosionWhenWalkDamage)		-- damege na zero?
-    local j = MDL.GetJointIndex(self._Entity, joint)
-    local x,y,z = MDL.TransformPointByJoint(self._Entity, j,0,0,0)
-    AddPFX('but',1.2,Vector:New(x,y,z))
+	local j = MDL.GetJointIndex(self._Entity, joint)
+	local x,y,z = MDL.TransformPointByJoint(self._Entity, j,0,0,0)
+	AddPFX('but',1.2,Vector:New(x,y,z))
 end
 
 
 function Giant:OnDamage(damage, obj, type, x, y, z, nx, ny, nz, he )			-- +pos
 	if type == AttackTypes.Demon or self._frozen or type == AttackTypes.OutOfLevel then
-         return false
-    end
+		return false
+	end
 
 	if he then
-        local t,e,j = PHYSICS.GetHavokBodyInfo(he)
-        local jName = MDL.GetJointName(e,j)
-        if jName == "n_p_kolano" or jName == "n_l_kolano" then		-- bo ma metalowe
+		local t,e,j = PHYSICS.GetHavokBodyInfo(he)
+		local jName = MDL.GetJointName(e,j)
+		if jName == "n_p_kolano" or jName == "n_l_kolano" then		-- bo ma metalowe
 			damage = damage * 0.33
 		end
 	end
@@ -1207,7 +1212,7 @@ function Giant:OnDamage(damage, obj, type, x, y, z, nx, ny, nz, he )			-- +pos
 		if obj then
 			self._AIBrain._lastHitByEnemyPos = obj.Pos
 		end
-        --ENTITY.PO_SetFlying(self._Entity,false)
+		--ENTITY.PO_SetFlying(self._Entity,false)
 
 		self.Health =  self.Health - damage
 		if self._AIBrain and self.AIenabled then
@@ -1226,15 +1231,15 @@ function Giant:OnDamage(damage, obj, type, x, y, z, nx, ny, nz, he )			-- +pos
 			self:RotateToVector(0,0,0)
 			self:SetAnim("zamiera", false)
 			for i,v in self.s_SubClass.zasysa do
-				MDL.SetMeshVisibility(self._Entity, v, false)		-- narazie 
+				MDL.SetMeshVisibility(self._Entity, v, false)		-- narazie
 			end
 			ENTITY.UnregisterAllChildren(self._Entity, ETypes.ParticleFX)
 			CAM.SetPositionDisplacement(0,0,0)
 			CAM.SetRotationDisplacement(0,0,0)
 			if debugMarek then Game:Print("--- DEAD ---") end
-			
+
 			for i,v in self.s_SubClass.zasysa do
-				MDL.SetMeshVisibility(self._Entity, v, false)		-- narazie 
+				MDL.SetMeshVisibility(self._Entity, v, false)		-- narazie
 			end
 			self:StopLastSound()
 			if self._soundSampleTornado then
@@ -1244,7 +1249,7 @@ function Giant:OnDamage(damage, obj, type, x, y, z, nx, ny, nz, he )			-- +pos
 			end
 			ENTITY.UnregisterAllChildren(self._Entity, ETypes.ParticleFX)
 			self._shakeCam = nil
-		    self._disableDemonic = true
+			self._disableDemonic = true
 			self._timerToDemon = 4
 			for i,v in Actors do
 				if v.Health > 0 and v._AIBrain then
@@ -1258,92 +1263,92 @@ end
 
 
 --[[function Giant:test()
-	local x,y,z = self:GetJointPos('d_p_1_3')
-	local dist = Dist3D(x,0,z, self._groundx, 0, self._groundz)
-	Game:Print("dist to lapa: "..dist)		-- 54 dla d_p_1_3
+local x,y,z = self:GetJointPos('d_p_1_3')
+local dist = Dist3D(x,0,z, self._groundx, 0, self._groundz)
+Game:Print("dist to lapa: "..dist)		-- 54 dla d_p_1_3
 end--]]
 
 function Giant:OnTick(delta)
 	--[[if self._isWalking then
-		local d = Dist2D(self._groundx, self._groundz, 0,0)
-		if d > 111 then
-			Game:Print("GIANT POZA LEVELEM? "..d)
-		end
-	end--]]
-	if self._shakeCam then
-	    --CAM.SetPositionDisplacement(0,0,0)
-	    --CAM.SetRotationDisplacement(0,0,0)
-		if self._shakeCam == 0 then
-			local x,y,z = CAM.GetAng() 
-			x = x + FRand(-2, 2)
-			y = y + FRand(-1, 1)
-			CAM.SetAng(x,y,z)
-		else
-        	x,y,z = self:GetJointPos('t15')
-            local dist = Dist3D(x,y,z, Player._groundx, Player._groundy + 1.7, Player._groundz)
-            x,y,z = self:GetJointPos('t12')
-            local dist2 = Dist3D(x,y,z, Player._groundx, Player._groundy + 1.7, Player._groundz)
-            --Game:Print("dist = "..dist)
-            
-            if dist < self.tornadosuckDistance or dist2 < self.tornadosuckDistance --[[and self._lastDamageStep + 1.0 < self._AIBrain._currentTime--]] then
-                local a = dist2
-                if dist < dist2 then
-                    a = dist
-                end
-
-                local x,y,z = CAM.GetAng() 
-                local d = 10*(self.tornadosuckDistance - a)/self.tornadosuckDistance
-                x = x + FRand(2+d, 6+d)
-                y = y + FRand(-4-d, 4+d)
-                CAM.SetAng(x,y,z)
-                
-                if FRand(0.0, 1.0) < delta * 2 then
-		            Player:OnDamage(self.tornadoDamage, self)
-		        end
-
-           		if Player.Pos.Y < -50 and FRand(0.0, 1.0) < delta * 1.5 then
-           			local mul = 4 * FRand(self.tornadosuckStrength[1], self.tornadosuckStrength[2]) + self.tornadosuckStrength[1] * 4
-           			ENTITY.PO_SetPlayerFlying(e, 0.2)
-           			local x,y,z = ENTITY.GetVelocity(Player._Entity)
-					ENTITY.SetVelocity(Player._Entity, x+FRand(-5,5), mul, z+FRand(-5,5))
-				end
-
-            else
-       			local x,y,z = CAM.GetAng() 
-                x = x + FRand(-2, 2)
-                y = y + FRand(-1, 1)
-                CAM.SetAng(x,y,z)
-            end
-		end
+	local d = Dist2D(self._groundx, self._groundz, 0,0)
+	if d > 111 then
+		Game:Print("GIANT POZA LEVELEM? "..d)
 	end
+end--]]
+if self._shakeCam then
+	--CAM.SetPositionDisplacement(0,0,0)
+	--CAM.SetRotationDisplacement(0,0,0)
+	if self._shakeCam == 0 then
+		local x,y,z = CAM.GetAng()
+		x = x + FRand(-2, 2)
+		y = y + FRand(-1, 1)
+		CAM.SetAng(x,y,z)
+	else
+		x,y,z = self:GetJointPos('t15')
+		local dist = Dist3D(x,y,z, brain.Target._groundx, brain.Target._groundy + 1.7, brain.Target._groundz)
+		x,y,z = self:GetJointPos('t12')
+		local dist2 = Dist3D(x,y,z, brain.Target._groundx, brain.Target._groundy + 1.7, brain.Target._groundz)
+		--Game:Print("dist = "..dist)
+
+		if dist < self.tornadosuckDistance or dist2 < self.tornadosuckDistance --[[and self._lastDamageStep + 1.0 < self._AIBrain._currentTime--]] then
+		local a = dist2
+		if dist < dist2 then
+			a = dist
+		end
+
+		local x,y,z = CAM.GetAng()
+		local d = 10*(self.tornadosuckDistance - a)/self.tornadosuckDistance
+		x = x + FRand(2+d, 6+d)
+		y = y + FRand(-4-d, 4+d)
+		CAM.SetAng(x,y,z)
+
+		if FRand(0.0, 1.0) < delta * 2 then
+			brain.Target:OnDamage(self.tornadoDamage, self)
+		end
+
+		if brain.Target.Pos.Y < -50 and FRand(0.0, 1.0) < delta * 1.5 then
+			local mul = 4 * FRand(self.tornadosuckStrength[1], self.tornadosuckStrength[2]) + self.tornadosuckStrength[1] * 4
+			ENTITY.PO_SetPlayerFlying(e, 0.2)
+			local x,y,z = ENTITY.GetVelocity(brain.Target._Entity)
+			ENTITY.SetVelocity(brain.Target._Entity, x+FRand(-5,5), mul, z+FRand(-5,5))
+		end
+
+	else
+		local x,y,z = CAM.GetAng()
+		x = x + FRand(-2, 2)
+		y = y + FRand(-1, 1)
+		CAM.SetAng(x,y,z)
+	end
+end
+end
 end
 
 function Giant:TornadoUpdate()
 	-- t15, t16, ..t13
 	self._shakeCam = 0
-    local b = WORLD.LineTraceFixedGeom(Player.Pos.X,Player.Pos.Y,Player.Pos.Z, Player.Pos.X,Player.Pos.Y + 4,Player.Pos.Z)
-    if not b then
-        self._shakeCam = 1
-        --Game._EarthQuakeProc:Add(x,y,z, self.StompTimeOut, self.StompRange * p, self.CameraMov * p, self.CameraRot * p, 1.0)
-    end
+	local b = WORLD.LineTraceFixedGeom(brain.Target.Pos.X,brain.Target.Pos.Y,brain.Target.Pos.Z, brain.Target.Pos.X,brain.Target.Pos.Y + 4,brain.Target.Pos.Z)
+	if not b then
+		self._shakeCam = 1
+		--Game._EarthQuakeProc:Add(x,y,z, self.StompTimeOut, self.StompRange * p, self.CameraMov * p, self.CameraRot * p, 1.0)
+	end
 
 end
 
 function Giant:Strike(par1)
-    local aiParams = self.AiParams			
-    local x,y,z = self:GetJointPos(par1)
-    local dist = Dist3D(x,y,z, Player._groundx, Player._groundy+ 1.8, Player._groundz)
-    
-    if dist < aiParams.handRange then
-        --Game:Print(">BEZPOSREDNI hit "..dist)
-        Player:OnDamage(aiParams.damageFist, self)
-    --else
+	local aiParams = self.AiParams
+	local x,y,z = self:GetJointPos(par1)
+	local dist = Dist3D(x,y,z, brain.Target._groundx, brain.Target._groundy+ 1.8, brain.Target._groundz)
+
+	if dist < aiParams.handRange then
+		--Game:Print(">BEZPOSREDNI hit "..dist)
+		brain.Target:OnDamage(aiParams.damageFist, self)
+		--else
 		--Game:Print("dist to handddd "..dist)
-    end
+	end
 end
 
 function Giant:GetAngleDistToPlayer()
-	local v = Vector:New(Player._groundx - self._groundx, 0, Player._groundz - self._groundz)
+	local v = Vector:New(self._AIBrain.Target._groundx - self._groundx, 0, self._AIBrain.Target._groundz - self._groundz)
 	v:Normalize()
 	local angleToPlayer = math.atan2(v.X, v.Z)
 	local dist = AngDist(self.angle, angleToPlayer) * 180/math.pi
@@ -1353,8 +1358,8 @@ function Giant:GetAngleDistToPlayer()
 end
 
 function Giant:CustomDelete()
-    if self._soundSampleTornado then
+	if self._soundSampleTornado then
 		SOUND2D.Delete(self._soundSampleTornado)
-        self._soundSampleTornado = nil
-    end
+		self._soundSampleTornado = nil
+	end
 end

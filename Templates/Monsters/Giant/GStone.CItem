@@ -67,7 +67,7 @@ function GStone:OnUpdate()
 		end
 	end
 	if self.mode == 1 then
-		local v = Vector:New(Player._groundx - self.Pos.X+FRand(-20.0,20.0), Player._groundy+FRand(1.0,2.0) - self.Pos.Y, Player._groundz - self.Pos.Z+FRand(-20.0,20.0))
+		local v = Vector:New(self.ObjOwner._AIBrain.Target._groundx - self.Pos.X+FRand(-20.0,20.0), self.ObjOwner._AIBrain.Target._groundy+FRand(1.0,2.0) - self.Pos.Y, self.ObjOwner._AIBrain.Target._groundz - self.Pos.Z+FRand(-20.0,20.0))
 		v:Normalize()
 		local rnd = FRand(0.7, 1.0)
 		ENTITY.SetVelocity(self._Entity,  v.X * self.speed * rnd, v.Y * self.speed * rnd, v.Z * self.speed * rnd)

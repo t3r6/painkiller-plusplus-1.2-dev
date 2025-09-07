@@ -201,8 +201,8 @@ function AiStates.JumpUP:OnUpdate(brain)
 			self.active = false
 		else
 			if aiParams.rotateWhileAfterJumpAnim then
-				brain._enemyLastSeenShootTarget.Y = Player._groundy + 1.8
-				actor:RotateToVector(Player._groundx, Player._groundy, Player._groundz)
+				brain._enemyLastSeenShootTarget.Y = brain.Target._groundy + 1.8
+				actor:RotateToVector(brain.Target._groundx, brain.Target._groundy, brain.Target._groundz)
 			end
 		end
 	end

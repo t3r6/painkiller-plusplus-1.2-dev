@@ -13,7 +13,8 @@ OptionsMenu =
 	fontBigTex  = "../PKPlusData/font_texturka_alpha",
 	fontSmallTex  = "../PKPlusData/font_texturka_alpha",
 	descColor	= R3D.RGB( 255, 255, 255 ),
-	
+				fontBig		= Cfg.DefaultFont,
+			fontSmall	= Cfg.DefaultFont,
 	useItemBG = false,
 
 	items =

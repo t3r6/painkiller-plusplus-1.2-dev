@@ -41,7 +41,7 @@ function FireBallAlastor:OnCollision(x,y,z,nx,ny,nz,e)
 		if obj and obj.OnDamage then
 			obj:OnDamage(self.damage, self.ObjOwner)
 			Game:Print("fireball damage "..obj._Name)
-            if obj == Player then
+            if obj == self._AIBrain.Target then
                 PlaySound2D("actor/samurai/samurai-fireball-hit")
             end
 		else
@@ -52,7 +52,7 @@ function FireBallAlastor:OnCollision(x,y,z,nx,ny,nz,e)
 	else
 		Game:Print(self._Name.." fireball collision no e")
 	end
-    if obj ~= Player then
+    if obj ~= self._AIBrain.Target then
         PlaySound3D("actor/samurai/samurai-fireball-hit",x,y,z, 30, 200)
     end
 	GObjects:ToKill(self)

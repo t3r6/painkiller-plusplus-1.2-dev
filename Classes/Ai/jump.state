@@ -47,7 +47,7 @@ function AiStates.Jump:OnUpdate(brain)
 					actor:SetAnim(aiParams.jumpAnim, false, speed)
 					actor._proc = Templates["PMove.CProcess"]:New(actor, aiParams.jumpSpeed)
 					actor._proc:SetDir(Vector:New(brain.r_closestEnemy._groundx - actor._groundx, 0, brain.r_closestEnemy._groundz - actor._groundz))
-					GObjects:Add(TempObjName(), actor._proc)
+					GObjects:Add("PMove"..TempObjName(), actor._proc)
 				else
 					self.active = false
 				end

@@ -6,24 +6,24 @@ AiStates.closeAttack = {
 }
 
 function AiStates.closeAttack:OnInit(brain)
-	local actor = brain._Objactor
-	local aiParams = actor.AiParams
-    actor:FullStop()
-    actor:RotateToVector(Player._groundx,Player._groundy,Player._groundz, true)
-    local att = actor.s_SubClass.NearAttacks        -- narazie
-	if att then
-        if aiParams.NearAttacks then
-            att = aiParams.NearAttacks
-        end
-    end
-
-    if not att then
-        Game:Print(actor._Name.." NEAR ATTACKS NOT DEFINED!!!!!!")
-        return
-    end
-    local animName = att[math.random(1,table.getn(att))]
-	actor:SetAnim(animName, false)
-	self.active = true
+		local actor = brain._Objactor
+		local aiParams = actor.AiParams
+	    actor:FullStop()
+	    actor:RotateToVector(brain.Target._groundx,brain.Target._groundy,brain.Target._groundz, true)
+	    local att = actor.s_SubClass.NearAttacks        -- narazie
+		if att then
+	        if aiParams.NearAttacks then
+	            att = aiParams.NearAttacks
+	        end
+	    end
+	
+	    if not att then
+	        Game:Print(actor._Name.." NEAR ATTACKS NOT DEFINED!!!!!!")
+	        return
+	    end
+	    local animName = att[math.random(1,table.getn(att))]
+		actor:SetAnim(animName, false)
+		self.active = true
 end
 
 function AiStates.closeAttack:OnUpdate(brain)

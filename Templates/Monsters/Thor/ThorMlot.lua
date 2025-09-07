@@ -29,7 +29,7 @@ end
 
 function o:OnDamage(damage, owner, attacktype)
 	--Game:Print(self._Name.." mlot damage "..damage.." "..self.Health)
-	if Thor_001 and (Thor_001.Animation == "atak1" or Thor_001.Animation == "atak2") then
+	if owner and (owner.Animation == "atak1" or owner.Animation == "atak2") then
 		--Game:Print("thor charging, damage canceled")
 		return
 	end
@@ -38,13 +38,13 @@ function o:OnDamage(damage, owner, attacktype)
 		self._alpha = 1
 
         self.Health = self.Health - damage
-        if damage > 8 and Thor_001 then
-			Thor_001._AIBrain._lastHitByEnemyPos = Vector:New(Player._groundx,Player._groundy,Player._groundz)
-			Thor_001._AIBrain._lastHitByEnemyTime = Thor_001._AIBrain._currentTime
+        if damage > 8 and owner then
+			owner._AIBrain._lastHitByEnemyPos = Vector:New(self._AIBrain.Target._groundx,self._AIBrain.Target._groundy,self._AIBrain.Target._groundz)
+			owner._AIBrain._lastHitByEnemyTime = owner._AIBrain._currentTime
 		end
         if self.Health <= 0 then
-			if Thor_001 then
-				Thor_001._weaponDied = true
+			if owner then
+				owner._weaponDied = true
 			end
         end
     end

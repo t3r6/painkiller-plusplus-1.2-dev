@@ -83,7 +83,7 @@ function Leper_monk:Take()
 			self._test = true
 
 			if self.AiParams.rotateRagdollToPlayer then
-				local v = Vector:New(Player._groundx - x2, Player._groundy - y2, Player._groundz - z2)
+				local v = Vector:New(self._AIBrain.Target._groundx - x2, self._AIBrain.Target._groundy - y2, self._AIBrain.Target._groundz - z2)
 				v:Normalize()
 				local angle = math.atan2(v.X, v.Z)
 				if aiParams.throwRagdollRotationInterpolation then
@@ -137,7 +137,7 @@ function Leper_monk:OnTick(delta)
         local aiParams = self.AiParams
 		MDL.ApplyPositionToJoint(brain.Objhostage2._Entity, brain._JointH, self._holdBastardPos.X, self._holdBastardPos.Y, self._holdBastardPos.Z)
 		self._holdBastardPos.Y = self._holdBastardPos.Y + delta * aiParams.ragdollLiftSpeed
-		--local v = Vector:New(Player._groundx - self._holdBastardPos.X, Player._groundy - self._holdBastardPos.Y, Player._groundz - self._holdBastardPos.Z)
+		--local v = Vector:New(self._AIBrain.Target._groundx - self._holdBastardPos.X, self._AIBrain.Target._groundy - self._holdBastardPos.Y, self._AIBrain.Target._groundz - self._holdBastardPos.Z)
 		if aiParams.throwRagdollRotationInterpolation then
 			if aiParams.ragdollLiftRotationSpeed then
 				self._qrot = self._qrot + delta * aiParams.ragdollLiftRotationSpeed
@@ -401,15 +401,15 @@ function Leper_monk:ThrowRagdoll()
 
 	MDL.SetPinnedJoint(brain.Objhostage2._Entity, brain._JointH, false)
 	
-	local v = Vector:New(Player._groundx - self._holdBastardPos.X, Player._groundy - self._holdBastardPos.Y, Player._groundz - self._holdBastardPos.Z)
+	local v = Vector:New(self._AIBrain.Target._groundx - self._holdBastardPos.X, self._AIBrain.Target._groundy - self._holdBastardPos.Y, self._AIBrain.Target._groundz - self._holdBastardPos.Z)
 	local distToTarget = v:Len()
 	v:Normalize()
 	local angle = math.atan2(v.Z, v.X)
 	
 	if aiParams.throwRagdollAngle then
-		x,y,z = CalcThrowVectorGivenAngle(distToTarget - aiParams.throwRagdollDistMinus, aiParams.throwRagdollAngle, angle, Player._groundy + 1.6 - self._holdBastardPos.Y)
+		x,y,z = CalcThrowVectorGivenAngle(distToTarget - aiParams.throwRagdollDistMinus, aiParams.throwRagdollAngle, angle, self._AIBrain.Target._groundy + 1.6 - self._holdBastardPos.Y)
 	else
-		x,y,z = CalcThrowVectorGivenVelocity(distToTarget - aiParams.throwRagdollDistMinus, aiParams.throwRagdollVelocity, angle, Player._groundy + 1.6 - self._holdBastardPos.Y, math.pi/2)
+		x,y,z = CalcThrowVectorGivenVelocity(distToTarget - aiParams.throwRagdollDistMinus, aiParams.throwRagdollVelocity, angle, self._AIBrain.Target._groundy + 1.6 - self._holdBastardPos.Y, math.pi/2)
 	end
 	--PHYSICS.SetHavokBodyVelocity(brain.Objhostage2._Entity,x,y,z) 
 	
@@ -453,12 +453,12 @@ function Leper_monk:CustomOnHit()
 		if self._HealthMax * aiParams.ABHp > self.Health and ENTITY.PO_IsOnFloor(self._Entity) then
 			if self._AIBrain._enemyLastSeenTime > 0 then
 				local brain = self._AIBrain
-				if self._AIBrain.r_lastDamageWho == Player or not self._AIBrain.r_lastDamageWho then
+				if self._AIBrain.r_lastDamageWho == self._AIBrain.Target or not self._AIBrain.r_lastDamageWho then
 					self._AIBrain._goals = {}
 					self._AIBrain._currentGoal = nil
 					self._disableHits = true
 					self:Stop()
-					self:RotateToVector(Player._groundx, Player._groundy, Player._groundz)
+					self:RotateToVector(self._AIBrain.Target._groundx, self._AIBrain.Target._groundy, self._AIBrain.Target._groundz)
 					self._ABdo = 0
 				end
 			end
@@ -469,7 +469,7 @@ end
 function Leper_monk:CustomUpdate()
 	if self._ABdo then
 		if self._ABdo == 0 and not self._isRotating then
-			self:RotateToVector(Player._groundx, Player._groundy, Player._groundz)
+			self:RotateToVector(self._AIBrain.Target._groundx, self._AIBrain.Target._groundy, self._AIBrain.Target._groundz)
 			ENTITY.UnregisterAllChildren(self._Entity, ETypes.ParticleFX)
 			self:SetAnim(self.AiParams.ThrowAnim, false)
 			self._ABdo = 1
@@ -480,7 +480,7 @@ function Leper_monk:CustomUpdate()
 				self._ABdo = 2
 			else
 				if not self._AIBrain._AxethrowedRight then
-					self:RotateToVector(Player._groundx, Player._groundy, Player._groundz)
+					self:RotateToVector(self._AIBrain.Target._groundx, self._AIBrain.Target._groundy, self._AIBrain.Target._groundz)
 				end
 			end
 		end

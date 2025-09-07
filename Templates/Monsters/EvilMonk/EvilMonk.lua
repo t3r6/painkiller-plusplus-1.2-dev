@@ -47,7 +47,7 @@ function EvilMonk:Throw()
 		self.Joint = MDL.GetJointIndex(self._Entity, "dlo_prawa_root")
 	    local x,y,z = MDL.TransformPointByJoint(self._Entity,self.Joint,0,0,0)
 
-		local player = Player
+		local player = self._AIBrain.Target
 		if self._AIBrain.r_closestEnemy then
 			player = self._AIBrain.r_closestEnemy
 		end
@@ -110,7 +110,7 @@ end
 
 function EvilMonk:CustomUpdate()
 	if self._ABdo then
-		local player = Player
+		local player = self._AIBrain.Target
 		if self._AIBrain.r_closestEnemy then
 			player = self._AIBrain.r_closestEnemy
 		end
@@ -147,7 +147,7 @@ function EvilMonk._CustomAiStates.throwAndDie:OnUpdate(brain)
 		if brain._distToNearestEnemy < actor.AiParams.attackRange then
 			actor:RotateToVector(brain.r_closestEnemy._groundx, brain.r_closestEnemy._groundy, brain.r_closestEnemy._groundz)
 			--if Player
-			local player = Player
+			local player = brain.Target
 			if brain.r_closestEnemy then
 				player = brain.r_closestEnemy
 			end

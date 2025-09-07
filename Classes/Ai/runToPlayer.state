@@ -18,38 +18,36 @@ function AiStates.runToPlayer:OnInit(brain)
 end
 
 function AiStates.runToPlayer:OnUpdate(brain)
-	local actor = brain._Objactor
-	local aiParams = actor.AiParams
-
-	if brain.r_closestEnemy then
-		if not actor._isWalking or math.random(100) < 11 then
-			actor:WalkTo(Player._groundx, Player._groundy, Player._groundz,aiParams.runToPlayerRun)
+		local actor = brain._Objactor
+		local aiParams = actor.AiParams
+	
+		if brain.r_closestEnemy then
+			if not actor._isWalking or math.random(100) < 11 then
+				actor:WalkTo(brain.Target._groundx, brain.Target._groundy, brain.Target._groundz,aiParams.runToPlayerRun)
+			end
 		end
-	end
-
-	local dist = Dist3D(actor._groundx, actor._groundy, actor._groundz, Player._groundx, Player._groundy, Player._groundz)
-	if dist < aiParams.actionDistance then
-		if aiParams.collisionAnim then
-            if aiParams.stopBeforeExpl then
-                actor:Stop()
-            end
-			actor:SetAnim(aiParams.collisionAnim, false)
-		else
-			actor:ExplodeBarrel(0.1)
+	
+		local dist = Dist3D(actor._groundx, actor._groundy, actor._groundz, brain.Target._groundx, brain.Target._groundy, brain.Target._groundz)
+		if dist < aiParams.actionDistance then
+			if aiParams.collisionAnim then
+	            if aiParams.stopBeforeExpl then
+	                actor:Stop()
+	            end
+				actor:SetAnim(aiParams.collisionAnim, false)
+			else
+				actor:ExplodeBarrel(0.1)
+			end
+	        actor.AIenabled = false
 		end
-        actor.AIenabled = false
-	end
-
-    if actor.s_SubClass.SoundsDefinitions.attackAmbient then
-        if self.lastTimeOnAttackAmbient + aiParams.soundAmbientDelay < brain._currentTime and math.random(100) < 3 then
-            self._lastAttackAmbient = actor:PlaySoundHit("attackAmbient")
-            if self._lastAttackAmbient then
-                self.lastTimeOnAttackAmbient = brain._currentTime
-            end
-        end
-    end
-
-
+	
+	    if actor.s_SubClass.SoundsDefinitions.attackAmbient then
+	        if self.lastTimeOnAttackAmbient + aiParams.soundAmbientDelay < brain._currentTime and math.random(100) < 3 then
+	            self._lastAttackAmbient = actor:PlaySoundHit("attackAmbient")
+	            if self._lastAttackAmbient then
+	                self.lastTimeOnAttackAmbient = brain._currentTime
+	            end
+	        end
+	    end
 end
 
 function AiStates.runToPlayer:OnRelease(brain)

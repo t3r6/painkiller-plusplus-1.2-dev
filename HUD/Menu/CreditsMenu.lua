@@ -36,7 +36,7 @@ CreditsMenu =
 			action = "",
 			useItemBG = false,
 			fontBigSize = 26,
-			fontBigTex = "",
+			fontBigTex = Cfg.DefaultFont,
 			textColor	= R3D.RGBA( 255, 255, 255, 255 ),
 		},
 

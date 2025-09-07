@@ -166,11 +166,6 @@ Network:RegisterMethod("RifleFlameThrower.OnReloadFX", NCallOn.ServerAndSingleCl
 --============================================================================
 function RifleFlameThrower:AltFire()
 Game:AddToStats(self.ObjOwner.ClientID, AttackTypes.FlameThrower, 0, 1, 0)
-    if Game.GMode ~= GModes.SingleGame then 
-        self._ActionState = "Idle"
-        self._altfire = false
-        return 
-    end
 
     if self.ObjOwner.Ammo.FlameThrower > 0 then
         self.StartAltFireFX(self.ObjOwner._Entity, self.ObjOwner.Ammo.FlameThrower)
@@ -482,7 +477,7 @@ end
 --============================================================================
 function RifleFlameThrower:ComboCheck()
 
-    if self._ActionState ~= "AltFire" or Game.GMode ~= GModes.SingleGame then return end
+    if self._ActionState ~= "AltFire" then return end
 
     local s = self:GetSubClass()
     if ENTITY.PO_IsActionState(self.ObjOwner._Entity,Actions.Fire) then

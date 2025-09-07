@@ -255,7 +255,7 @@ function Bat._CustomAiStates.Batattack:OnUpdate(brain)
 		local dist = Dist3D(brain.r_closestEnemy.Pos.X,brain.r_closestEnemy.Pos.Y + 1.3,brain.r_closestEnemy.Pos.Z, actor.Pos.X,actor.Pos.Y,actor.Pos.Z)
 		if dist <= aiParams.attackRange then
 			if self.timerDelay <= 0 then
-				Player:OnDamage(aiParams.weaponDamage * FRand(0.6, 1.4),actor,0)
+				self._AIBrain.Target:OnDamage(aiParams.weaponDamage * FRand(0.6, 1.4),actor,0)
 				self.timerDelay = math.random(7,12)
 			else
 				self.timerDelay = self.timerDelay - 1
@@ -292,7 +292,7 @@ end
 function Bat._CustomAiStates.Batattack:OnRelease(brain)
 	brain._batfly = true
 	brain._landAfterAttack = true
-	brain._batflySndSrc = Vector:New(Player.Pos.X + FRand(1,2), Player.Pos.Y, Player.Pos.Z + FRand(1,2))
+	brain._batflySndSrc = Vector:New(self._AIBrain.Target.Pos.X + FRand(1,2), self._AIBrain.Target.Pos.Y, self._AIBrain.Target.Pos.Z + FRand(1,2))
 	self.active = false
 end
 

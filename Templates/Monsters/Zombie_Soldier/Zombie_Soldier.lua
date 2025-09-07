@@ -49,7 +49,7 @@ function o:CustomUpdateHeadless()
 			else
 				if self.Animation == "dead" and self._CurAnimTime > self.AiParams.timeWhenSpinCasusesDamage then
 					if math.random(100) < 15 and self._proc then
-						self._proc:SetDir(Vector:New(Player._groundx - self._groundx, 0, Player._groundz - self._groundz))
+						self._proc:SetDir(Vector:New(self._AIBrain.Target._groundx - self._groundx, 0, self._AIBrain.Target._groundz - self._groundz))
 					end
 					local idx  = MDL.GetJointIndex(self._Entity,"miecz")	
 					local x,y,z = MDL.TransformPointByJoint(self._Entity, idx, 0.3,0.0,0.0)
@@ -85,7 +85,7 @@ end
 function o:CustomUpdateZombie2()
 	if self._headLess == 1 then
 		if not self._isAnimating or self._CurAnimTime > self.AiParams.afterBeheadIdleTime then
-			self:WalkTo(Player._groundx,Player._groundy,Player._groundz, false, nil, "dead")
+			self:WalkTo(self._AIBrain.Target._groundx,self._AIBrain.Target._groundy,self._AIBrain.Target._groundz, false, nil, "dead")
 			self._headLess = 2
 			self._startTime = Game.currentTime
 		end
@@ -96,7 +96,7 @@ function o:CustomUpdateZombie2()
 			self._headLess = 3
 		else
 			if math.random(100) < 15 then
-				self:WalkTo(Player._groundx,Player._groundy,Player._groundz, false, nil, "dead")
+				self:WalkTo(self._AIBrain.Target._groundx,self._AIBrain.Target._groundy,self._AIBrain.Target._groundz, false, nil, "dead")
 			end
 			if not self._isWalking then
 				self:WalkForward(FRand(3,5), false, nil, nil, "dead")

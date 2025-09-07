@@ -2,9 +2,22 @@
 function ArmorStrong:OnInitTemplate()
     self._Synchronize = self.Synchronize
     self.Synchronize = nil
+     if Cfg.SimpleItems then
+    	self.Model = "spawn"
+    else
+    	self.Model = "armour_gold"
+    end
 end
 --============================================================================
 function ArmorStrong:OnCreateEntity()
+		if Cfg.SimpleItems then
+	    local e = ENTITY.Create(ETypes.Billboard,"Script","ArmorStrong")    
+	    local tex = "../PKPLUSDATA/Textures/Simpleitems/ArmorStrong.tga"        
+	    BILLBOARD.SetupCorona(e,1,0,0,0,0,0.5,0,0,0,tex,Color:New(255,255,255,0):Compose(),1,true)    
+	    ENTITY.SetPosition(e,0,0,0)
+	    ENTITY.RegisterChild(self._Entity,e,true,0) 
+	    WORLD.AddEntity(e)
+    end
     ENTITY.SetSynchroString(self._Entity,"ArmorStrong.CItem") 
     ENTITY.EnableNetworkSynchronization(self._Entity,true,true)
     self._orient = FRand(7.26)

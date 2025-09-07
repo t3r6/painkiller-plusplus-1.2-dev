@@ -3,8 +3,8 @@ VoteMenu =
 	bgStartFrame = { 120, 243, 268 },
 	bgEndFrame   = { 180, 267, 291 },
 
-	fontBig		= "timesbd",
-	fontSmall	= "timesbd",
+	fontBig		= Cfg.DefaultFont,
+	fontSmall	= Cfg.DefaultFont,
 
 	--backAction = "PainMenu:ApplySettings(false); PainMenu:ActivateScreen(MainMenu)",
 	--applyAction = "PainMenu:ApplySettings(true)",
@@ -78,6 +78,8 @@ VoteMenu =
 			inGameOnly = 1,
 			action = "PMENU.ResumeSounds(); PMENU.ReturnToGame(); PainMenu:ReloadBrightskins()",
 			useItemBG = false,
+			fontBig		= Cfg.DefaultFont,
+			fontSmall	= Cfg.DefaultFont,
 		},
 		
 		BackToMap =
@@ -92,6 +94,8 @@ VoteMenu =
 			inGameOnly = 1,
 			action = "PainMenu:AskReturnToMap()",
 			useItemBG = false,
+			fontBig		= Cfg.DefaultFont,
+			fontSmall	= Cfg.DefaultFont,
 		},
 		
 		Disconnect =

@@ -26,7 +26,16 @@ function Quad:OnCreateEntity()
 end
 --============================================================================
 function Quad:Client_OnCreateEntity(entity)
-	BindFX(entity,"quad1",0.1,"e1")
+	 if Cfg.SimpleItems then
+	    local e = ENTITY.Create(ETypes.Billboard,"Script","Quad")    
+	    local tex = "../PKPLUSDATA/Textures/Simpleitems/Quad.tga"        
+	    BILLBOARD.SetupCorona(e,1,0,0,0,0,0.5,0,0,0,tex,Color:New(255,255,255,0):Compose(),1,true)    
+	    ENTITY.SetPosition(e,0,0,0)
+	    ENTITY.RegisterChild(entity,e,true,0) 
+	    WORLD.AddEntity(e)
+    else
+			BindFX(entity,"quad1",0.1,"e1")
+    end
     -- jezeli jest wziety to musze schowac particle
     if not ENTITY.IsDrawEnabled(entity) then
         ENTITY.EnableDraw(entity,false,true)
@@ -212,5 +221,10 @@ Network:RegisterMethod("Quad.OnReturnFX", NCallOn.ServerAndAllClients, NMode.Rel
 function Quad:OnInitTemplate()
     self._Synchronize = self.Synchronize
     self.Synchronize = nil
+    if Cfg.SimpleItems then
+    	self.Model = "spawn"
+    else
+    	self.Model = "quad"
+    end
 end
 --============================================================================

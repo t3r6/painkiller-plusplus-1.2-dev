@@ -6,6 +6,11 @@ end
 function IShotgunFZ:OnInitTemplate()
     self._Synchronize = self.Synchronize
     self.Synchronize = nil
+    if Cfg.SimpleItems then
+    	self.Model = "spawn"
+    else
+    	self.Model = "ASG_item"
+    end
 end
 --============================================================================
 function IShotgunFZ:OnCreateEntity()
@@ -19,15 +24,24 @@ function IShotgunFZ:OnCreateEntity()
 end
 --============================================================================
 function IShotgunFZ:Client_OnCreateEntity(entity,param)
-    local e = ENTITY.Create(ETypes.Billboard,"Script","IShotgunFZ")    
-    local tex = "HUD/weapons/ikona_freezer"
-    if param == "s" then
-        tex = "HUD/weapons/ikona_shell"
-    end
-    BILLBOARD.SetupCorona(e,1,0,0,0,0,0.25,0,0,0,tex,Color:New(255,255,255,0):Compose(),4,true)    
-    ENTITY.SetPosition(e,0,-0.7,0)
-    ENTITY.RegisterChild(entity,e,true,0) 
-    WORLD.AddEntity(e)
+	  if Cfg.SimpleItems then
+	    local e = ENTITY.Create(ETypes.Billboard,"Script","IShotgunFZ")    
+	    local tex = "../PKPLUSDATA/Textures/Simpleitems/IShotgunFZ.tga"        
+	    BILLBOARD.SetupCorona(e,1,0,0,0,0,0.5,0,0,0,tex,Color:New(255,255,255,0):Compose(),1,true)    
+	    ENTITY.SetPosition(e,0,0,0)
+	    ENTITY.RegisterChild(entity,e,true,0) 
+	    WORLD.AddEntity(e)
+    else
+	    local e = ENTITY.Create(ETypes.Billboard,"Script","IShotgunFZ")    
+	    local tex = "HUD/weapons/ikona_freezer"
+	    if param == "s" then
+	        tex = "HUD/weapons/ikona_shell"
+	    end
+	    BILLBOARD.SetupCorona(e,1,0,0,0,0,0.25,0,0,0,tex,Color:New(255,255,255,0):Compose(),4,true)    
+	    ENTITY.SetPosition(e,0,-0.7,0)
+	    ENTITY.RegisterChild(entity,e,true,0) 
+	    WORLD.AddEntity(e)
+    end	
 end
 --============================================================================
 --function IShotgunFZ:OnRespawn()

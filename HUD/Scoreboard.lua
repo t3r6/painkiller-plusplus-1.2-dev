@@ -65,8 +65,8 @@ function Hud:DrawScoreboard()
 	if(Cfg.ScoreboardFontSize == nil)then Cfg.ScoreboardFontSize = 20 end
 	local mediumactualfont = Cfg.ScoreboardFontSize --math.floor(16 * h / 480 )
 	local smallfont = 24 --math.floor(18 * h / 480)
-	local font = "Impact"
-	local bigfont = "Impact"
+	local font = Cfg.DefaultFont
+	local bigfont = Cfg.DefaultFont
 	local linespacing = 1.2
 	local fontfactor = h / 600
 	mediumfont = mediumactualfont*fontfactor

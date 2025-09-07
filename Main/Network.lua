@@ -247,6 +247,8 @@ function GetNetEvent(msg,clientID)
     --Game:Print("* GetNetEvent: After Decompose")
     
 	--	local a1 = INP.GetTimeFromTimerReset()		-- ###Marek, test szybkosci dzialania funkcji
+		--CONSOLE_AddMessage(tostring(event[2]))
+		if tostring(event[2]) == "Teleport.MovePlayer" then  return end
     event[6](nil,unpack(args))
 	--    local a2 = INP.GetTimeFromTimerReset()
 end

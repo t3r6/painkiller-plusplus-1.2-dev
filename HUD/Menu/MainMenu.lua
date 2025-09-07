@@ -13,7 +13,8 @@ MainMenu =
 	descColor	= R3D.RGB( 255, 255, 255 ),
 
 	useItemBG = false,
-
+			fontBig		= Cfg.DefaultFont,
+			fontSmall	= Cfg.DefaultFont,
 	items		=
 	{
 

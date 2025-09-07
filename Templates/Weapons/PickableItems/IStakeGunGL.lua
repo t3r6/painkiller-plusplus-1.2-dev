@@ -6,6 +6,11 @@ end
 function IStakeGunGL:OnInitTemplate()
     self._Synchronize = self.Synchronize
     self.Synchronize = nil
+    if Cfg.SimpleItems then
+    	self.Model = "spawn"
+    else
+    	self.Model = "kgritem"
+    end
 end
 --============================================================================
 function IStakeGunGL:OnCreateEntity()
@@ -20,6 +25,14 @@ function IStakeGunGL:OnCreateEntity()
 end
 --============================================================================
 function IStakeGunGL:Client_OnCreateEntity(entity,param)
+	  if Cfg.SimpleItems then
+	    local e = ENTITY.Create(ETypes.Billboard,"Script","IStakeGunGL")    
+	    local tex = "../PKPLUSDATA/Textures/Simpleitems/IStakeGunGL.tga"        
+	    BILLBOARD.SetupCorona(e,1,0,0,0,0,0.5,0,0,0,tex,Color:New(255,255,255,0):Compose(),1,true)    
+	    ENTITY.SetPosition(e,0,0,0)
+	    ENTITY.RegisterChild(entity,e,true,0) 
+	    WORLD.AddEntity(e)
+    else
     local e = ENTITY.Create(ETypes.Billboard,"Script","IStakeGunGL")    
     local tex = "HUD/weapons/ikona_granat_rakieta"
     if param == "k" then
@@ -29,6 +42,8 @@ function IStakeGunGL:Client_OnCreateEntity(entity,param)
     ENTITY.SetPosition(e,0,-0.7,0)
     ENTITY.RegisterChild(entity,e,true,0) 
     WORLD.AddEntity(e)
+    end	
+
 end
 --============================================================================
 --function IStakeGunGL:OnRespawn()

@@ -6,6 +6,11 @@ end
 function IRifleFlameThrower:OnInitTemplate()
     self._Synchronize = self.Synchronize
     self.Synchronize = nil
+     if Cfg.SimpleItems then
+    	self.Model = "spawn"
+    else
+    	self.Model = "RTF_ITEM"
+    end
 end
 --============================================================================
 function IRifleFlameThrower:OnCreateEntity()
@@ -19,7 +24,15 @@ function IRifleFlameThrower:OnCreateEntity()
 end
 --============================================================================
 function IRifleFlameThrower:Client_OnCreateEntity(entity,param)
-    local e = ENTITY.Create(ETypes.Billboard,"Script","IRifleFlameThrower")    
+	  if Cfg.SimpleItems then
+	    local e = ENTITY.Create(ETypes.Billboard,"Script","IRifleFlameThrower")    
+	    local tex = "../PKPLUSDATA/Textures/Simpleitems/IRifleFlameThrower.tga"        
+	    BILLBOARD.SetupCorona(e,1,0,0,0,0,0.5,0,0,0,tex,Color:New(255,255,255,0):Compose(),1,true)    
+	    ENTITY.SetPosition(e,0,0,0)
+	    ENTITY.RegisterChild(entity,e,true,0) 
+	    WORLD.AddEntity(e)
+    else
+        local e = ENTITY.Create(ETypes.Billboard,"Script","IRifleFlameThrower")    
     
     local tex = "HUD/weapons/ikona_szuriken"
     if param == "f" then
@@ -29,6 +42,8 @@ function IRifleFlameThrower:Client_OnCreateEntity(entity,param)
     ENTITY.SetPosition(e,0,-0.7,0)
     ENTITY.RegisterChild(entity,e,true,0) 
     WORLD.AddEntity(e)
+    end	
+
 end
 --============================================================================
 function IRifleFlameThrower:OnTake(player)     

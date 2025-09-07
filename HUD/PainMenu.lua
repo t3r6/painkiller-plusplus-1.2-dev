@@ -39,14 +39,9 @@ ApplyButton =
 
 -- Menu screens
 
+if Cfg.TournamentSettings == false then
 
-
-
-
-
-if Cfg.TournamentSettings == false then 
-	
-	DoFile(path.."HUD/Menu/Multiplayer/PlayerOptions.lua")	
+	DoFile(path.."HUD/Menu/Multiplayer/PlayerOptions.lua")
 else
 	DoFile(path.."HUD/Menu/Multiplayer/Tournament/PlayerOptions.lua")
 end
@@ -90,21 +85,14 @@ PainMenu =
 	sliderCtrlWidth = 700,
 	listMaxHeight = 380,
 
---	fontBig		= "gothicum",
---	fontSmall	= "gothicum",
---	fontBig		= "arialbd",
---	fontSmall	= "arialbd",
---	fontBig		= "tahomabd",
---	fontSmall	= "tahomabd",
-	fontBig		= "timesbd",
-	fontSmall	= "timesbd",
+	fontBig		= Cfg.DefaultFont,
+	fontSmall	= Cfg.DefaultFont,
 	fontBigSize	= 54,
 	fontSmallSize = 26,
 	fontBigTex  = "",
 	fontSmallTex = "",
 
 	-- Colors
---	textColor	= R3D.RGBA( 66, 3, 3, 200 ),
 	textColor	= R3D.RGBA( 255, 255, 255, 255 ),
 	disabledColor = R3D.RGBA( 155, 86, 22, 255 ),
 	underMouseColor = R3D.RGBA( 166, 3, 3, 255 ),
@@ -113,8 +101,6 @@ PainMenu =
 	itemsFadeLength = 15,
 	itemsDrawShadow = true,
 
---	background	= "../Data/Movies/menu.avi",
---	bgType		= MenuBackgroundTypes.Movie,
 	background	= "../PKPlusData/Menu",
 	bgType		= MenuBackgroundTypes.Image,
 
@@ -138,20 +124,20 @@ PainMenu =
 	cameraPos = { 0.0, 0.0, 0.0 },
 	cameraRot = { 0.0, 0.0, 0.0 },
 	ambient = { 0, 0, 0, 0 },
-	
+
 	showStartMovies = true,
-	
+
 	weapons = { _11 = TXT.Weapons.Pain, _12 = TXT.Weapons.Killer, _21 = TXT.Weapons.Shotgun, _22 = TXT.Weapons.Freezer, _31 = TXT.Weapons.Stakegun,
-				_32 = TXT.Weapons.GranadeLauncher, _41 = TXT.Weapons.RocketLauncher, _42 = TXT.Weapons.Minigun, _51 = TXT.Weapons.Shurikens, _52 = TXT.Weapons.Electro,
-				_61 = TXT.Weapons.Rifle, _62 = TXT.Weapons.FlameThrower, _71 = TXT.Weapons.BoltGun, _72 = TXT.Weapons.Heater },
+		_32 = TXT.Weapons.GranadeLauncher, _41 = TXT.Weapons.RocketLauncher, _42 = TXT.Weapons.Minigun, _51 = TXT.Weapons.Shurikens, _52 = TXT.Weapons.Electro,
+	_61 = TXT.Weapons.Rifle, _62 = TXT.Weapons.FlameThrower, _71 = TXT.Weapons.BoltGun, _72 = TXT.Weapons.Heater },
 
 	lastSaveSort = "",
-	
+
 	movSndTracks = { "english", "french", "german", "italian", "russian", "spanish" },
 	movSndTrack = 0,
 
 	playerName = Cfg["PlayerName"],
-	passwd = "",
+	passwd = Cfg["Password"],
 	speed = 1,
 	host = "",
 	port = 3455,
@@ -181,7 +167,7 @@ PainMenu =
 			Coronas = false,				-- true/false
 			DetailTextures = false,			-- true/false
 		},
-		
+
 		{
 			-- Fast
 			Resolution = "640X480",			-- "640X480", "800X600", "1024X768", "1280X1024", "1600X1200"
@@ -203,7 +189,7 @@ PainMenu =
 			Coronas = false,				-- true/false
 			DetailTextures = false,			-- true/false
 		},
-		
+
 		{
 			-- Standard
 			Resolution = "800X600",			-- "640X480", "800X600", "1024X768", "1280X1024", "1600X1200"
@@ -225,7 +211,7 @@ PainMenu =
 			Coronas = true,					-- true/false
 			DetailTextures = true,			-- true/false
 		},
-		
+
 		{
 			-- High
 			Resolution = "1024X768",		-- "640X480", "800X600", "1024X768", "1280X1024", "1600X1200"
@@ -247,7 +233,7 @@ PainMenu =
 			Coronas = true,					-- true/false
 			DetailTextures = true,			-- true/false
 		},
-		
+
 		{
 			-- Very High
 			Resolution = "1024X768",		-- "640X480", "800X600", "1024X768", "1280X1024", "1600X1200"
@@ -269,7 +255,7 @@ PainMenu =
 			Coronas = true,					-- true/false
 			DetailTextures = true,			-- true/false
 		},
-		
+
 		{
 			-- Insane
 			Resolution = "1280X960",		-- "640X480", "800X600", "1024X768", "1280X1024", "1600X1200"
@@ -297,103 +283,85 @@ PainMenu =
 	{
 		{
 			-- modem
-            NetcodeClientMaxBytesPerSecond = -1,
-            NetcodeEnemyPredictionInterpolation = true,
-            NetcodeLocalPlayerSynchroEveryNFrames = 1,
-            NetcodeMaxPlayerActionsPassed = 1,
-            NetcodeMinUpstreamFrameSize = 0,
-            NetcodeServerFramerate = 10,
-            NetcodeStatsNumberToAverageFrom = 1,
-            NetcodeStatsUpdateDelay = 1000,
-            MaxFpsMP = 60,
+			NetcodeClientMaxBytesPerSecond = -1,
+			NetcodeEnemyPredictionInterpolation = true,
+			NetcodeLocalPlayerSynchroEveryNFrames = 1,
+			NetcodeMaxPlayerActionsPassed = 1,
+			NetcodeMinUpstreamFrameSize = 0,
+			NetcodeServerFramerate = 10,
+			NetcodeStatsNumberToAverageFrom = 1,
+			NetcodeStatsUpdateDelay = 1000,
+			MaxFpsMP = 60,
 		},
-		
+
 		{
 			-- ISDN/ADSL
-            NetcodeClientMaxBytesPerSecond = -1,
-            NetcodeEnemyPredictionInterpolation = true,
-            NetcodeLocalPlayerSynchroEveryNFrames = 1,
-            NetcodeMaxPlayerActionsPassed = 1,
-            NetcodeMinUpstreamFrameSize = 0,
-            NetcodeServerFramerate = 20,
-            NetcodeStatsNumberToAverageFrom = 1,
-            NetcodeStatsUpdateDelay = 1000,
-            MaxFpsMP = 60,
+			NetcodeClientMaxBytesPerSecond = -1,
+			NetcodeEnemyPredictionInterpolation = true,
+			NetcodeLocalPlayerSynchroEveryNFrames = 1,
+			NetcodeMaxPlayerActionsPassed = 1,
+			NetcodeMinUpstreamFrameSize = 0,
+			NetcodeServerFramerate = 20,
+			NetcodeStatsNumberToAverageFrom = 1,
+			NetcodeStatsUpdateDelay = 1000,
+			MaxFpsMP = 60,
 		},
-		
+
 		{
 			-- ADSL/Cable
-            NetcodeClientMaxBytesPerSecond = -1,
-            NetcodeEnemyPredictionInterpolation = true,
-            NetcodeLocalPlayerSynchroEveryNFrames = 1,
-            NetcodeMaxPlayerActionsPassed = 1,
-            NetcodeMinUpstreamFrameSize = 0,
-            NetcodeServerFramerate = 30,
-            NetcodeStatsNumberToAverageFrom = 1,
-            NetcodeStatsUpdateDelay = 1000,
-            MaxFpsMP = 100,
+			NetcodeClientMaxBytesPerSecond = -1,
+			NetcodeEnemyPredictionInterpolation = true,
+			NetcodeLocalPlayerSynchroEveryNFrames = 1,
+			NetcodeMaxPlayerActionsPassed = 1,
+			NetcodeMinUpstreamFrameSize = 0,
+			NetcodeServerFramerate = 30,
+			NetcodeStatsNumberToAverageFrom = 1,
+			NetcodeStatsUpdateDelay = 1000,
+			MaxFpsMP = 100,
 		},
-		
+
 		{
 			-- LAN/T1/E1
-            NetcodeClientMaxBytesPerSecond = -1,
-            NetcodeEnemyPredictionInterpolation = true,
-            NetcodeLocalPlayerSynchroEveryNFrames = 1,
-            NetcodeMaxPlayerActionsPassed = 1,
-            NetcodeMinUpstreamFrameSize = 0,
-            NetcodeServerFramerate = 30,
-            NetcodeStatsNumberToAverageFrom = 1,
-            NetcodeStatsUpdateDelay = 1000,
-            MaxFpsMP = 125,
+			NetcodeClientMaxBytesPerSecond = -1,
+			NetcodeEnemyPredictionInterpolation = true,
+			NetcodeLocalPlayerSynchroEveryNFrames = 1,
+			NetcodeMaxPlayerActionsPassed = 1,
+			NetcodeMinUpstreamFrameSize = 0,
+			NetcodeServerFramerate = 30,
+			NetcodeStatsNumberToAverageFrom = 1,
+			NetcodeStatsUpdateDelay = 1000,
+			MaxFpsMP = 125,
 		},
 	},
 }
 
 --============================================================================
-
 firstTimeRun = 1
-
 --============================================================================
-
 function PainMenu:Init()
---	PainMenu:ActivateScreen( self.mainScreen )
---	MagicBoard_LoadStatus()
 end
-
+--=======================================================================================
 function PainMenu:Close()
 	PMENU.Clear()
 end
-
 --============================================================================
-
 function PainMenu:Draw()
+	CONSOLE.SetFont(Cfg.DefaultFont,20)
+	Cfg:Load()
 	if self.showStartMovies then
 		if IsFinalBuild() then
 			--PMENU.PlayMovie('../Data/Movies/logo-dreamcatcher.bik');
 			--PMENU.PlayMovie('../Data/Movies/logo-pcf.bik');
 			--PMENU.PlayMovie('../Data/Movies/logo-nvidia.bik');
-			PMENU.PlayMovie('../Data/PKPlusData/startup_logo.dds');
 		end
 		self.showStartMovies = false
 	end
-	
 end
-
+--=======================================================================================
 function PainMenu:ActivateScreen( screen )
---	local ret = PMENU.PlayMovie( "../Data/Movies/menu.bik" )
---	if not ret then
---		Game:Print( "Cannot play movie" )
---	end
-
 	SOUND.SetRoomType(0,0,0)
-
 	PMENU.ClearScreen()
 	PainMenu:SetupScreen( screen )
-	
-	--if Cfg.BlackEdition then
-		--screen.background = "HUD/Menu_black"
-	--end
-	
 	PMENU.SetBackground( screen.background, screen.bgType )
 	PMENU.SetMenuWidth( screen.menuWidth )
 	PMENU.SetTopPosition( screen.topPos )
@@ -406,11 +374,7 @@ function PainMenu:ActivateScreen( screen )
 	end
 
 	if( screen.bgStartFrame and screen.bgEndFrame ) then
---		if( currScreen == nil ) then
-			PMENU.SetMovieLoop( screen.bgStartFrame[1], screen.bgEndFrame[1] )
---		else
---			PainMenu:OnMovieLoopEnd()
---		end
+		PMENU.SetMovieLoop( screen.bgStartFrame[1], screen.bgEndFrame[1] )
 	end
 
 	self.currScreen = screen
@@ -422,13 +386,8 @@ function PainMenu:ActivateScreen( screen )
 	end
 
 	if screen.backAction then
---		Game:Print( "Adding back button - "..screen.backAction )
 		PainMenu:AddCommonButton( BackButton, screen, "BackButton", screen.backAction, "" )
 	end
-
---	if screen.applyAction then
---		PainMenu:AddCommonButton( ApplyButton, screen, "ApplyButton", screen.applyAction, "" )
---	end
 
 	PMENU.SetItemsDrawShadow( screen.itemsDrawShadow )
 
@@ -442,7 +401,7 @@ function PainMenu:ActivateScreen( screen )
 		end
 		self.lastScreen = ""
 	end
-	
+
 	if screen == WeaponsConfig then
 		PainMenu:FixFireSwitchTable()
 	end
@@ -451,12 +410,9 @@ function PainMenu:ActivateScreen( screen )
 
 	if screen == DemoEnd then
 		CONSOLE.Activate(false)
---		PMENU.ShowMouse(false)
 	end
 
 	PainMenu:CheckWeaponSpecular()
-
---	PainMenu:OnMovieLoopEnd()
 
 	local wait = 0
 	if screen.wait then wait = screen.wait end
@@ -494,22 +450,23 @@ function PainMenu:ActivateScreen( screen )
 			PMENU.SetItemVisibility( "CaptureLimit", false )
 			PMENU.SetItemVisibility( "LMSLives", false )
 		end
-		
+
 		item = self.currScreen.items.GeneralTab.items.PublicServer
-		if not IsPKInstalled() then PMENU.DisableItem( "PublicServer" ) end
+		--if not IsPKInstalled() then PMENU.DisableItem( "PublicServer" ) end
 	end
-	
+
 	if(Cfg and Cfg.DirectInput) then
-	INP.SetUseDInput(Cfg.DirectInput)
+		INP.SetUseDInput(Cfg.DirectInput)
 	else
-	INP.SetUseDInput(true)
+		INP.SetUseDInput(true)
 	end
 	INP.Reset()
-	Game.WaitForServer = nil        
+	Game.WaitForServer = nil
 	Game.Active = true
+	Game.GameInProgress = true
 	--MOUSE.Lock()
 end
-
+--=======================================================================================
 function PainMenu:AddItem( i, o )
 	local itemName = i
 	local skip = false
@@ -527,11 +484,11 @@ function PainMenu:AddItem( i, o )
 			skip = true
 		end
 	end
-	
---	if not Cfg.Credits and itemName == "Credits" then
---		skip = true
---	end
-	
+
+	--	if not Cfg.Credits and itemName == "Credits" then
+	--		skip = true
+	--	end
+
 	if IsMPDemo() then
 		if itemName == "SignAPact" or itemName == "LoadGame" or itemName == "CDKey" then
 			o.disabled = true
@@ -545,7 +502,7 @@ function PainMenu:AddItem( i, o )
 			o.visible = { TXT.Menu.Model1, TXT.Menu.Model2, TXT.Menu.Model3, TXT.Menu.Model4 }
 		end
 	end
-	
+
 	if not IsPKInstalled() then
 		if itemName == "CDKey" then
 			o.disabled = true
@@ -554,19 +511,19 @@ function PainMenu:AddItem( i, o )
 
 	if itemName == "ModelSelect" and not IsMPDemo() then
 		o.currValue = Cfg.PlayerModel
-		if not Game.BonusMPModel and not Game.BonusMPModel2 then
-			o.values = { 1, 2, 3, 4, 5 }
-			o.visible = { TXT.Menu.Model1, TXT.Menu.Model2, TXT.Menu.Model3, TXT.Menu.Model4, TXT.Menu.Model7 }
-		elseif Game.BonusMPModel and not Game.BonusMPModel2 then
-			o.values = { 1, 2, 3, 4, 5, 6 }
-			o.visible = { TXT.Menu.Model1, TXT.Menu.Model2, TXT.Menu.Model3, TXT.Menu.Model4, TXT.Menu.Model7, TXT.Menu.Model5 }
-		elseif not Game.BonusMPModel and Game.BonusMPModel2 then
-			o.values = { 1, 2, 3, 4, 5, 7 }
-			o.visible = { TXT.Menu.Model1, TXT.Menu.Model2, TXT.Menu.Model3, TXT.Menu.Model4, TXT.Menu.Model7, TXT.Menu.Model6 }
-		else
+		--if not Game.BonusMPModel and not Game.BonusMPModel2 then
+		--	o.values = { 1, 2, 3, 4, 5 }
+		--	o.visible = { TXT.Menu.Model1, TXT.Menu.Model2, TXT.Menu.Model3, TXT.Menu.Model4, TXT.Menu.Model7 }
+		--elseif Game.BonusMPModel and not Game.BonusMPModel2 then
+		--	o.values = { 1, 2, 3, 4, 5, 6 }
+		--	o.visible = { TXT.Menu.Model1, TXT.Menu.Model2, TXT.Menu.Model3, TXT.Menu.Model4, TXT.Menu.Model7, TXT.Menu.Model5 }
+		--elseif not Game.BonusMPModel and Game.BonusMPModel2 then
+		--	o.values = { 1, 2, 3, 4, 5, 7 }
+		--	o.visible = { TXT.Menu.Model1, TXT.Menu.Model2, TXT.Menu.Model3, TXT.Menu.Model4, TXT.Menu.Model7, TXT.Menu.Model6 }
+		--else
 			o.values = { 1, 2, 3, 4, 5, 6, 7 }
 			o.visible = { TXT.Menu.Model1, TXT.Menu.Model2, TXT.Menu.Model3, TXT.Menu.Model4, TXT.Menu.Model7, TXT.Menu.Model5, TXT.Menu.Model6 }
-		end
+		--end
 	end
 
 	if skip == false then
@@ -594,7 +551,7 @@ function PainMenu:AddItem( i, o )
 		elseif o.type == MenuItemTypes.WeaponList then
 			PainMenu:AddWeaponList( itemName, o )
 		elseif o.type == MenuItemTypes.LoadSave then
---				Game:Print( "Adding loadsave" )
+			--				Game:Print( "Adding loadsave" )
 			PainMenu:AddLoadSave( itemName, o )
 		elseif o.type == MenuItemTypes.MapTable then
 			PainMenu:AddMapTable( itemName, o )
@@ -767,7 +724,7 @@ function PainMenu:AddItem( i, o )
 			end
 			for i, v in o.images do
 				PMENU.AddImageToSlider( itemName, v )
---					Game:Print( "Adding image "..v )
+				--					Game:Print( "Adding image "..v )
 			end
 		end
 
@@ -794,7 +751,7 @@ function PainMenu:AddItem( i, o )
 		end
 	end
 end
-
+--=======================================================================================
 function PainMenu:SetupScreen( screen )
 	if not screen.name then
 		screen.name = ""
@@ -847,7 +804,7 @@ function PainMenu:SetupScreen( screen )
 				width = 700,
 				action = "",
 				maxLength = 48,
-				fontBig = "courbd",
+				fontBig = Cfg.DefaultFont,
 				fontBigSize = 22,
 				align = MenuAlign.Left,
 			}
@@ -866,11 +823,11 @@ function PainMenu:SetupScreen( screen )
 	if not screen.sliderWidth and self.sliderWidth then
 		screen.sliderWidth = self.sliderWidth
 	end
-	
+
 	if not screen.sliderCtrlWidth and self.sliderCtrlWidth then
 		screen.sliderCtrlWidth = self.sliderCtrlWidth
 	end
-	
+
 	if not screen.listMaxHeight and self.listMaxHeight then
 		screen.listMaxHeight = self.listMaxHeight
 	end
@@ -894,7 +851,7 @@ function PainMenu:SetupScreen( screen )
 	if not screen.fontSmallTex and self.fontSmallTex then
 		screen.fontSmallTex = self.fontSmallTex
 	end
-	
+
 	-- Colors
 	if not screen.textColor and self.textColor then
 		screen.textColor = self.textColor
@@ -908,7 +865,7 @@ function PainMenu:SetupScreen( screen )
 	if not screen.descColor and self.descColor then
 		screen.descColor = self.descColor
 	end
-	
+
 	-- Background
 	if not screen.background and self.background then
 		screen.background = self.background
@@ -920,7 +877,7 @@ function PainMenu:SetupScreen( screen )
 	if not screen.itemsFadeLength then
 		screen.itemsFadeLength = self.itemsFadeLength
 	end
-	
+
 	if not screen.itemsDrawShadow then
 		screen.itemsDrawShadow = self.itemsDrawShadow
 	end
@@ -941,16 +898,16 @@ function PainMenu:SetupScreen( screen )
 		i,o = next( screen.items, i )
 	end
 end
-
+--=======================================================================================
 function PainMenu:SetupItem( screen, i, o )
 	if not o.sliderWidth then
 		o.sliderWidth = screen.sliderWidth
 	end
-	
+
 	if not o.sliderCtrlWidth then
 		o.sliderCtrlWidth = screen.sliderCtrlWidth
 	end
-	
+
 	if not o.listMaxHeight then
 		o.listMaxHeight = screen.listMaxHeight
 	end
@@ -1000,7 +957,7 @@ function PainMenu:SetupItem( screen, i, o )
 	if not o.x then
 		o.x = -1
 	end
-	
+
 	if not o.y then
 		o.y = -1
 	end
@@ -1014,7 +971,7 @@ function PainMenu:SetupItem( screen, i, o )
 	if not o.useItemBG then
 		o.useItemBG = false
 	end
-	
+
 	if not o.applyRequired then
 		o.applyRequired = false
 	end
@@ -1031,11 +988,11 @@ function PainMenu:SetupItem( screen, i, o )
 	if not o.sndLightOn then
 		o.sndLightOn = screen.sndLightOn
 	end
-	
+
 	if not o.dark then
 		o.dark = false
 	end
-	
+
 	if not o.descOn then o.descOn = "" end
 	if not o.descOff then o.descOff = "" end
 
@@ -1056,7 +1013,7 @@ function PainMenu:SetupItem( screen, i, o )
 		Cfg.WaterFX = 0
 		screen.items.AdvancedTab.items.HiResWeapon.disabled = 1
 		screen.items.AdvancedTab.items.WaterFX.disabled = 1
---		screen.items.AdvancedTab.items.DynLights.disabled = 1
+		--		screen.items.AdvancedTab.items.DynLights.disabled = 1
 		screen.items.AdvancedTab.items.Bloom.disabled = 1
 		screen.items.AdvancedTab.items.WarpEffects.disabled = 1
 		screen.items.AdvancedTab.items.DynLights.values = { 0, 1 }
@@ -1071,9 +1028,7 @@ function PainMenu:SetupItem( screen, i, o )
 		end
 	end
 end
-
 --=======================================================================================
-
 function PainMenu:FillSoundProviders( item )
 	local cnt = SOUND.GetNumOfProviders()
 	if cnt <= 0 then return end
@@ -1091,67 +1046,63 @@ function PainMenu:FillSoundProviders( item )
 			end
 			v = v + 1
 		end
-    end
+	end
 
-    SOUND.Set3DSoundProvider( curr )
+	SOUND.Set3DSoundProvider( curr )
 end
-
 --=======================================================================================
-
 function PainMenu:LoadLevel(levName)
-    PMENU.Activate(false)
---    SOUND.StreamPause(0)
---    SOUND.StreamPause(1)
-    
-    MOUSE.Show(false)
-    Lev._Name = levName
-    EDITOR.PostMessage(1,0) -- reload map message
-end
+	PMENU.Activate(false)
+	--    SOUND.StreamPause(0)
+	--    SOUND.StreamPause(1)
 
+	MOUSE.Show(false)
+	Lev._Name = levName
+	EDITOR.PostMessage(1,0) -- reload map message
+end
+--=======================================================================================
 function PainMenu:OpenMenu()
---    SOUND.StreamPause(0)
---    SOUND.StreamPause(1)
-    
---    SOUND.StreamLoad(2,"menu")  
---    SOUND.StreamSetVolume(2,100)
---    SOUND.StreamPlay(2)
+	--    SOUND.StreamPause(0)
+	--    SOUND.StreamPause(1)
+
+	--    SOUND.StreamLoad(2,"menu")
+	--    SOUND.StreamSetVolume(2,100)
+	--    SOUND.StreamPlay(2)
 
 	self.cameraFOV = R3D.GetCameraFOV()
 	R3D.SetCameraFOV(90)
 
 	PainMenu:ReadFavoriteServers()
-	
+
 	if IsCDCheckEnabled() then
 		--PainMenu:ShowNoCDWarning()
 	end
 end
-
+--=======================================================================================
 function PainMenu:CloseMenu()
---    SOUND.StreamLoad(2,"")
-    
-    if Lev and Lev._ambient then
---        SOUND.StreamResume(0)
-    else
---        SOUND.StreamResume(1)
-    end
+	--    SOUND.StreamLoad(2,"")
 
-    if self.cameraFOV then
-        R3D.SetCameraFOV(self.cameraFOV)
-    end
-    self.cameraFOV = nil
+	if Lev and Lev._ambient then
+		--        SOUND.StreamResume(0)
+	else
+		--        SOUND.StreamResume(1)
+	end
+
+	if self.cameraFOV then
+		R3D.SetCameraFOV(self.cameraFOV)
+	end
+	self.cameraFOV = nil
 end
-
+--=======================================================================================
 function PainMenu:OnMovieLoopEnd()
-    local frame = 1
-    if math.random(1,4) == 1 then frame = math.random(2,3) end
-    if self.currScreen then
+	local frame = 1
+	if math.random(1,4) == 1 then frame = math.random(2,3) end
+	if self.currScreen then
 		PMENU.SetMovieLoop( self.currScreen.bgStartFrame[frame], self.currScreen.bgEndFrame[frame] )
 	end
---	Game:Print( "Changing movie loop to "..self.currScreen.bgStartFrame[frame].." "..self.currScreen.bgEndFrame[frame] )
+	--	Game:Print( "Changing movie loop to "..self.currScreen.bgStartFrame[frame].." "..self.currScreen.bgEndFrame[frame] )
 end
-
 --=======================================================================================
-
 function PainMenu:AddControlConfig( item )
 	PMENU.AddKeyControl( "KeyLabels", TXT.Menu.Action, "", "", TXT.Menu.Primary, TXT.Menu.Alternative )
 	PMENU.SetItemFonts( "KeyLabels", item.fontBig, item.fontBigSize, item.fontSmall, item.fontSmallSize )
@@ -1203,11 +1154,11 @@ function PainMenu:AddControlConfig( item )
 		PMENU.SetBorderHeader( "KeyBorder", 50 )
 	end
 end
-
+--=======================================================================================
 function PainMenu:AddSimpleKeyConf( name, item )
 	PMENU.AddSimpleKeyConf( name, INP.GetKeyNameByEngName(Cfg[item.option][item.index]), Cfg[item.option][item.index], item.index )
 end
-
+--=======================================================================================
 function PainMenu:AddServerList( name, item )
 	local lanOnly = false
 	local favorites = false
@@ -1224,20 +1175,20 @@ function PainMenu:AddServerList( name, item )
 	PMENU.SetListMaxHeight( name, item.listMaxHeight )
 	PMENU.RefreshServerList( name )
 end
-
+--=======================================================================================
 function PainMenu:FindWeapon( w )
 	local i, o = next( self.weapons, nil )
 	while i do
---		Game:Print( o )
+		--		Game:Print( o )
 		if self.weapons[i] == w then
---			Game:Print( "Found: "..i.."   "..string.sub( i, 2 ) )
+			--			Game:Print( "Found: "..i.."   "..string.sub( i, 2 ) )
 			return tonumber( string.sub( i, 2 ) )
 		end
 		i, o = next( self.weapons, i )
 	end
 	return 0
 end
-
+--=======================================================================================
 function PainMenu:AddList( name, item )
 	PMENU.AddList( name, item.useHeader )
 	PMENU.SetItemFonts( name, item.fontBig, item.fontBigSize, item.fontSmall, item.fontSmallSize )
@@ -1254,7 +1205,7 @@ function PainMenu:AddList( name, item )
 		i, o = next( item.elems, i )
 	end
 end
-
+--=======================================================================================
 function PainMenu:AddWeaponList( name, item )
 	PMENU.AddWeaponList( name, item.useHeader )
 	PMENU.SetItemFonts( name, item.fontBig, item.fontBigSize, item.fontSmall, item.fontSmallSize )
@@ -1280,7 +1231,7 @@ function PainMenu:AddWeaponList( name, item )
 				PMENU.AddItemToList( name, self.weapons["_"..o] )
 			end
 			i, o = next( Cfg.WeaponPriority, i )
-		end	
+		end
 	end
 
 	if name == "Custom1Order" then
@@ -1292,7 +1243,7 @@ function PainMenu:AddWeaponList( name, item )
 				PMENU.AddItemToList( name, self.weapons["_"..o] )
 			end
 			i, o = next( Cfg.BestWeapons1, i )
-		end	
+		end
 	end
 
 	if name == "Custom2Order" then
@@ -1304,13 +1255,13 @@ function PainMenu:AddWeaponList( name, item )
 				PMENU.AddItemToList( name, self.weapons["_"..o] )
 			end
 			i, o = next( Cfg.BestWeapons2, i )
-		end	
+		end
 	end
 end
-
+--=======================================================================================
 function PainMenu:AddKeyList( name, item )
 end
-
+--=======================================================================================
 function PainMenu:AddLoadSave( name, item )
 	PMENU.AddLoadSave( name, true )
 	PMENU.SetItemFonts( name, item.fontBig, item.fontBigSize, item.fontSmall, item.fontSmallSize )
@@ -1321,7 +1272,7 @@ function PainMenu:AddLoadSave( name, item )
 
 	PainMenu:ReloadSaveGameList( name )
 end
-
+--=======================================================================================
 function SortSaveGamesByLevel(a,b)
 	o = {}
 	DoFile("../SaveGames/"..a.."/SaveGame.Info",false)
@@ -1348,7 +1299,7 @@ function SortSaveGamesByLevel(a,b)
 		end
 	end
 end
-
+--=======================================================================================
 function SortSaveGamesByTime(a,b)
 	o = {}
 	DoFile("../SaveGames/"..a.."/SaveGame.Info",false)
@@ -1365,7 +1316,7 @@ function SortSaveGamesByTime(a,b)
 		return timeA < timeB
 	end
 end
-
+--=======================================================================================
 function SortSaveGamesByDate(a,b)
 	o = {}
 	DoFile("../SaveGames/"..a.."/SaveGame.Info",false)
@@ -1382,7 +1333,7 @@ function SortSaveGamesByDate(a,b)
 		return timeA < timeB
 	end
 end
-
+--=======================================================================================
 function SortSaveGamesByDiff(a,b)
 	o = {}
 	DoFile("../SaveGames/"..a.."/SaveGame.Info",false)
@@ -1409,7 +1360,7 @@ function SortSaveGamesByDiff(a,b)
 		end
 	end
 end
-
+--=======================================================================================
 function PainMenu:ReloadSaveGameList(name,sort)
 	PMENU.ClearList(name)
 
@@ -1420,7 +1371,7 @@ function PainMenu:ReloadSaveGameList(name,sort)
 		type = "Auto"
 	end
 
---	PMENU.AddSaveGameToList( name, "header", TXT.Menu.Level, TXT.SPStats.Playtime, TXT.Menu.SaveTime, TXT.SPStats.Difficulty )
+	--	PMENU.AddSaveGameToList( name, "header", TXT.Menu.Level, TXT.SPStats.Playtime, TXT.Menu.SaveTime, TXT.SPStats.Difficulty )
 	PMENU.AddSaveGameToList( name, "header", "", "", "", "" )
 
 	if type ~= "Auto" and Game.GameInProgress == true and Game.Difficulty < 3 and Game.GMode == GModes.SingleGame and (not Player or Player.Health > 0) then
@@ -1466,9 +1417,9 @@ function PainMenu:ReloadSaveGameList(name,sort)
 		end
 	end
 end
-
+--=======================================================================================
 function PainMenu:SaveGame()
---	if not Player then return end
+	--	if not Player then return end
 
 	local slot = PMENU.GetSelectedSGSlot()
 
@@ -1492,19 +1443,19 @@ function PainMenu:SaveGame()
 		Game:Print("SaveList reloaded")
 	end
 end
-
+--=======================================================================================
 function PainMenu:DeleteSaveGame()
 	local slot = PMENU.GetSelectedSGSlot()
 	local yes_action = string.format( "SaveGame:Delete('%s'); PainMenu:ActivateScreen(LoadSaveMenu)", slot )
 	PainMenu:AskYesNo( Languages.Texts[645], yes_action, 'PainMenu:ActivateScreen(LoadSaveMenu)' )
 end
-
+--=======================================================================================
 function PainMenu:DeleteAutoSaveGame()
 	local slot = PMENU.GetSelectedSGSlot()
 	local yes_action = string.format( "SaveGame:Delete('%s'); PainMenu:ActivateScreen(AutoLoadSaveMenu)", slot )
 	PainMenu:AskYesNo( Languages.Texts[645], yes_action, 'PainMenu:ActivateScreen(AutoLoadSaveMenu)' )
 end
-
+--=======================================================================================
 function PainMenu:AddMapTable( name, item )
 	PMENU.AddMapTable( name )
 	PMENU.SetListMaxHeight( name, item.listMaxHeight )
@@ -1517,12 +1468,12 @@ function PainMenu:AddMapTable( name, item )
 	for i=1,table.getn(Cfg.ServerMaps) do
 		self.mapsOnServer[i] = Cfg.ServerMaps[i]
 	end
-	
+
 	self.mapsOnServerFFA = {}
 	for i=1,table.getn(Cfg.ServerMapsFFA) do
 		self.mapsOnServerFFA[i] = Cfg.ServerMapsFFA[i]
 	end
-	
+
 	self.mapsOnServerTDM = {}
 	for i=1,table.getn(Cfg.ServerMapsTDM) do
 		self.mapsOnServerTDM[i] = Cfg.ServerMapsTDM[i]
@@ -1537,7 +1488,7 @@ function PainMenu:AddMapTable( name, item )
 	for i=1,table.getn(Cfg.ServerMapsVSH) do
 		self.mapsOnServerVSH[i] = Cfg.ServerMapsVSH[i]
 	end
-	
+
 	self.mapsOnServerCTF = {}
 	for i=1,table.getn(Cfg.ServerMapsCTF) do
 		self.mapsOnServerCTF[i] = Cfg.ServerMapsCTF[i]
@@ -1547,17 +1498,17 @@ function PainMenu:AddMapTable( name, item )
 	for i=1,table.getn(Cfg.ServerMapsPCF) do
 		self.mapsOnServerPCF[i] = Cfg.ServerMapsPCF[i]
 	end
-	
+
 	self.mapsOnServerDUE = {}
 	for i=1,table.getn(Cfg.ServerMapsDUE) do
 		self.mapsOnServerDUE[i] = Cfg.ServerMapsDUE[i]
 	end
-	
+
 	self.mapsOnServerCLA = {}
 	for i=1,table.getn(Cfg.ServerMapsCLA) do
 		self.mapsOnServerCLA[i] = Cfg.ServerMapsCLA[i]
 	end
-	
+
 	self.mapsOnServerLMS = {}
 	for i=1,table.getn(Cfg.ServerMapsLMS) do
 		self.mapsOnServerLMS[i] = Cfg.ServerMapsLMS[i]
@@ -1565,13 +1516,13 @@ function PainMenu:AddMapTable( name, item )
 
 	for i=1,table.getn(self.mapsOnServer) do
 		PMENU.AddMapToServer( name, self.mapsOnServer[i] )
-    end
+	end
 
---	self.lastMPMode = Cfg.GameMode
+	--	self.lastMPMode = Cfg.GameMode
 
 	PainMenu:UpdateMapTable(name,Cfg.GameMode)
 end
-
+--=======================================================================================
 function PainMenu:AddCommonButton( o, screen, name, action, desc )
 	local itemName = name
 
@@ -1640,7 +1591,7 @@ function PainMenu:AddCommonButton( o, screen, name, action, desc )
 	end
 	PMENU.SetItemSounds( itemName, o.sndAccept, o.sndLightOn )
 end
-
+--=======================================================================================
 function PainMenu:ShowWarning( question, yesAction, noAction, notAgainCfg, notAgainTxt )
 	if Cfg[notAgainCfg] ~= nil and Cfg[notAgainCfg] == false then
 		dostring( yesAction )
@@ -1660,7 +1611,7 @@ function PainMenu:ShowWarning( question, yesAction, noAction, notAgainCfg, notAg
 	PMENU.SetItemAction( "YesButton", "PainMenu:ApplySettings(true); "..yesAction )
 	PMENU.SetItemAction( "NoButton", "PainMenu:ApplySettings(true); "..noAction )
 end
-
+--=======================================================================================
 function PainMenu:AskYesNo( question, yesAction, noAction )
 	PainMenu:ActivateScreen(YesNoAlert)
 	PMENU.AddStaticText( "question", HUD.PrepareString( question ) )
@@ -1674,7 +1625,7 @@ function PainMenu:AskYesNo( question, yesAction, noAction )
 	PMENU.SetItemAction( "YesButton", yesAction )
 	PMENU.SetItemAction( "NoButton", noAction )
 end
-
+--=======================================================================================
 function PainMenu:AskNoCDInDrive( question, yesAction, noAction )
 	PainMenu:ActivateScreen(NoCDAlert)
 	PMENU.AddStaticText( "question", HUD.PrepareString( question ) )
@@ -1688,7 +1639,7 @@ function PainMenu:AskNoCDInDrive( question, yesAction, noAction )
 	PMENU.SetItemAction( "YesButton", yesAction )
 	PMENU.SetItemAction( "NoButton", noAction )
 end
-
+--=======================================================================================
 function PainMenu:ShowInfo( message, okAction, fontSize, notAgainCfg, notAgainTxt )
 	if not fontSize then fontSize = 36 end
 	if not notAgainCfg then
@@ -1712,7 +1663,7 @@ function PainMenu:ShowInfo( message, okAction, fontSize, notAgainCfg, notAgainTx
 	PMENU.SetStaticTextRect( "message", 240, 240, 780, 380 )
 	PMENU.SetItemAction( "OKButton", okAction )
 end
-
+--=======================================================================================
 function PainMenu:AskForPassword( message, okAction, backAction )
 	PainMenu:ActivateScreen(AskForPassword)
 	PMENU.AddStaticText( "message", HUD.PrepareString( message ) )
@@ -1726,7 +1677,7 @@ function PainMenu:AskForPassword( message, okAction, backAction )
 	PMENU.SetItemAction( "OKButton", okAction )
 	PMENU.SetItemAction( "BackButton", backAction )
 end
-
+--=======================================================================================
 function PainMenu:EnableApplyButton()
 	local screen = self.currScreen
 	if screen.applyAction then
@@ -1734,7 +1685,7 @@ function PainMenu:EnableApplyButton()
 		PMENU.SetItemVisibility('ApplyButton',true)
 	end
 end
-
+--=======================================================================================
 function PainMenu:AfterControlChange(name)
 	if self.currScreen == VideoOptions then
 		local item = self.currScreen.items.GeneralTab.items.GraphicsQuality
@@ -1769,9 +1720,7 @@ function PainMenu:AfterControlChange(name)
 		end
 	end
 end
-
 --=======================================================================================
-
 function PainMenu:VideoChangeGamma()
 	if self.currScreen == nil then
 		return
@@ -1788,7 +1737,7 @@ function PainMenu:VideoChangeGamma()
 
 	R3D.SetContrastGammaAndBrightness( contr, gamma, bright )
 end
-
+--=======================================================================================
 function PainMenu:SetShadowsQuality()
 	Game:Print( "Setting shadows" )
 	if self.currScreen == nil then
@@ -1797,8 +1746,8 @@ function PainMenu:SetShadowsQuality()
 
 	local screen = self.currScreen
 	local item = screen.items.Shadows
---	Cfg["Shadows"] = item.values[item.currValue]
---	R3D.EnableShadows( item.values[item.currValue] )
+	--	Cfg["Shadows"] = item.values[item.currValue]
+	--	R3D.EnableShadows( item.values[item.currValue] )
 	R3D.EnableShadows( Cfg["Shadows"] )
 	for i,v in Actors do
 		if Cfg["Shadows"] then
@@ -1808,19 +1757,19 @@ function PainMenu:SetShadowsQuality()
 		end
 	end
 end
-
+--=======================================================================================
 function PainMenu:SetBloom()
 	R3D.EnableBloom( Cfg["Bloom"] )
 end
-
+--=======================================================================================
 function PainMenu:SetWarpEffects()
 	R3D.EnableWarpEffects( Cfg["WarpEffects"] )
 end
-
+--=======================================================================================
 function PainMenu:SetWaterQuality()
 	R3D.SetWaterQuality( Cfg["WaterFX"] )
 end
-
+--=======================================================================================
 function PainMenu:SwapTextButtonEx( name, inc )
 	if self.currScreen == nil then
 		return
@@ -1839,7 +1788,7 @@ function PainMenu:SwapTextButtonEx( name, inc )
 			i,o = next( self.currScreen.items, i )
 		end
 	end
-	
+
 	if item == nil then
 		return
 	end
@@ -1850,20 +1799,20 @@ function PainMenu:SwapTextButtonEx( name, inc )
 		else
 			item.currValue = 1
 		end
-		
---		if name == "ModelSelect" and item.currValue == table.getn(item.values) and not (Game.BonusMPModel or Game.BonusMPModel2 or IsMPDemo()) then
---			item.currValue = 1
---		end
+
+		--		if name == "ModelSelect" and item.currValue == table.getn(item.values) and not (Game.BonusMPModel or Game.BonusMPModel2 or IsMPDemo()) then
+		--			item.currValue = 1
+		--		end
 	else
 		if item.currValue > 1 then
 			item.currValue = item.currValue - 1
 		else
 			item.currValue = table.getn( item.values )
 		end
-		
---		if name == "ModelSelect" and item.currValue == table.getn(item.values) and not (Game.BonusMPModel or Game.BonusMPModel2 or IsMPDemo()) then
---			item.currValue = table.getn( item.values ) - 1
---		end
+
+		--		if name == "ModelSelect" and item.currValue == table.getn(item.values) and not (Game.BonusMPModel or Game.BonusMPModel2 or IsMPDemo()) then
+		--			item.currValue = table.getn( item.values ) - 1
+		--		end
 	end
 
 	if name == "GraphicsQuality" then
@@ -1874,7 +1823,7 @@ function PainMenu:SwapTextButtonEx( name, inc )
 
 	PMENU.ChangeTextButtonExValue( name, item.visible[item.currValue] )
 end
-
+--=======================================================================================
 function PainMenu:UpdateConnSpeedControl(val)
 	if not self.currScreen then return end
 	if self.currScreen ~= PlayerOptions then return end
@@ -1883,14 +1832,14 @@ function PainMenu:UpdateConnSpeedControl(val)
 	self.currScreen.items.ConnectionSpeed.currValue = val
 	PMENU.ChangeTextButtonExValue( "ConnectionSpeed", self.currScreen.items.ConnectionSpeed.visible[val] )
 end
-
+--=======================================================================================
 function PainMenu:UpdateVideoControls(q)
 	if q <= 1 or q > 7 then return end
 
 	local preset = PainMenu.GfxQualityPresets[q-1]
 	local i, o = next( preset, nil )
 	while i do
---		Cfg[i] = o
+		--		Cfg[i] = o
 		local m, n = next( self.currScreen.items.GeneralTab.items, nil )
 		while m do
 			if n.option == i then
@@ -1936,16 +1885,16 @@ function PainMenu:UpdateVideoControls(q)
 		i,o = next( preset, i )
 	end
 end
-
+--=======================================================================================
 function PainMenu:ChangeNumRangeValue( name, val )
 	local item = self.currScreen.items[name]
 	if item == nil then
 		return
 	end
-	
+
 	item.currValue = val
 end
-
+--=======================================================================================
 function PainMenu:ShowTabGroup( group, name )
 	local i, o = next( group.items, nil )
 	while i do
@@ -1960,7 +1909,7 @@ function PainMenu:ShowTabGroup( group, name )
 		i,o = next( group.items, i )
 	end
 	PMENU.SetItemVisibility( name, true )
-	
+
 	if name == "GeneralTab" then
 		if self.currScreen ~= ControlsConfig then
 			PMENU.SetItemPosition( "GeneralSettings", 212, 88 )
@@ -1991,12 +1940,12 @@ function PainMenu:ShowTabGroup( group, name )
 			PMENU.SetItemVisibility( "CaptureLimit", false )
 			PMENU.SetItemVisibility( "LMSLives", false )
 		end
-		
+
 		item = self.currScreen.items.GeneralTab.items.PublicServer
-		if not IsPKInstalled() then PMENU.DisableItem( "PublicServer" ) end
+		--if not IsPKInstalled() then PMENU.DisableItem( "PublicServer" ) end
 	end
 end
-
+--=======================================================================================
 function PainMenu:HideTabGroup( group, name )
 	local i, o = next( group.items, nil )
 	while i do
@@ -2012,9 +1961,7 @@ function PainMenu:HideTabGroup( group, name )
 	end
 	PMENU.SetItemVisibility( name, false )
 end
-
 --=======================================================================================
-
 function PainMenu:ApplySettings( all )
 	if self.currScreen == nil then return end
 	if all == nil then all = false end
@@ -2079,7 +2026,7 @@ function PainMenu:ApplySettings( all )
 
 	Cfg:Save()
 end
-
+--=======================================================================================
 function PainMenu:ApplyVideoSettings()
 	WORLD.SetDrawDynLights( Cfg.DynamicLights )
 	R3D.ApplyVideoSettings( Cfg.Resolution, Cfg.Fullscreen , Cfg.Gamma, Cfg.Brightness, Cfg.Contrast, Cfg.Shadows, Cfg.TextureQuality, Cfg.WeatherEffects, Cfg.ViewWeaponModel, Cfg.TextureFiltering, Cfg.DynamicLights, Cfg.Projectors, Cfg.Coronas, Cfg.Decals, Cfg.DecalsStay )
@@ -2088,13 +2035,13 @@ function PainMenu:ApplyVideoSettings()
 		Lev:ReloadDetailMaps()
 		WORLD.SetFarClipDist(Lev.FarClipDist * (Cfg.ClipPlane+100)/200)
 		local f = Lev.Fog
-		WORLD.SetupFog(f.Mode,f.Start * (Cfg.ClipPlane+100)/200,f.End * (Cfg.ClipPlane+100)/200,f.Density,f.Color:Compose())
-	end
-	HUD.SetTransparency( Cfg.HUDTransparency )
-	R3D.SetTexFiltering()
+	WORLD.SetupFog(f.Mode,f.Start * (Cfg.ClipPlane+100)/200,f.End * (Cfg.ClipPlane+100)/200,f.Density,f.Color:Compose())
+end
+HUD.SetTransparency( Cfg.HUDTransparency )
+R3D.SetTexFiltering()
 --	INP.SetUseDInput(true)
 end
-
+--=======================================================================================
 function PainMenu:ApplyAudioSettings(all)
 	local master = PMENU.GetSliderValue( "MasterVolume" )
 	local music = PMENU.GetSliderValue( "MusicVolume" )
@@ -2109,7 +2056,7 @@ function PainMenu:ApplyAudioSettings(all)
 	end
 	Cfg:Save()
 end
-
+--=======================================================================================
 function PainMenu:ApplyControlSettings()
 	INP.LoadBindings()
 	MOUSE.SetSensitivity( Cfg.MouseSensitivity )
@@ -2118,13 +2065,13 @@ function PainMenu:ApplyControlSettings()
 	MOUSE.SetSmooth( Cfg.SmoothMouse )
 	Cfg:Save()
 end
-
+--=======================================================================================
 function PainMenu:UpdateWheelSensitivity()
 	local sens = PMENU.GetSliderValue( "WheelSensitivity" )
 	Cfg.WheelSensitivity = sens
 	MOUSE.SetWheelSensitivity( 4 - Cfg.WheelSensitivity )
 end
-
+--=======================================================================================
 function PainMenu:ApplyCheckbox( item, name )
 	if not string.find( name, "AutoGenerated_" ) then
 		if PMENU.IsItemChecked( name ) then
@@ -2140,23 +2087,23 @@ function PainMenu:ApplyCheckbox( item, name )
 		end
 	end
 end
-
+--=======================================================================================
 function PainMenu:ApplySimpleKeyConf( item, name )
 	if string.find( name, "AutoGenerated_" ) then
 		Cfg[item.option][item.index] = PMENU.GetSimpleKey( name )
 	end
 end
-
+--=======================================================================================
 function PainMenu:ApplyImageButtonEx( item, name )
 	Cfg[item.option] = PMENU.GetImageButtonExValue( name ) + 1
 end
-
+--=======================================================================================
 function PainMenu:ApplyTextButtonEx( item, name )
 	Cfg[item.option] = item.values[item.currValue]
 	if name ~= "ConnectionSpeed" then return end
 	PainMenu_ConnectionSpeedPreset( item.values[item.currValue] )
 end
-
+--=======================================================================================
 function PainMenu_ConnectionSpeedPreset( num )
 	if not num then return end
 
@@ -2175,11 +2122,11 @@ function PainMenu_ConnectionSpeedPreset( num )
 		i,o = next( data, i )
 	end
 end
-
+--=======================================================================================
 function PainMenu:ApplyNumRange( item, name )
 	Cfg[item.option] = PMENU.GetNumRangeValue( name )
 end
-
+--=======================================================================================
 function PainMenu:ApplyTextEdit( item, name )
 	if name == "CDKey" then
 		cdkey = PMENU.GetTextEditValue( name )
@@ -2195,11 +2142,11 @@ function PainMenu:ApplyTextEdit( item, name )
 		Cfg[item.option] = PMENU.GetTextEditValue( name )
 	end
 end
-
+--=======================================================================================
 function PainMenu:ApplyNumEdit( item, name )
 	Cfg[item.option] = tonumber( PMENU.GetTextEditValue( name ) )
 end
-
+--=======================================================================================
 function PainMenu:ApplySlider( item, name )
 	if PMENU.IsSliderFloat( name ) then
 		Cfg[item.option] = PMENU.GetSliderValue( name ) / 100.0
@@ -2207,7 +2154,7 @@ function PainMenu:ApplySlider( item, name )
 		Cfg[item.option] = PMENU.GetSliderValue( name )
 	end
 end
-
+--=======================================================================================
 function PainMenu:ApplyControlConfig( item, name )
 	local i, o = next( item.keys, nil )
 	while i do
@@ -2216,7 +2163,7 @@ function PainMenu:ApplyControlConfig( item, name )
 		i, o = next( item.keys, i )
 	end
 end
-
+--=======================================================================================
 function PainMenu:SaveWeaponConfig()
 	Cfg.BestWeapons1 = {}
 	Cfg.BestWeapons2 = {}
@@ -2225,67 +2172,67 @@ function PainMenu:SaveWeaponConfig()
 	local wpn = PMENU.GetListItems( "PickupOrder" )
 	local n = 1
 	for i=1,table.getn(wpn) do
-        if PMENU.GetListSeparatorPos( "PickupOrder" ) == i - 1 then
+		if PMENU.GetListSeparatorPos( "PickupOrder" ) == i - 1 then
 			Cfg.WeaponPriority[n] = 0
 			Cfg.WeaponPriority[n+1] = PainMenu:FindWeapon(wpn[i])
 			n = n + 1
 		else
 			Cfg.WeaponPriority[n] = PainMenu:FindWeapon(wpn[i])
-        end
-        n = n + 1
-    end
+		end
+		n = n + 1
+	end
 
 	if PMENU.GetListSeparatorPos( "PickupOrder" ) == table.getn(wpn) then
 		Cfg.WeaponPriority[n] = 0
 	end
 
-    local cus = PMENU.GetListItems( "Custom1Order" )
-    n = 1
-    for i=1,table.getn(cus) do
-        if PMENU.GetListSeparatorPos( "Custom1Order" ) == i - 1 then
+	local cus = PMENU.GetListItems( "Custom1Order" )
+	n = 1
+	for i=1,table.getn(cus) do
+		if PMENU.GetListSeparatorPos( "Custom1Order" ) == i - 1 then
 			Cfg.BestWeapons1[n] = 0
 			Cfg.BestWeapons1[n+1] = PainMenu:FindWeapon(cus[i])
 			n = n + 1
 		else
 			Cfg.BestWeapons1[n] = PainMenu:FindWeapon(cus[i])
-        end
-        n = n + 1
-    end
-    
-    if PMENU.GetListSeparatorPos( "Custom1Order" ) == table.getn(cus) then
+		end
+		n = n + 1
+	end
+
+	if PMENU.GetListSeparatorPos( "Custom1Order" ) == table.getn(cus) then
 		Cfg.BestWeapons1[n] = 0
 	end
-	
+
 	cus = PMENU.GetListItems( "Custom2Order" )
-    n = 1
-    for i=1,table.getn(cus) do
-        if PMENU.GetListSeparatorPos( "Custom2Order" ) == i - 1 then
+	n = 1
+	for i=1,table.getn(cus) do
+		if PMENU.GetListSeparatorPos( "Custom2Order" ) == i - 1 then
 			Cfg.BestWeapons2[n] = 0
 			Cfg.BestWeapons2[n+1] = PainMenu:FindWeapon(cus[i])
 			n = n + 1
 		else
 			Cfg.BestWeapons2[n] = PainMenu:FindWeapon(cus[i])
-        end
-        n = n + 1
-    end
-    
-    if PMENU.GetListSeparatorPos( "Custom2Order" ) == table.getn(cus) then
+		end
+		n = n + 1
+	end
+
+	if PMENU.GetListSeparatorPos( "Custom2Order" ) == table.getn(cus) then
 		Cfg.BestWeapons2[n] = 0
 	end
 
 	Cfg:Save()
 end
-
+--=======================================================================================
 function PainMenu:SwitchFire(i)
 	if Cfg.SwitchFire[i] then
 		Cfg.SwitchFire[i] = false
 	else
 		Cfg.SwitchFire[i] = true
 	end
-	
+
 	PainMenu:FixFireSwitchTable()
 end
-
+--=======================================================================================
 function PainMenu:FixFireSwitchTable()
 	if Cfg.SwitchFire[1] then
 		PMENU.SetItemText( "Primary1", TXT.Weapons.Killer )
@@ -2310,7 +2257,7 @@ function PainMenu:FixFireSwitchTable()
 		PMENU.SetItemText( "Primary3", TXT.Weapons.Stakegun )
 		PMENU.SetItemText( "Secondary3", TXT.Weapons.GranadeLauncher )
 	end
-	
+
 	if Cfg.SwitchFire[4] then
 		PMENU.SetItemText( "Primary4", TXT.Weapons.Minigun )
 		PMENU.SetItemText( "Secondary4", TXT.Weapons.RocketLauncher )
@@ -2334,7 +2281,7 @@ function PainMenu:FixFireSwitchTable()
 		PMENU.SetItemText( "Primary6", TXT.Weapons.Rifle )
 		PMENU.SetItemText( "Secondary6", TXT.Weapons.FlameThrower )
 	end
-	
+
 	if Cfg.SwitchFire[7] then
 		PMENU.SetItemText( "Primary7", TXT.Weapons.Heater )
 		PMENU.SetItemText( "Secondary7", TXT.Weapons.BoltGun )
@@ -2343,19 +2290,17 @@ function PainMenu:FixFireSwitchTable()
 		PMENU.SetItemText( "Secondary7", TXT.Weapons.Heater )
 	end
 end
-
 --=======================================================================================
-
 function PainMenu:RefreshServerList()
---	Game:Print( "Refreshing server list" )
+	--	Game:Print( "Refreshing server list" )
 	PMENU.RefreshServerList( 'ServerList' )
 end
-
+--=======================================================================================
 function PainMenu:StopServerList()
---	Game:Print( "Refreshing stopped" )
+	--	Game:Print( "Refreshing stopped" )
 	PMENU.StopServerList( 'ServerList' )
 end
-
+--=======================================================================================
 function PainMenu:StartMultiplayerServer()
 	local playerName = Cfg["PlayerName"]
 	local passwd = ""
@@ -2368,17 +2313,14 @@ function PainMenu:StartMultiplayerServer()
 
 	if( PMENU.StartServer( playerName, passwd, map, speed, port, "", public ) ) then
 		PMENU.Activate( false )
---		SOUND.StreamPause( 0 )
---		SOUND.StreamPause( 1 )
-
 		MOUSE.Show( false )
-        NET.LoadMapOnServer(map)
+		NET.LoadMapOnServer(map)
 	end
 end
-
+--=======================================================================================
 function PainMenu:JoinServer( public, spectator )
 	self.playerName = Cfg["PlayerName"]
-	self.passwd = ""
+	self.passwd = Cfg.Password
 	self.speed = 1
 	self.host = PMENU.GetSelectedServerIP()
 	self.port = PMENU.GetSelectedServerPort()
@@ -2396,29 +2338,24 @@ function PainMenu:JoinServer( public, spectator )
 		PainMenu:ShowInfo( "Cannot connect to server "..self.host, "PainMenu:BackToLastScreen()" )
 	end
 end
-
+--=======================================================================================
 function PainMenu:ReJoinServer()
-	if not self.playerName then
-		return
-	end
-
-	Game:Print( "Connecting to: "..self.host..", port: "..self.port )
-
+	--if not self.playerName then return end
+	CONSOLE_AddMessage( "Connecting to: "..self.host..", port: "..self.port )
 	local passwd = PMENU.GetTextEditValue( "Password" )
-
 	PMENU.Activate(false)
 	local res = PMENU.JoinServer( self.playerName, passwd, self.speed, self.host, self.port, self.public, self.spectator )
 	if res == false then
-		Game:Print( "Cannot join server "..self.host )
+		CONSOLE_AddMessage( "Cannot join server "..self.host )
 		PainMenu:ShowInfo( "Cannot connect to server "..self.host, "PainMenu:BackToLastScreen()" )
 	end
 end
-
+--=======================================================================================
 function PainMenu:Disconnect()
 	if Game.GMode == GModes.SingleGame or Game:IsServer() then return end
 
 	NET.Disconnect()
-    Game:NewLevel('NoName','','',0.3); WORLD.Release()
+	Game:NewLevel('NoName','','',0.3); WORLD.Release()
 	Game.GameInProgress = false
 	Game.LevelStarted = false
 	PMENU.DisableItem( "Disconnect" )
@@ -2426,7 +2363,7 @@ function PainMenu:Disconnect()
 	PMENU.SetItemVisibility( "Disconnect" )
 	PMENU.SetItemVisibility( "BackButton" )
 end
-
+--=======================================================================================
 function PainMenu:AddServerToFavorites()
 	local ip = PMENU.GetSelectedServerIP()
 	local port = PMENU.GetSelectedServerPort()
@@ -2448,7 +2385,7 @@ function PainMenu:AddServerToFavorites()
 
 	PainMenu:SaveFavoriteServers()
 end
-
+--=======================================================================================
 function PainMenu:RemoveServerFromFavorites()
 	local ip = PMENU.GetSelectedServerIP()
 	local port = PMENU.GetSelectedServerPort()
@@ -2465,7 +2402,7 @@ function PainMenu:RemoveServerFromFavorites()
 	PainMenu:SaveFavoriteServers()
 	PainMenu:RefreshServerList()
 end
-
+--=======================================================================================
 function PainMenu:ReadFavoriteServers()
 	self.favServers = {}
 
@@ -2478,7 +2415,7 @@ function PainMenu:ReadFavoriteServers()
 	end
 	io.close( f )
 end
-
+--=======================================================================================
 function PainMenu:SaveFavoriteServers()
 	local f = io.open( "favorites.ini", "w" )
 	for i, v in self.favServers do
@@ -2486,7 +2423,7 @@ function PainMenu:SaveFavoriteServers()
 	end
 	io.close( f )
 end
-
+--=======================================================================================
 function PainMenu:AddFavorites()
 	for i, v in self.favServers do
 		local pos = string.find( v, ":" )
@@ -2498,23 +2435,19 @@ function PainMenu:AddFavorites()
 		end
 	end
 end
-
 --=======================================================================================
-
 function PainMenu:SaveMapsOnServer()
 	PainMenu:UpdateMapTable("MapSelect",Cfg.GameMode)
-
 	self.mapsOnServer = {}
 	Cfg.ServerMaps = {}
 	local tmp_tab = PMENU.GetMapsOnServer()
-    for i=1,table.getn(tmp_tab) do
+	for i=1,table.getn(tmp_tab) do
 		self.mapsOnServer[i] = tmp_tab[i]
 		Cfg.ServerMaps[i] = tmp_tab[i]
-    end
-
+	end
 	Cfg:Save()
 end
-
+--=======================================================================================
 function PainMenu:UpdateMapTable(name,mode)
 	Game:Print("UpdateMapTable to mode: "..mode)
 	Game:Print("Last mode: "..self.lastMPMode)
@@ -2549,7 +2482,7 @@ function PainMenu:UpdateMapTable(name,mode)
 	end
 
 	local tmp_tab = PMENU.GetMapsOnServer()
-    for i=1,table.getn(tmp_tab) do
+	for i=1,table.getn(tmp_tab) do
 		local val = tmp_tab[i]
 		if self.lastMPMode == "Free For All" then
 			self.mapsOnServerFFA[i] = val
@@ -2579,13 +2512,13 @@ function PainMenu:UpdateMapTable(name,mode)
 			self.mapsOnServerLMS[i] = val
 			Cfg.ServerMapsLMS[i] = val
 		end
-    end
+	end
 
 	PMENU.UpdateMapTable(name,mode)
 
---	for i=1,table.getn(Cfg.ServerMaps) do
---		self.mapsOnServer[i] = Cfg.ServerMaps[i]
---	end
+	--	for i=1,table.getn(Cfg.ServerMaps) do
+	--		self.mapsOnServer[i] = Cfg.ServerMaps[i]
+	--	end
 
 	tmp_tab = {}
 	if mode == "Free For All" then
@@ -2612,23 +2545,21 @@ function PainMenu:UpdateMapTable(name,mode)
 	Cfg.ServerMaps = {}
 
 	PMENU.RemoveAllMapsFromServer( name )
-	
+
 	if(tmp_tab~=nil) then
 		for i=1,table.getn(tmp_tab) do
 			PMENU.AddMapToServer( name, tmp_tab[i] )
 			self.mapsOnServer[i] = tmp_tab[i]
 			Cfg.ServerMaps[i] = tmp_tab[i]
-	    	end
-    	end
+		end
+	end
 
 	self.lastMPMode = mode
 	Cfg.GameMode = mode
 
 	Cfg:Save()
 end
-
 --=======================================================================================
-
 function PainMenu:BackToLastScreen()
 	if self.lastScreen == "server" then
 		PainMenu:ActivateScreen(CreateServerMenu)
@@ -2636,69 +2567,81 @@ function PainMenu:BackToLastScreen()
 		PainMenu:ActivateScreen(InternetGameMenu)
 	end
 end
-
+--=======================================================================================
 function PainMenu_MultiplayerErrorCallback( mtype, desc )
-    if IsDedicatedServer() then 
-        if mtype ~= MultiplayerErrorTypes.Information then MsgBox(desc) end
-        Game.LevelStarted = false
-        return
-    end
-	if mtype == MultiplayerErrorTypes.Information then
-		CONSOLE.Print( desc )
-	elseif mtype == MultiplayerErrorTypes.Disconnected then
-		Game:NewLevel('NoName','','',0.3); WORLD.Release()
+	if Game and Game:IsServer() then
+		--if mtype ~= MultiplayerErrorTypes.Information then MsgBox(desc) end
+		--Game.LevelStarted = false
+			for i,ps in Game.PlayerStats do
+					SendNetMethod(Game.ConsoleClientMessage, ps.ClientID, true, true, ServerID, desc, 0)
+			end
+			RawCallMethod(Game.ConsoleClientMessage, ServerID, desc, 0)
+		return
+	else
+		Game:NewLevel('NoName','','',0.3); 
+		WORLD.SetWorldSpeed(1)
+		WORLD.Release()
 		Game.LevelStarted = false
-		PMENU.ShowMenu()
-		PainMenu:ShowInfo( desc, "PainMenu:BackToLastScreen()" )
-	elseif mtype == MultiplayerErrorTypes.BadCDKey then
-		Game:NewLevel('NoName','','',0.3); WORLD.Release()
-		Game.LevelStarted = false
-		PMENU.ShowMenu()
-		PainMenu:ShowInfo( desc, "PainMenu:ActivateScreen(PlayerOptions)" )
-	elseif mtype == MultiplayerErrorTypes.BadPassword then
-		Game.LevelStarted = false
-		PMENU.ShowMenu()
-		PainMenu:AskForPassword( desc, "PainMenu:ReJoinServer()", "PainMenu:BackToLastScreen()" )
+		PMENU.ShowMenu()	
+		CONSOLE_AddMessage(desc)
+		if mtype == MultiplayerErrorTypes.Information then
+		elseif mtype == MultiplayerErrorTypes.Disconnected then
+			--PainMenu:ReJoinServer()
+			--PainMenu:ShowInfo( desc, "PainMenu:BackToLastScreen()" )
+		elseif mtype == MultiplayerErrorTypes.BadCDKey then
+			--PainMenu:ReJoinServer()
+			--PainMenu:ShowInfo( desc, "PainMenu:ActivateScreen(PlayerOptions)" )
+		elseif mtype == MultiplayerErrorTypes.BadPassword then
+			PainMenu:AskForPassword( desc, "PainMenu:ReJoinServer()", "PainMenu:BackToLastScreen()" )
+		end
 	end
 end
-
-
-function PainMenu:PrintMapsOnServer()
-	local tmp_tab = PMENU.GetMapsOnServer()
-    for i=1,table.getn(tmp_tab) do
-        Game:Print( tmp_tab[i] )
-    end
-end
-
 --=======================================================================================
-
+function PainMenu:PrintMapsOnServer()
+	CONSOLE_AddMessage("Maps On Server : -")
+	local tmp_tab = PMENU.GetMapsOnServer()
+	for i=1,table.getn(tmp_tab) do
+		CONSOLE_AddMessage(tostring( tmp_tab[i] ))
+	end
+end
+--=======================================================================================
 function PainMenu:AddPlayerModelItem( name, item )
 	PMENU.AddPlayerModel( name )
 
 	PainMenu:ChangePlayerModel( MPModels[Cfg.PlayerModel] )
 end
-
+--=======================================================================================
 function PainMenu:RenderPlayerModel( name )
-
 	if not self.playerModel then return end
---	if not self.playerModel or not self.playerLight then return end
+	--	if not self.playerModel or not self.playerLight then return end
 	local x, y, z = CAM.GetPos()
 	local rx, ry, rz = CAM.GetRotation()
 	self.cameraPos = { x, y, z }
 	self.cameraRot = { rx, ry, rz }
+	if not self.turn then self.turn = 0.7 end
 
 	CAM.SetPos( 0, 5, 19 )
 	CAM.LookAt( -9.5, 1, 0 )
 	CAM.UpdateViewport()
 
-	ENTITY.SetPosition( self.playerModel, 0, 0, 0 )
+	ENTITY.SetPosition( self.playerModel, 0, 0, -10 )
 	ENTITY.SetOrientation( self.playerModel, 0.7 )
 	ENTITY.SetPosition( self.playerLight, -2, 6, 2 )
 
-	if not Game:IsServer() and Game.GMode == GModes.SingleGame then
-		WORLD.AdvanceFrameCounter()
-		ENTITY.Tick( self.playerModel, INP.GetTimeDelta() )
---		ENTITY.Tick( self.playerLight, INP.GetTimeDelta() )
+	--if not Game:IsServer() and Game.GMode == GModes.SingleGame then
+	WORLD.AdvanceFrameCounter()
+	ENTITY.Tick( self.playerModel, INP.GetTimeDelta() )
+	self.turn = self.turn + 0.01
+	ENTITY.SetOrientation( self.playerModel, self.turn  )
+	ENTITY.Tick( self.playerLight, INP.GetTimeDelta() )
+	--end
+
+	if self.turn > 4*3.14159 then
+		MDL.SetAnim( self.playerModel, "idle", true )
+	end
+	if self.turn > 8*3.14159 then
+		MDL.SetAnim( self.playerModel, "run", true )
+		self.turn = 0
 	end
 
 	R3D.SetCameraFOV(90)
@@ -2710,7 +2653,7 @@ function PainMenu:RenderPlayerModel( name )
 	CAM.UpdateViewport()
 
 end
-
+--=======================================================================================
 function PainMenu:ReleasePlayerModel( name )
 	Game:BrightSkin( self.playerModel, true, Cfg.Team )
 
@@ -2730,19 +2673,19 @@ function PainMenu:ReleasePlayerModel( name )
 	WORLD.DeleteDelayedEntities()
 
 end
-
+--=======================================================================================
 function PainMenu:ReloadFOV()
-    PainMenu.cameraFOV = Cfg.FOV    
-    R3D.SetCameraFOV(Cfg.FOV)
+	PainMenu.cameraFOV = Cfg.FOV
+	R3D.SetCameraFOV(Cfg.FOV)
 end
-
+--=======================================================================================
 function PainMenu:ReloadBrightskins()
 	if Game.GMode == GModes.SingleGame then return end
 	for i,o in Game.PlayerStats do
 		Game:BrightSkin( o._Entity, true, o.Team )
 	end
 end
-
+--=======================================================================================
 function PainMenu:ChangePlayerModel( model )
 
 	if self.playerModel or self.playerLight then PainMenu:ReleasePlayerModel( "PlayerModel" ) end
@@ -2750,11 +2693,11 @@ function PainMenu:ChangePlayerModel( model )
 	if not model then model = "player" end
 
 	Game:Print( "Model change "..model )
-	
+
 	self.playerModel = ENTITY.Create( ETypes.Model, model, "player_menu", 0.6 )
 	WORLD.AddEntity( self.playerModel, true )
 	MDL.SetAnim( self.playerModel, "run", true )
-	Game:BrightSkin( self.playerModel, false, Cfg.Team )
+	Game:BrightSkin( self.playerModel, true, Cfg.Team )
 
 	if not self.playerModel then
 		PainMenu:ReleasePlayerModel( "PlayerModel" )
@@ -2762,105 +2705,101 @@ function PainMenu:ChangePlayerModel( model )
 	end
 
 	self.playerLight = ENTITY.Create( ETypes.Light, "Script", "player_menu_light" );
-	
+
 	if not self.playerLight then
 		PainMenu:ReleasePlayerModel( "PlayerModel" )
 		return
 	end
-	
+
 	LIGHT.Setup( self.playerLight, 2, Color:New(255,255,255,0):Compose(), 0, 1, 0, 1 )
 	LIGHT.SetFalloff( self.playerLight, 2, 10, 90 )
 	LIGHT.SetDynamicFlag( self.playerLight, false )
---	LIGHT.SetLitParentFlag( self.playerLight, false )
---	LIGHT.SetProjector( self.playerLight, "" )
+	--	LIGHT.SetLitParentFlag( self.playerLight, false )
+	--	LIGHT.SetProjector( self.playerLight, "" )
 	WORLD.AddEntity( self.playerLight, true )
---	MDL.SetMeshLighting( self.playerModel, "*", true )
+	--	MDL.SetMeshLighting( self.playerModel, "*", true )
 
 	local e = self.playerModel
 
-    
-    
+
+
 	-- stakegun
-    MDL.SetMeshVisibility(e,"stake",false)
-    -- minigun
-    MDL.SetMeshVisibility(e,"rl",false)
-    -- shotgun
-    MDL.SetMeshVisibility(e,"ASG_bodyShape",false)
-    
-    -- painkiller
-    --MDL.SetMeshVisibility(e,"PKW_korpusShape",false)
-	--MDL.SetMeshVisibility(e,"PKW_HeadShape",false)
+	MDL.SetMeshVisibility(e,"stake",false)
+	-- minigun
+	MDL.SetMeshVisibility(e,"rl",true)
+	-- shotgun
+	MDL.SetMeshVisibility(e,"ASG_bodyShape",false)
+
+	-- painkiller
+	MDL.SetMeshVisibility(e,"PKW_korpusShape",false)
+	MDL.SetMeshVisibility(e,"PKW_HeadShape",false)
 
 	-- spawara
 	MDL.SetMeshVisibility(e,"pCylinderShape1",false)
-    MDL.SetMeshVisibility(e,"pCylinderShape2",false)
-    MDL.SetMeshVisibility(e,"polySurfaceShape450",false)
-    MDL.SetMeshVisibility(e,"polySurfaceShape455",false)
+	MDL.SetMeshVisibility(e,"pCylinderShape2",false)
+	MDL.SetMeshVisibility(e,"polySurfaceShape450",false)
+	MDL.SetMeshVisibility(e,"polySurfaceShape455",false)
 	-- boltstickheater
 	MDL.SetMeshVisibility(e,"polySurfaceShape431",false)
 	-- flameth
-    MDL.SetMeshVisibility(e,"polySurfaceShape1391",false)
-    
-    
+	MDL.SetMeshVisibility(e,"polySurfaceShape1391",false)
+
+
 
 	local r, g, b, l = WORLD.GetAmbientColor()
 	self.ambient = { r, g, b, l }
 
 	WORLD.AmbientColor( 200, 200, 200, 0 )
 	ENTITY.SetAmbient(e, true, 200,200,200)
---	WORLD.AmbientColor( 255, 255, 255, 0 )
---	ENTITY.SetAmbient(e, true, 255,255,255)
+	--	WORLD.AmbientColor( 255, 255, 255, 0 )
+	--	ENTITY.SetAmbient(e, true, 255,255,255)
 
 end
-
 --=======================================================================================
-
 function PainMenu:ReloadWeaponsTextures()
 	if not Player then return end
 
 	for i=1,7 do
-        if Player.Weapons[i] then
+		if Player.Weapons[i] then
 			if Player.Weapons[i]["ReloadTextures"] then
 				Player.Weapons[i]:ReloadTextures()
 			end
-        end
-    end
+		end
+	end
 end
-
+--=======================================================================================
 function PainMenu:CheckWeaponSpecular()
 	if not self.currScreen then return end
 	if self.currScreen ~= VideoOptions then return end
 
 	if PMENU.IsItemChecked( "WeaponNormalMap" ) then
 		Cfg.WeaponSpecular = true
---		PMENU.EnableItem( "WeaponSpecular" )
+		--		PMENU.EnableItem( "WeaponSpecular" )
 	else
---		PMENU.DisableItem( "WeaponSpecular" )
+		--		PMENU.DisableItem( "WeaponSpecular" )
 		Cfg.WeaponSpecular = false
 	end
 end
-
 --=======================================================================================
-
 function PainMenu_PrintGameVersion()
 	if PainMenu.currScreen == DemoEnd then return end
 	local w,h = R3D.ScreenSize()
-    HUD.SetFont("timesbd",16)
-    local ver = "Version: "..PK_VERSION
-    if IsMPDemo() then
+	HUD.SetFont(Cfg.DefaultFont,16)
+	local ver = "Version: "..PK_VERSION
+	if IsMPDemo() then
 		ver = "Version: "..PK_VERSION.." MP Demo"
-    end
-    local tw = HUD.GetTextWidth(ver)
-   --HUD.PrintXY(w-tw-54*w/1024,54*h/768,ver,"timesbd",0,0,0,16)
-    --HUD.PrintXY(w-tw-53*w/1024,53*h/768,ver,"timesbd",255,186,122,16)
+	end
+	local tw = HUD.GetTextWidth(ver)
+	--HUD.PrintXY(w-tw-54*w/1024,54*h/768,ver,Cfg.DefaultFont,0,0,0,16)
+	--HUD.PrintXY(w-tw-53*w/1024,53*h/768,ver,Cfg.DefaultFont,255,186,122,16)
 end
-
+--=======================================================================================
 function PainMenu:SignAPact(mode,addon)
 	if not IsPKInstalled() then
 		Game:Print( "PK not installed" )
 		return PainMenu:SignAPactBooHOnly(mode,addon)
 	end
-	
+
 	if not IsBooHInstalled() then
 		Game:Print( "BooH not installed" )
 		return PainMenu:SignAPactPKOnly(mode,addon)
@@ -2869,7 +2808,7 @@ function PainMenu:SignAPact(mode,addon)
 	end
 
 	WORLD.SwitchToState(2)
---	WORLD.Release(true)
+	--	WORLD.Release(true)
 
 	if not Game then
 		PainMenu:ActivateScreen(NewGameMenu)
@@ -2913,10 +2852,10 @@ function PainMenu:SignAPact(mode,addon)
 		end
 	end
 end
-
+--=======================================================================================
 function PainMenu:SignAPactBooHOnly(mode,addon)
 	WORLD.SwitchToState(2)
---	WORLD.Release(true)
+	--	WORLD.Release(true)
 
 	if not Game then
 		PainMenu:ActivateScreen(NewGameMenu)
@@ -2959,10 +2898,10 @@ function PainMenu:SignAPactBooHOnly(mode,addon)
 		end
 	end
 end
-
+--=======================================================================================
 function PainMenu:SignAPactPKOnly(mode,addon)
 	WORLD.SwitchToState(2)
---	WORLD.Release(true)
+	--	WORLD.Release(true)
 
 	if not Game then
 		PainMenu:ActivateScreen(NewGameMenu)
@@ -3005,7 +2944,7 @@ function PainMenu:SignAPactPKOnly(mode,addon)
 		end
 	end
 end
-
+--=======================================================================================
 function PainMenu:AskReturnToMap()
 	if not Game.LevelStarted then
 		PMENU.SwitchToMap()
@@ -3013,7 +2952,7 @@ function PainMenu:AskReturnToMap()
 		PainMenu:AskYesNo( Languages.Texts[687], 'Game.LevelStarted = false; PMENU.SwitchToMap()', 'PainMenu:ActivateScreen(MainMenu)' )
 	end
 end
-
+--=======================================================================================
 function PainMenu:ResetCheats()
 	GOD = false
 	if not Game then return end
@@ -3027,9 +2966,8 @@ function PainMenu:ResetCheats()
 		Player._WeaponModifierCounter = 0
 	end
 end
-
+--=======================================================================================
 function PainMenu:SelectDifficulty(mode)
-	Game:Print( "SoundTrack: "..self.movSndTrack )
 	if not Game.AddOn then
 		PMENU.PlayMovie("../Data/Movies/intro.bik",self.movSndTrack)
 	else
@@ -3043,8 +2981,9 @@ function PainMenu:SelectDifficulty(mode)
 	PMENU.MapReset()
 	PMENU.SwitchToMap()
 end
-
+--=======================================================================================
 function PainMenu:CheckCDInDrive()
+	if true then return true end
 	local path = nil
 	local f = 3 -- math.random(1,3)
 	if f == 1 then
@@ -3069,11 +3008,13 @@ function PainMenu:CheckCDInDrive()
 		return false
 	end
 end
-
+--=======================================================================================
 function PainMenu:ShowNoCDWarning()
+	if true then return true end
 	if not PainMenu:CheckCDInDrive() then
 		PainMenu:AskNoCDInDrive( TXT.Menu.InsertCD, "PainMenu:ShowNoCDWarning()", "Exit()" )
 	else
 		PainMenu:ActivateScreen(MainMenu)
 	end
 end
+--=======================================================================================

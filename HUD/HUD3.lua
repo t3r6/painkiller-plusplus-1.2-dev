@@ -3,7 +3,7 @@ function Hud:DrawMOTD()
 
 	if(not Hud or MPCfg.MOTD==nil) then return end
 	local w,h = R3D.ScreenSize()
-	local font = "Impact"
+	local font = Cfg.DefaultFont
 	local fontfactor = h / 600	
 	local linespacing = 1.2
 	local mediumfont = 24
@@ -92,8 +92,8 @@ function Hud:DrawTeamScores(indicateID)
 	--local largefont = math.floor(0.1*0.8 * w)
 	if(Cfg.TeamScoresFontSize == nil)then Cfg.TeamScoresFontSize = 26 end
 	local mediumfont = Cfg.TeamScoresFontSize
-	local font = "Impact"
-	local bigfont = "Impact"
+	local font = Cfg.DefaultFont
+	local bigfont = Cfg.DefaultFont
 	if(Cfg.TeamScoresX == nil)then Cfg.TeamScoresX = 0.86 end
 	if(Cfg.TeamScoresY == nil)then Cfg.TeamScoresY = 0.82 end
 	local scorepanel = {x = Cfg.TeamScoresX, y = Cfg.TeamScoresY, w = 0.11, d = 0.11}
@@ -267,7 +267,7 @@ end
 function Hud:DrawTeamOverlay()
 	if(not Hud) then return end
 	local w,h = R3D.ScreenSize()
-	local font ="Impact"
+	local font =Cfg.DefaultFont
 	if(Cfg.TeamOverlayFontSize == nil)then Cfg.TeamOverlayFontSize = 26 end
 	local smallfont = Cfg.TeamOverlayFontSize --math.floor(14 * h / 480)
 	
@@ -278,8 +278,8 @@ function Hud:DrawTeamOverlay()
 	local overlaypanel = {x = Cfg.TeamOverlayX, y = Cfg.TeamOverlayY, w = Cfg.TeamOverlayW, d = 0.1}
 	local panelfraction = {status  = 0.0, name = 0.075, location = 0.45}
 	-- ADJUSTMENTS FOR LOTS OF PLAYERS
-	local font = "Impact"
-	local bigfont = "Impact"
+	local font = Cfg.DefaultFont
+	local bigfont = Cfg.DefaultFont
 	local fontfactor = h / 600
 	local delta = smallfont*fontfactor
 	--local scorepanel = {x = Cfg.TeamOverlayX, y = Cfg.TeamOverlayY, w = 0.1, d = 0.1}
@@ -343,7 +343,7 @@ function Hud:DrawBotInfo()
 	if(not Hud) then return end
 	local w,h = R3D.ScreenSize()
 	--if(Game.PlayerStats[7]==nil)then return end
-	local font ="Impact"
+	local font =Cfg.DefaultFont
 	local smallfont = 11
 	for i,o in Game.Players do
 		if o.ClientID == 6 then 

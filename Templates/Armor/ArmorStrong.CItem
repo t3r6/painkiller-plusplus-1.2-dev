@@ -19,4 +19,9 @@ function o:OnInitTemplate()
     self.Impulse = nil
     self:ReplaceFunction("_Synchronize","Synchronize")
     self:ReplaceFunction("Synchronize","nil")
+    if Cfg.SimpleItems then
+    	self.Model = "spawn"
+    else
+    	self.Model = "armour_gold"
+    end
 end

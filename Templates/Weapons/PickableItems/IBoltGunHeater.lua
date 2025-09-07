@@ -6,6 +6,11 @@ end
 function IBoltGunHeater:OnInitTemplate()
     self._Synchronize = self.Synchronize
     self.Synchronize = nil
+    if Cfg.SimpleItems then
+    	self.Model = "spawn"
+    else
+    	self.Model = "kk2item"
+    end
 end
 --============================================================================
 function IBoltGunHeater:OnCreateEntity()
@@ -19,7 +24,15 @@ function IBoltGunHeater:OnCreateEntity()
 end
 --============================================================================
 function IBoltGunHeater:Client_OnCreateEntity(entity,param)
-    local e = ENTITY.Create(ETypes.Billboard,"Script","IBoltGunHeater")    
+	  if Cfg.SimpleItems then
+	    local e = ENTITY.Create(ETypes.Billboard,"Script","IBoltGunHeater")    
+	    local tex = "../PKPLUSDATA/Textures/Simpleitems/IBoltGunHeater.tga"        
+	    BILLBOARD.SetupCorona(e,1,0,0,0,0,0.5,0,0,0,tex,Color:New(255,255,255,0):Compose(),1,true)    
+	    ENTITY.SetPosition(e,0,0,0)
+	    ENTITY.RegisterChild(entity,e,true,0) 
+	    WORLD.AddEntity(e)
+    else
+        local e = ENTITY.Create(ETypes.Billboard,"Script","IBoltGunHeater")    
     local tex = "HUD/weapons/ikona_haeterkulki"
     if param == "b" then        
         tex = "HUD/weapons/ikona_boltymetal"
@@ -28,6 +41,8 @@ function IBoltGunHeater:Client_OnCreateEntity(entity,param)
     ENTITY.SetPosition(e,0,-0.7,0)
     ENTITY.RegisterChild(entity,e,true,0) 
     WORLD.AddEntity(e)
+    end	
+
 end
 --============================================================================
 function IBoltGunHeater:OnTake(player)     

@@ -4,8 +4,8 @@ StartGameMenu =
 	bgEndFrame   = { 180, 267, 291 },
 
 	firstTimeShowItems = 80,
-	fontBig		= "timesbd",
-	fontSmall	= "timesbd",
+	fontBig		= Cfg.DefaultFont,
+	fontSmall	= Cfg.DefaultFont,
 
 	backAction = "PainMenu:ActivateScreen(MultiplayerMenu)",
 	
@@ -62,6 +62,15 @@ StartGameMenu =
 		},
 		
 		ClanArena =
+		{
+			text = "Clan Arena",
+			desc = "Prove your worth",
+			x	 = -1,
+			y	 = 530,
+			action = "PainMenu:ActivateScreen(CreateServerMenu)",
+		},
+		
+		COOP =
 		{
 			text = "Clan Arena",
 			desc = "Prove your worth",

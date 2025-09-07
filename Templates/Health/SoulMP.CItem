@@ -68,12 +68,21 @@ function SoulMP:Client_OnCreateEntity(entity)
     gNrSoul = gNrSoul + 1
     Log("SoulMP:Client_OnCreateEntity:"..gNrSoul.."\n")
     --Log("SoulMP:Client_OnCreateEntity\n")
-    BindFX(entity,"energy_red",0.2,"e1")
-    BindFX(entity,"energy_red",0.2,"e2")
-    BindFX(entity,"energy_red",0.2,"e3")
-    BindFX(entity,"energy_red",0.2,"e4")
-    BindFX(entity,"energy_red",0.2,"e5")
-    BindFX(entity,"energy_red",0.2,"e6")    
+    if Cfg.SimpleItems then
+	    local e = ENTITY.Create(ETypes.Billboard,"Script","SoulMP")    
+	    local tex = "../PKPLUSDATA/Textures/Simpleitems/SoulMP.tga"        
+	    BILLBOARD.SetupCorona(e,1,0,0,0,0,0.5,0,0,0,tex,Color:New(255,255,255,0):Compose(),1,true)    
+	    ENTITY.SetPosition(e,0,0,0)
+	    ENTITY.RegisterChild(entity,e,true,0) 
+	    WORLD.AddEntity(e)
+    else
+	    BindFX(entity,"energy_red",0.2,"e1")
+	    BindFX(entity,"energy_red",0.2,"e2")
+	    BindFX(entity,"energy_red",0.2,"e3")
+	    BindFX(entity,"energy_red",0.2,"e4")
+	    BindFX(entity,"energy_red",0.2,"e5")
+	    BindFX(entity,"energy_red",0.2,"e6")  
+    end
 end
 --============================================================================
 function SoulMP:OnTake(player)

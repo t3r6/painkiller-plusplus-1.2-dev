@@ -13,12 +13,22 @@ function Energy:OnPrecache()
 end
 --============================================================================
 function Energy:OnCreateEntity()
-    self:BindFX("energy",0.2,"e1")
-    self:BindFX("energy",0.2,"e2")
-    self:BindFX("energy",0.2,"e3")
-    self:BindFX("energy",0.2,"e4")
-    self:BindFX("energy",0.2,"e5")
-    self:BindFX("energy",0.2,"e6")
+    if Cfg.SimpleItems then
+	    local e = ENTITY.Create(ETypes.Billboard,"Script","Energy")    
+	    local tex = "../PKPLUSDATA/Textures/Simpleitems/Energy.tga"        
+	    BILLBOARD.SetupCorona(e,1,0,0,0,0,0.5,0,0,0,tex,Color:New(255,255,255,0):Compose(),1,true)    
+	    ENTITY.SetPosition(e,0,0,0)
+	    ENTITY.RegisterChild(entity,e,true,0) 
+	    WORLD.AddEntity(e)
+    else
+	    self:BindFX("energy",0.2,"e1")
+	    self:BindFX("energy",0.2,"e2")
+	    self:BindFX("energy",0.2,"e3")
+	    self:BindFX("energy",0.2,"e4")
+	    self:BindFX("energy",0.2,"e5")
+	    self:BindFX("energy",0.2,"e6")
+    end
+
     self.TimeToLive = self.TimeToLive * Game.SoulStayFactor
     self.takeDistance = self.SoulTakeDistance + Game.SoulCatchDistance
     self._velocity = 0

@@ -15,9 +15,25 @@ function o:OnInitTemplate()
     self.Impulse = nil
     self:ReplaceFunction("_Synchronize","Synchronize")
     self:ReplaceFunction("Synchronize","nil")
+    if Cfg.SimpleItems then
+    	self.Model = "spawn"
+  		self.Mesh = ""
+			self.Pack = ""
+    else
+			self.Mesh = "polySurfaceShape58510"
+			self.Pack = "electro_ammo.dat"
+    end
 end
 --============================================================================
 function AmmoElectro:OnCreateEntity()
+	  if Cfg.SimpleItems then
+	    local e = ENTITY.Create(ETypes.Billboard,"Script","AmmoElectro")    
+	    local tex = "../PKPLUSDATA/Textures/Simpleitems/AmmoElectro.tga"        
+	    BILLBOARD.SetupCorona(e,1,0,0,0,0,0.5,0,0,0,tex,Color:New(255,255,255,0):Compose(),1,true)    
+	    ENTITY.SetPosition(e,0,0.5,0)
+	    ENTITY.RegisterChild(self._Entity,e,true,0) 
+	    WORLD.AddEntity(e)
+    end
     ENTITY.EnableNetworkSynchronization(self._Entity)
 end
 --============================================================================

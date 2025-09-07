@@ -6,6 +6,11 @@ end
 function IDriverElectro:OnInitTemplate()
     self._Synchronize = self.Synchronize
     self.Synchronize = nil
+     if Cfg.SimpleItems then
+    	self.Model = "spawn"
+    else
+    	self.Model = "ESL_ITEM"
+    end
 end
 --============================================================================
 function IDriverElectro:OnCreateEntity()
@@ -19,15 +24,24 @@ function IDriverElectro:OnCreateEntity()
 end
 --============================================================================
 function IDriverElectro:Client_OnCreateEntity(entity,param)
-    local e = ENTITY.Create(ETypes.Billboard,"Script","IDriverElectro")    
-    local tex = "HUD/weapons/ikona_electro"
-    if param == "s" then
-        tex = "HUD/weapons/ikona_szuriken"
-    end
-    BILLBOARD.SetupCorona(e,1,0,0,0,0,0.25,0,0,0,tex,Color:New(255,255,255,0):Compose(),4,true)    
-    ENTITY.SetPosition(e,0,-0.7,0)
-    ENTITY.RegisterChild(entity,e,true,0) 
-    WORLD.AddEntity(e)
+	  if Cfg.SimpleItems then
+	    local e = ENTITY.Create(ETypes.Billboard,"Script","IDriverElectro")    
+	    local tex = "../PKPLUSDATA/Textures/Simpleitems/IDriverElectro.tga"        
+	    BILLBOARD.SetupCorona(e,1,0,0,0,0,0.5,0,0,0,tex,Color:New(255,255,255,0):Compose(),1,true)    
+	    ENTITY.SetPosition(e,0,0,0)
+	    ENTITY.RegisterChild(entity,e,true,0) 
+	    WORLD.AddEntity(e)
+    else
+	    local e = ENTITY.Create(ETypes.Billboard,"Script","IDriverElectro")    
+	    local tex = "HUD/weapons/ikona_electro"
+	    if param == "s" then
+	        tex = "HUD/weapons/ikona_szuriken"
+	    end
+	    BILLBOARD.SetupCorona(e,1,0,0,0,0,0.25,0,0,0,tex,Color:New(255,255,255,0):Compose(),4,true)    
+	    ENTITY.SetPosition(e,0,-0.7,0)
+	    ENTITY.RegisterChild(entity,e,true,0) 
+	    WORLD.AddEntity(e)
+    end	    
 end
 --============================================================================
 function IDriverElectro:OnTake(player)     
